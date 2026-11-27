@@ -120,22 +120,22 @@ export const FinalBossEngine: React.FC<Props> = ({
       { x: 545, y: 270, baseX: 545, baseY: 270, w: 190, h: 24, moveAmpY: 0, moveSpeed: 1.5, phase: 2.2 },
     ];
 
-    // Stage 1: 3 Energy Cores on the Giant Mecha Christmas Tree (centered at x=640)
+    // Stage 1: 3 Energy Cores on the Giant Mecha Christmas Tree (balanced HP!)
     const treeCores = [
-      { id: 0, ox: -105, oy: -82, hp: 5, maxHp: 5, hurt: 0 },
-      { id: 1, ox: 105, oy: -82, hp: 5, maxHp: 5, hurt: 0 },
-      { id: 2, ox: 0, oy: -210, hp: 6, maxHp: 6, hurt: 0 },
+      { id: 0, ox: -105, oy: -82, hp: 4, maxHp: 4, hurt: 0 },
+      { id: 1, ox: 105, oy: -82, hp: 4, maxHp: 4, hurt: 0 },
+      { id: 2, ox: 0, oy: -205, hp: 4, maxHp: 4, hurt: 0 },
     ];
-    let treeSlamTimer = 5.0;
+    let treeSlamTimer = 6.2;
     let treeYOffset = 0;
 
     // Stage 2: Midnight Clock — 3 Temporal Crystals + Swinging Pendulum + Countdown!
     const clockCrystals = [
-      { x: 190, y: 280, hp: 4, maxHp: 4, hurt: 0 },
-      { x: 640, y: 190, hp: 4, maxHp: 4, hurt: 0 },
-      { x: 1090, y: 280, hp: 4, maxHp: 4, hurt: 0 },
+      { x: 190, y: 280, hp: 3, maxHp: 3, hurt: 0 },
+      { x: 640, y: 195, hp: 3, maxHp: 3, hurt: 0 },
+      { x: 1090, y: 280, hp: 3, maxHp: 3, hurt: 0 },
     ];
-    let clockCountdown = 48;
+    let clockCountdown = 60;
     let pendulumAngle = 0;
 
     // Stage 3 & 4: Lula Supremo -> Redeemed Lula!
@@ -144,11 +144,11 @@ export const FinalBossEngine: React.FC<Props> = ({
       y: 320,
       vx: 0,
       vy: 0,
-      hp: 22,
-      maxHp: 22,
+      hp: 16,
+      maxHp: 16,
       hurt: 0,
       state: 'hover' as 'hover' | 'wave_cast' | 'spiral_cast' | 'dash_warn' | 'dash' | 'dizzy' | 'sad' | 'happy',
-      stateTimer: 2.2,
+      stateTimer: 2.4,
       dashTargetX: 200,
       dashTargetY: 500,
       facing: -1,
@@ -172,9 +172,9 @@ export const FinalBossEngine: React.FC<Props> = ({
       shootCooldown: 0,
       bellyFlopping: false,
       invuln: 0,
-      hearts: 5,
-      maxHearts: 5,
-      starMeter: 50, // 0..100; at 100 press Y for SUPER STAR BEAM!
+      hearts: 6,
+      maxHearts: 6,
+      starMeter: 60, // 0..100; at 100 press Y for SUPER STAR BEAM!
       runAnim: 0,
     };
 
@@ -273,23 +273,60 @@ export const FinalBossEngine: React.FC<Props> = ({
       }
     };
 
+    // Smart Auto-Aim helper: finds nearest active boss target so attacks feel awesome on mobile & PC!
+    const getNearestTargetPos = (): { x: number; y: number } | null => {
+      const px = player.x + 22;
+      const py = player.y + 18;
+      if (stage === 1) {
+        let best: { x: number; y: number } | null = null;
+        let bestDist = Infinity;
+        for (const c of treeCores) {
+          if (c.hp <= 0) continue;
+          const tx = 640 + c.ox;
+          const ty = FLOOR_Y + c.oy + treeYOffset;
+          const d = Math.hypot(tx - px, ty - py);
+          if (d < bestDist) {
+            bestDist = d;
+            best = { x: tx, y: ty };
+          }
+        }
+        return best;
+      }
+      if (stage === 2) {
+        let best: { x: number; y: number } | null = null;
+        let bestDist = Infinity;
+        for (const c of clockCrystals) {
+          if (c.hp <= 0) continue;
+          const d = Math.hypot(c.x - px, c.y - py);
+          if (d < bestDist) {
+            bestDist = d;
+            best = { x: c.x, y: c.y };
+          }
+        }
+        return best;
+      }
+      if (stage === 3) {
+        return { x: lula.x, y: lula.y - 10 };
+      }
+      return null;
+    };
+
     const fireStarShot = (isSuper = false) => {
-      // PARRY / REFLECT MECHANIC: Barking near any GOLDEN parryable attack sends it rocketing back at Lula for 3x Critical Damage!
+      // Generous PARRY / REFLECT: Barking near any GOLDEN parryable attack sends it rocketing back for 3x Critical Damage!
       for (const pr of projs) {
-        if (!pr.fromPlayer && pr.parryable && Math.hypot(pr.x - (player.x + 22), pr.y - (player.y + 20)) < 115) {
+        if (!pr.fromPlayer && pr.parryable && Math.hypot(pr.x - (player.x + 22), pr.y - (player.y + 20)) < 145) {
           pr.fromPlayer = true;
           pr.kind = 'super_star';
           pr.parryable = false;
           pr.color = '#ffe055';
-          const tx = stage === 3 ? lula.x : 640;
-          const ty = stage === 3 ? lula.y : FLOOR_Y - 140;
-          const ang = Math.atan2(ty - pr.y, tx - pr.x);
-          pr.vx = Math.cos(ang) * 860;
-          pr.vy = Math.sin(ang) * 860;
+          const tgt = getNearestTargetPos() || { x: 640, y: FLOOR_Y - 140 };
+          const ang = Math.atan2(tgt.y - pr.y, tgt.x - pr.x);
+          pr.vx = Math.cos(ang) * 880;
+          pr.vy = Math.sin(ang) * 880;
           pr.r = 22;
           pr.life = 1.6;
-          player.starMeter = Math.min(100, player.starMeter + 32);
-          screenShake = 0.25;
+          player.starMeter = Math.min(100, player.starMeter + 35);
+          screenShake = 0.22;
           haptics.impact();
           audioSystem.playSfx('super_bark');
           spawnParticles(pr.x, pr.y, '#ffe055', 22, 260, 'star');
@@ -297,24 +334,33 @@ export const FinalBossEngine: React.FC<Props> = ({
         }
       }
 
+      const target = getNearestTargetPos();
+      const baseAng = target
+        ? Math.atan2(target.y - (player.y + 18), target.x - (player.x + 22))
+        : player.facing > 0
+        ? 0
+        : Math.PI;
+
+      if (target) {
+        player.facing = target.x >= player.x + 22 ? 1 : -1;
+      }
+
       if (isSuper) {
         audioSystem.playSfx('super_bark');
         haptics.impact();
         screenShake = 0.2;
         player.starMeter = 0;
-        // 3 big homing/spread golden star blasts!
-        [-0.22, 0, 0.22].forEach((angOff) => {
-          const baseAng = player.facing > 0 ? 0 : Math.PI;
+        [-0.14, 0, 0.14].forEach((angOff) => {
           const a = baseAng + angOff;
           projs.push({
             x: player.x + 22,
             y: player.y + 18,
-            vx: Math.cos(a) * 760,
-            vy: Math.sin(a) * 760,
+            vx: Math.cos(a) * 820,
+            vy: Math.sin(a) * 820,
             r: 22,
             fromPlayer: true,
             kind: 'super_star',
-            life: 1.4,
+            life: 1.5,
             color: '#ffe055',
           });
         });
@@ -324,19 +370,15 @@ export const FinalBossEngine: React.FC<Props> = ({
         if (player.shootCooldown > 0) return;
         player.shootCooldown = 0.22;
         audioSystem.playSfx('bark');
-        // Aim gently upward if pressing Up!
-        const inp = inputManager.poll();
-        const aimY = inp.up ? -340 : 0;
-        const aimX = inp.up && !inp.left && !inp.right ? player.facing * 220 : player.facing * 640;
         projs.push({
-          x: player.x + (player.facing > 0 ? 42 : 2),
+          x: player.x + 22,
           y: player.y + 18,
-          vx: aimX,
-          vy: aimY,
-          r: 13,
+          vx: Math.cos(baseAng) * 700,
+          vy: Math.sin(baseAng) * 700,
+          r: 14,
           fromPlayer: true,
           kind: 'star',
-          life: 1.25,
+          life: 1.4,
           color: '#ffe055',
         });
       }
@@ -662,7 +704,7 @@ export const FinalBossEngine: React.FC<Props> = ({
         }
       }
 
-      // Heart drops from Princesa Jujuba
+      // Heart drops from Princesa Jujuba (+2 hearts for healthy breather between stages!)
       for (const hd of heartDrops) {
         if (!hd.active) continue;
         hd.vy += 600 * dt;
@@ -671,13 +713,13 @@ export const FinalBossEngine: React.FC<Props> = ({
           hd.y = FLOOR_Y - 22;
           hd.vy = -210;
         }
-        if (Math.hypot(hd.x - (player.x + 22), hd.y - (player.y + 20)) < 46) {
+        if (Math.hypot(hd.x - (player.x + 22), hd.y - (player.y + 20)) < 50) {
           hd.active = false;
-          player.hearts = Math.min(player.maxHearts, player.hearts + 1);
+          player.hearts = Math.min(player.maxHearts, player.hearts + 2);
           haptics.collect();
           audioSystem.playSfx('powerup');
           spawnParticles(hd.x, hd.y, '#ff5d8f', 18, 180, 'heart');
-          showBanner('❤️ Princesa Jujuba enviou carinho (+1 Coração)!', 2.2);
+          showBanner('❤️ Princesa Jujuba enviou carinho (+2 Corações)!', 2.2);
         }
       }
 
@@ -691,17 +733,17 @@ export const FinalBossEngine: React.FC<Props> = ({
 
         attackTimer -= dt;
         if (attackTimer <= 0) {
-          attackTimer = 1.65;
+          attackTimer = 2.05;
           // Alternate between Explosive Ornaments fan and Bouncing Gift-Bombs!
           if (Math.random() < 0.55) {
             for (const dir of [-1, 1]) {
-              const isGoldenParry = dir === 1 && Math.random() < 0.65;
+              const isGoldenParry = dir === 1 && Math.random() < 0.72;
               projs.push({
                 x: 640 + dir * 75,
                 y: FLOOR_Y - 190,
-                vx: dir * (190 + Math.random() * 140),
-                vy: -240 - Math.random() * 100,
-                r: isGoldenParry ? 19 : 16,
+                vx: dir * (165 + Math.random() * 110),
+                vy: -220 - Math.random() * 80,
+                r: isGoldenParry ? 19 : 15,
                 fromPlayer: false,
                 kind: 'gift_bomb',
                 life: 4.5,
@@ -717,8 +759,8 @@ export const FinalBossEngine: React.FC<Props> = ({
               projs.push({
                 x: 640,
                 y: FLOOR_Y - 200,
-                vx: Math.cos(angToP + off) * 330,
-                vy: Math.sin(angToP + off) * 330,
+                vx: Math.cos(angToP + off) * 285,
+                vy: Math.sin(angToP + off) * 285,
                 r: isGoldenParry ? 16 : 13,
                 fromPlayer: false,
                 kind: 'ornament',
@@ -736,13 +778,13 @@ export const FinalBossEngine: React.FC<Props> = ({
         if (treeSlamTimer < 0.7 && treeSlamTimer > 0) {
           treeYOffset = -Math.sin(((0.7 - treeSlamTimer) / 0.7) * Math.PI) * 55;
         } else if (treeSlamTimer <= 0) {
-          treeSlamTimer = 5.4;
+          treeSlamTimer = 6.2;
           treeYOffset = 0;
-          screenShake = 0.3;
+          screenShake = 0.28;
           audioSystem.playSfx('belly_flop');
           waves.push(
-            { x: 560, y: FLOOR_Y - 28, vx: -360, w: 42, h: 30, color: '#e47bb8', life: 2.2 },
-            { x: 720, y: FLOOR_Y - 28, vx: 360, w: 42, h: 30, color: '#e47bb8', life: 2.2 }
+            { x: 560, y: FLOOR_Y - 28, vx: -310, w: 40, h: 28, color: '#e47bb8', life: 2.2 },
+            { x: 720, y: FLOOR_Y - 28, vx: 310, w: 40, h: 28, color: '#e47bb8', life: 2.2 }
           );
         }
 
@@ -756,35 +798,34 @@ export const FinalBossEngine: React.FC<Props> = ({
       // ================================================================
       else if (stage === 2) {
         clockCountdown -= dt;
-        pendulumAngle = Math.sin(timeSec * 1.9) * 0.72;
+        pendulumAngle = Math.sin(timeSec * 1.45) * 0.68;
 
         for (const c of clockCrystals) {
           if (c.hurt > 0) c.hurt -= dt;
         }
 
-        // Pendulum bob collision (fair glowing golden orb swinging across center!)
+        // Pendulum bob collision (fair hitbox!)
         const pendX = 640 + Math.sin(pendulumAngle) * 305;
         const pendY = 175 + Math.cos(pendulumAngle) * 305;
-        if (Math.hypot(pendX - (player.x + 22), pendY - (player.y + 20)) < 46) {
+        if (Math.hypot(pendX - (player.x + 22), pendY - (player.y + 20)) < 36) {
           damagePlayer();
         }
 
         // Clock strikes warning -> lightning beams & flying clock gears
         attackTimer -= dt;
         if (attackTimer <= 0) {
-          attackTimer = 2.05;
+          attackTimer = 2.45;
           if (Math.random() < 0.55) {
-            // Telegraph a vertical temporal lightning beam at player's X!
-            beams.push({ x: player.x + 22, w: 66, timer: 1.25, maxTimer: 1.25 });
+            beams.push({ x: player.x + 22, w: 62, timer: 1.55, maxTimer: 1.55 });
             audioSystem.playSfx('click');
           } else {
             const fromLeft = Math.random() < 0.5;
             projs.push({
               x: fromLeft ? 20 : W - 20,
               y: 230 + Math.random() * 290,
-              vx: fromLeft ? 310 : -310,
+              vx: fromLeft ? 265 : -265,
               vy: 0,
-              r: 18,
+              r: 17,
               fromPlayer: false,
               kind: 'gear',
               life: 4.5,
@@ -795,7 +836,7 @@ export const FinalBossEngine: React.FC<Props> = ({
         }
 
         if (clockCountdown <= 0) {
-          clockCountdown = 36;
+          clockCountdown = 45;
           damagePlayer();
           showBanner('⏰ Meia-Noite bateu! O tempo pulsa — continue destruindo os cristais!', 2.6);
         }
@@ -838,34 +879,32 @@ export const FinalBossEngine: React.FC<Props> = ({
         } else if (lula.state === 'wave_cast') {
           lula.y += (FLOOR_Y - 82 - lula.y) * Math.min(1, dt * 6);
           if (lula.stateTimer <= 0.7 && lula.stateTimer + dt > 0.7) {
-            screenShake = 0.28;
+            screenShake = 0.26;
             audioSystem.playSfx('belly_flop');
             waves.push(
-              { x: lula.x - 30, y: FLOOR_Y - 34, vx: -390, w: 46, h: 36, color: '#9f7aea', life: 2.6 },
-              { x: lula.x + 30, y: FLOOR_Y - 34, vx: 390, w: 46, h: 36, color: '#9f7aea', life: 2.6 },
-              { x: lula.x - 30, y: FLOOR_Y - 24, vx: -250, w: 34, h: 24, color: '#ffe055', life: 3.0 },
-              { x: lula.x + 30, y: FLOOR_Y - 24, vx: 250, w: 34, h: 24, color: '#ffe055', life: 3.0 }
+              { x: lula.x - 30, y: FLOOR_Y - 32, vx: -315, w: 42, h: 32, color: '#9f7aea', life: 2.6 },
+              { x: lula.x + 30, y: FLOOR_Y - 32, vx: 315, w: 42, h: 32, color: '#9f7aea', life: 2.6 }
             );
           }
           if (lula.stateTimer <= 0) {
             lula.state = 'hover';
-            lula.stateTimer = 2.0;
+            lula.stateTimer = 2.35;
           }
         } else if (lula.state === 'spiral_cast') {
           lula.x += (640 - lula.x) * Math.min(1, dt * 5);
           lula.y += (230 - lula.y) * Math.min(1, dt * 5);
           attackTimer -= dt;
           if (attackTimer <= 0) {
-            attackTimer = 0.32;
-            const baseA = timeSec * 2.8;
+            attackTimer = 0.44;
+            const baseA = timeSec * 2.5;
             for (let k = 0; k < 4; k++) {
               const a = baseA + (k * Math.PI) / 2;
-              const isGoldenParry = k === 0;
+              const isGoldenParry = k === 0 || k === 2;
               projs.push({
                 x: lula.x,
                 y: lula.y,
-                vx: Math.cos(a) * 300,
-                vy: Math.sin(a) * 300,
+                vx: Math.cos(a) * 255,
+                vy: Math.sin(a) * 255,
                 r: isGoldenParry ? 16 : 13,
                 fromPlayer: false,
                 kind: 'lula_orb',
@@ -878,13 +917,13 @@ export const FinalBossEngine: React.FC<Props> = ({
           }
           if (lula.stateTimer <= 0) {
             lula.state = 'hover';
-            lula.stateTimer = 2.0;
+            lula.stateTimer = 2.35;
           }
         } else if (lula.state === 'dash_warn') {
           if (lula.stateTimer <= 0) {
             lula.state = 'dash';
-            lula.stateTimer = 0.95;
-            lula.vx = lula.dashTargetX > lula.x ? 920 : -920;
+            lula.stateTimer = 1.05;
+            lula.vx = lula.dashTargetX > lula.x ? 780 : -780;
             audioSystem.playSfx('boost');
           }
         } else if (lula.state === 'dash') {
@@ -893,10 +932,10 @@ export const FinalBossEngine: React.FC<Props> = ({
             lula.x = Math.max(115, Math.min(W - 115, lula.x));
             lula.vx = 0;
             lula.state = 'dizzy';
-            lula.stateTimer = 2.6;
-            screenShake = 0.3;
+            lula.stateTimer = 3.1;
+            screenShake = 0.28;
             audioSystem.playSfx('belly_flop');
-            showBanner('💫 Lula ficou tonto! Hora de atacar com tudo (B / Barrigada / Y)!', 2.4);
+            showBanner('💫 Lula ficou tonto! Hora de atacar com tudo (B / Barrigada / Y)!', 2.6);
           }
         } else if (lula.state === 'dizzy') {
           lula.y = FLOOR_Y - 62;
@@ -967,7 +1006,7 @@ export const FinalBossEngine: React.FC<Props> = ({
               if (Math.hypot(pr.x - cx, pr.y - cy) < pr.r + 32) {
                 c.hp -= dmg;
                 c.hurt = 0.2;
-                player.starMeter = Math.min(100, player.starMeter + 10);
+                player.starMeter = Math.min(100, player.starMeter + 15);
                 haptics.dpad();
                 audioSystem.playSfx('enemy_defeat');
                 spawnParticles(cx, cy, '#ffe055', 14, 180, 'star');
@@ -1067,7 +1106,7 @@ export const FinalBossEngine: React.FC<Props> = ({
             : stage === 3
             ? Math.max(0, lula.hp)
             : 0;
-        const maxHp = stage === 1 ? 16 : stage === 2 ? 12 : stage === 3 ? lula.maxHp : 0;
+        const maxHp = stage === 1 ? 12 : stage === 2 ? 9 : stage === 3 ? lula.maxHp : 0;
 
         onHudUpdate({
           hearts: player.hearts,
