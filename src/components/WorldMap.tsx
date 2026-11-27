@@ -1,7 +1,7 @@
 import React from 'react';
 import { LEVELS } from '../data/levels';
 import { LevelId, SaveData } from '../types/game';
-import { getFragmentsCount, isLevelUnlocked } from '../systems/saveSystem';
+import { FRAGMENTS_REQUIRED, getFragmentsCount, isLevelUnlocked, TOTAL_LEVELS } from '../systems/saveSystem';
 import { CharacterPortrait } from './CharacterArt';
 import { audioSystem } from '../systems/audioSystem';
 import { ArrowLeft, Play, Settings, Shirt, Sparkles, Lock } from 'lucide-react';
@@ -70,8 +70,8 @@ export const WorldMap: React.FC<Props> = ({
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', fontSize: 13.5, fontWeight: 900, color: '#221b18' }}>
-          <span style={{ color: '#c91d1d' }}>⭐ Fragmentos: {fragments}/9</span>
-          <span>🐾 Patinhas: {totalPaws}/30</span>
+          <span style={{ color: '#c91d1d' }}>⭐ Fragmentos: {fragments}/{FRAGMENTS_REQUIRED}</span>
+          <span>🐾 Patinhas: {totalPaws}/{TOTAL_LEVELS * 3}</span>
           <span>🦴 Petiscos: {save.totalTreats}</span>
           <span>🐶 Vidas: {save.lives}</span>
         </div>
@@ -340,9 +340,9 @@ export const WorldMap: React.FC<Props> = ({
             <>
               <Play size={18} /> JOGAR FASE
             </>
-          ) : selected.id === 10 ? (
+          ) : selected.id === 12 ? (
             <>
-              <Lock size={16} /> Requer 9 Fragmentos
+              <Lock size={16} /> Requer {FRAGMENTS_REQUIRED} Fragmentos
             </>
           ) : (
             <>

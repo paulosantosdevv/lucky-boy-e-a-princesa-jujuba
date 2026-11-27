@@ -68,7 +68,7 @@ interface Particle {
 
 interface ActiveBoss {
   name: string;
-  kind: 'mushroom' | 'baker_bot' | 'octopus' | 'snowman';
+  kind: 'mushroom' | 'baker_bot' | 'octopus' | 'snowman' | 'steam_dragon' | 'nutcracker';
   x: number;
   y: number;
   baseY: number;
@@ -805,6 +805,8 @@ export const Platform2DEngine: React.FC<Props> = ({
                 ? 'cupcake'
                 : boss.kind === 'octopus'
                 ? 'ink'
+                : boss.kind === 'steam_dragon'
+                ? 'fire'
                 : 'snowball';
             projectiles.push({
               x: boss.x + boss.w / 2,
@@ -1605,6 +1607,27 @@ export const Platform2DEngine: React.FC<Props> = ({
           ctx.fill();
           ctx.stroke();
 
+          if (bp.isTrain && p.h > 80) {
+            // Train car windows & spinning golden wheels!
+            ctx.fillStyle = '#ffe770';
+            for (let wx = 26; wx < p.w - 40; wx += 74) {
+              ctx.fillRect(sx + wx, p.y + 26, 44, 34);
+              ctx.strokeRect(sx + wx, p.y + 26, 44, 34);
+            }
+            ctx.fillStyle = '#221b18';
+            for (let rx = 55; rx < p.w - 40; rx += 140) {
+              ctx.beginPath();
+              ctx.arc(sx + rx, p.y + p.h - 4, 22, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.strokeStyle = '#ffe055';
+              ctx.lineWidth = 3;
+              ctx.beginPath();
+              ctx.moveTo(sx + rx + Math.cos(timeSec * 14) * 16, p.y + p.h - 4 + Math.sin(timeSec * 14) * 16);
+              ctx.lineTo(sx + rx - Math.cos(timeSec * 14) * 16, p.y + p.h - 4 - Math.sin(timeSec * 14) * 16);
+              ctx.stroke();
+            }
+          }
+
           if (p.kind === 'conveyor') {
             ctx.fillStyle = '#221b18';
             ctx.font = 'bold 12px Nunito, sans-serif';
@@ -1753,151 +1776,393 @@ export const Platform2DEngine: React.FC<Props> = ({
         ctx.restore();
       }
 
+      // Redesigned Expressive Dr. Seuss Storybook Villains!
       for (const en of enemies) {
         if (!en.alive) continue;
         const sx = en.x - cameraX;
-        if (sx < -60 || sx > viewW + 60) continue;
+        if (sx < -65 || sx > viewW + 65) continue;
+        const bob = Math.sin(en.bobPhase) * 3;
+        const facing = en.vx >= 0 ? 1 : -1;
         ctx.save();
-        ctx.translate(sx + en.w / 2, en.y + en.h / 2);
+        ctx.translate(sx + en.w / 2, en.y + en.h / 2 + bob);
         if (en.frozenTimer > 0) {
           ctx.fillStyle = 'rgba(111, 211, 247, 0.72)';
-          ctx.fillRect(-24, -24, 48, 48);
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.roundRect(-26, -26, 52, 52, 10);
+          ctx.fill();
+          ctx.stroke();
         }
+        ctx.scale(facing, 1);
         ctx.strokeStyle = '#221b18';
         ctx.lineWidth = 2.8;
+
         if (en.kind === 'jellyfish') {
+          // Glowing storybook jellyfish with frilly bell & wavy tentacles
           ctx.fillStyle = '#f46d75';
           ctx.beginPath();
-          ctx.arc(0, -4, 18, Math.PI, 0);
+          ctx.arc(0, -4, 19, Math.PI, 0);
+          ctx.quadraticCurveTo(10, 4, 0, -1);
+          ctx.quadraticCurveTo(-10, 4, -19, -4);
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
+          ctx.fillStyle = '#ffd6e6';
+          ctx.beginPath();
+          ctx.arc(-6, -12, 4, 0, Math.PI * 2);
+          ctx.arc(5, -14, 3, 0, Math.PI * 2);
+          ctx.fill();
           ctx.strokeStyle = '#e278b8';
-          for (let t = -10; t <= 10; t += 10) {
+          ctx.lineWidth = 3;
+          for (let t = -11; t <= 11; t += 7.3) {
             ctx.beginPath();
-            ctx.moveTo(t, -2);
-            ctx.quadraticCurveTo(t + Math.sin(timeSec * 6 + t) * 5, 10, t, 20);
+            ctx.moveTo(t, 0);
+            ctx.quadraticCurveTo(t + Math.sin(timeSec * 7 + t) * 6, 11, t, 22);
             ctx.stroke();
           }
         } else if (en.kind === 'ghost_goof') {
-          ctx.fillStyle = '#ffffff';
+          // Goofy Haunted Mansion Ghost with crooked Seuss top hat!
+          ctx.fillStyle = '#fffdf9';
           ctx.beginPath();
           ctx.arc(0, -4, 18, Math.PI, 0);
-          ctx.lineTo(18, 16);
-          ctx.lineTo(8, 10);
-          ctx.lineTo(0, 16);
-          ctx.lineTo(-8, 10);
-          ctx.lineTo(-18, 16);
+          ctx.lineTo(18, 17);
+          ctx.lineTo(9, 11);
+          ctx.lineTo(0, 17);
+          ctx.lineTo(-9, 11);
+          ctx.lineTo(-18, 17);
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
+          ctx.fillStyle = '#6b2fa0';
+          ctx.fillRect(-13, -32, 26, 12);
+          ctx.strokeRect(-13, -32, 26, 12);
+          ctx.fillRect(-17, -21, 34, 4);
+          ctx.fillStyle = '#ff8fab';
+          ctx.beginPath();
+          ctx.ellipse(-11, 2, 3.5, 2, 0, 0, Math.PI * 2);
+          ctx.ellipse(11, 2, 3.5, 2, 0, 0, Math.PI * 2);
+          ctx.fill();
         } else if (en.kind === 'snowball_roller') {
+          // Mischievous Snowball Roller with cozy red beanie & carrot nose!
           ctx.fillStyle = '#ffffff';
           ctx.beginPath();
-          ctx.arc(0, 0, 20, 0, Math.PI * 2);
+          ctx.arc(0, 1, 20, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#d92626';
+          ctx.beginPath();
+          ctx.arc(0, -10, 15, Math.PI, 0);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#ff9f43';
+          ctx.beginPath();
+          ctx.moveTo(4, 1);
+          ctx.lineTo(19, 4);
+          ctx.lineTo(4, 7);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        } else if (en.kind === 'chomper') {
+          // Animated Dr. Seuss Carnivorous Plant with green leaves & snapping jaws!
+          ctx.fillStyle = '#5ea93f';
+          ctx.beginPath();
+          ctx.ellipse(-12, 12, 10, 5, -0.3, 0, Math.PI * 2);
+          ctx.ellipse(12, 12, 10, 5, 0.3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          const jaw = Math.abs(Math.sin(timeSec * 6)) * 0.38;
+          ctx.fillStyle = '#d92626';
+          ctx.beginPath();
+          ctx.arc(0, -2, 19, jaw, Math.PI * 2 - jaw);
+          ctx.lineTo(0, -2);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#ffe055';
+          ctx.beginPath();
+          ctx.arc(-8, -11, 4, 0, Math.PI * 2);
+          ctx.arc(-2, -14, 3.2, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (en.kind === 'candy_bot') {
+          // Steampunk Candy Robot with antenna, bow tie & spinning wheel!
+          ctx.fillStyle = '#ff9f43';
+          ctx.beginPath();
+          ctx.roundRect(-18, -18, 36, 31, 9);
+          ctx.fill();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, -18);
+          ctx.lineTo(0, -28);
+          ctx.stroke();
+          ctx.fillStyle = '#d92626';
+          ctx.beginPath();
+          ctx.arc(0, -29, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#221b18';
+          ctx.beginPath();
+          ctx.arc(-9, 16, 6, 0, Math.PI * 2);
+          ctx.arc(9, 16, 6, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (en.kind === 'living_chair') {
+          // Thing 1 & 2 Lavender Armchair come to life!
+          ctx.fillStyle = '#b38cd9';
+          ctx.beginPath();
+          ctx.roundRect(-18, -22, 36, 32, 10);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#9f7aea';
+          ctx.fillRect(-20, -4, 40, 14);
+          ctx.strokeRect(-20, -4, 40, 14);
+          ctx.fillStyle = '#6f4e37';
+          ctx.fillRect(-15, 10, 6, 10);
+          ctx.fillRect(9, 10, 6, 10);
+        } else if (en.kind === 'grinch_elf') {
+          // Mischievous Grump Elf with striped Cat-in-the-Hat cap!
+          ctx.fillStyle = '#80ed99';
+          ctx.beginPath();
+          ctx.arc(0, 1, 17, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#d92626';
+          ctx.beginPath();
+          ctx.moveTo(-16, -10);
+          ctx.lineTo(0, -34);
+          ctx.lineTo(16, -10);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(-10, -20, 20, 5);
+          ctx.beginPath();
+          ctx.arc(0, -35, 4.5, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
         } else {
-          ctx.fillStyle =
-            en.kind === 'chomper'
-              ? '#d92626'
-              : en.kind === 'candy_bot'
-              ? '#ff9f43'
-              : en.kind === 'living_chair'
-              ? '#b38cd9'
-              : '#9f7aea';
+          // Fluffy Purple Dr. Seuss Grump Critter with hair tuft & comical tooth!
+          ctx.fillStyle = '#9f7aea';
           ctx.beginPath();
-          ctx.roundRect(-19, -18, 38, 36, 12);
+          ctx.ellipse(0, 3, 20, 16, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(-6, -12);
+          ctx.lineTo(0, -24);
+          ctx.lineTo(6, -12);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.moveTo(-5, 11);
+          ctx.lineTo(-1, 16);
+          ctx.lineTo(3, 11);
+          ctx.closePath();
           ctx.fill();
           ctx.stroke();
         }
-        ctx.fillStyle = '#fff';
+
+        // Expressive Storybook Eyes + Grumpy Eyebrows
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#221b18';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(-6, -4, 4.5, 0, Math.PI * 2);
-        ctx.arc(6, -4, 4.5, 0, Math.PI * 2);
+        ctx.arc(-5, -4, 5, 0, Math.PI * 2);
+        ctx.arc(7, -4, 5, 0, Math.PI * 2);
         ctx.fill();
+        ctx.stroke();
         ctx.fillStyle = '#221b18';
         ctx.beginPath();
-        ctx.arc(-6, -4, 2, 0, Math.PI * 2);
-        ctx.arc(6, -4, 2, 0, Math.PI * 2);
+        ctx.arc(-4, -4, 2.3, 0, Math.PI * 2);
+        ctx.arc(8, -4, 2.3, 0, Math.PI * 2);
         ctx.fill();
+        ctx.lineWidth = 2.6;
+        ctx.beginPath();
+        ctx.moveTo(-11, -10);
+        ctx.lineTo(-1, -7);
+        ctx.moveTo(13, -10);
+        ctx.lineTo(3, -7);
+        ctx.stroke();
         ctx.restore();
       }
 
+      // Redesigned Expressive Storybook Mini-Bosses (including Steam Dragon & Royal Nutcracker!)
       if (boss && !boss.defeated) {
         const sx = boss.x - cameraX;
-        if (sx > -150 && sx < viewW + 150) {
+        if (sx > -160 && sx < viewW + 160) {
+          const bBob = Math.sin(timeSec * 4.5) * 4;
           ctx.save();
-          ctx.translate(sx + boss.w / 2, boss.y + boss.h / 2);
+          ctx.translate(sx + boss.w / 2, boss.y + boss.h / 2 + bBob);
           if (boss.hurtFlash > 0) ctx.filter = 'brightness(1.75)';
           ctx.strokeStyle = '#221b18';
           ctx.lineWidth = 3.6;
 
           if (boss.kind === 'mushroom') {
             ctx.fillStyle = '#fff9eb';
-            ctx.fillRect(-24, -6, 48, 50);
-            ctx.strokeRect(-24, -6, 48, 50);
+            ctx.beginPath();
+            ctx.roundRect(-28, -8, 56, 54, 14);
+            ctx.fill();
+            ctx.stroke();
             ctx.fillStyle = '#d92626';
             ctx.beginPath();
-            ctx.ellipse(0, -10, 50, 32, 0, Math.PI, 0);
+            ctx.ellipse(0, -12, 56, 36, 0, Math.PI, 0);
             ctx.closePath();
             ctx.fill();
             ctx.stroke();
             ctx.fillStyle = '#ffe055';
             ctx.beginPath();
-            ctx.arc(-20, -24, 9, 0, Math.PI * 2);
-            ctx.arc(18, -22, 10, 0, Math.PI * 2);
+            ctx.arc(-24, -26, 10, 0, Math.PI * 2);
+            ctx.arc(20, -24, 11, 0, Math.PI * 2);
+            ctx.arc(0, -34, 8, 0, Math.PI * 2);
             ctx.fill();
+            ctx.fillStyle = '#f46d75';
+            ctx.beginPath();
+            ctx.arc(0, 14, 9, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
           } else if (boss.kind === 'baker_bot') {
             ctx.fillStyle = '#ff9f43';
             ctx.beginPath();
-            ctx.roundRect(-40, -34, 80, 76, 16);
+            ctx.roundRect(-42, -32, 84, 78, 16);
             ctx.fill();
             ctx.stroke();
-            ctx.fillStyle = '#ffffff';
+            // Apron & Big Whipped-Cream Mustache
+            ctx.fillStyle = '#fff9eb';
+            ctx.fillRect(-30, 10, 60, 34);
+            ctx.strokeRect(-30, 10, 60, 34);
             ctx.beginPath();
-            ctx.arc(-15, -42, 16, 0, Math.PI * 2);
-            ctx.arc(0, -48, 19, 0, Math.PI * 2);
-            ctx.arc(15, -42, 16, 0, Math.PI * 2);
+            ctx.ellipse(-14, 14, 15, 7, -0.2, 0, Math.PI * 2);
+            ctx.ellipse(14, 14, 15, 7, 0.2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            // Chef Hat
+            ctx.beginPath();
+            ctx.arc(-18, -42, 16, 0, Math.PI * 2);
+            ctx.arc(0, -50, 20, 0, Math.PI * 2);
+            ctx.arc(18, -42, 16, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
           } else if (boss.kind === 'octopus') {
             ctx.fillStyle = '#9f7aea';
             ctx.beginPath();
-            ctx.arc(0, -12, 40, 0, Math.PI * 2);
+            ctx.arc(0, -10, 42, 0, Math.PI * 2);
             ctx.fill();
             ctx.stroke();
-            for (let t = -32; t <= 32; t += 16) {
+            // Royal Golden Treasure Crown!
+            ctx.fillStyle = '#ffe055';
+            ctx.beginPath();
+            ctx.moveTo(-22, -46);
+            ctx.lineTo(-14, -66);
+            ctx.lineTo(0, -52);
+            ctx.lineTo(14, -66);
+            ctx.lineTo(22, -46);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.strokeStyle = '#6b2fa0';
+            ctx.lineWidth = 7;
+            for (let t = -34; t <= 34; t += 13.6) {
               ctx.beginPath();
-              ctx.moveTo(t, 20);
-              ctx.quadraticCurveTo(t + Math.sin(timeSec * 5 + t) * 10, 38, t, 48);
+              ctx.moveTo(t, 22);
+              ctx.quadraticCurveTo(t + Math.sin(timeSec * 6 + t) * 12, 38, t, 52);
               ctx.stroke();
             }
-          } else {
-            ctx.fillStyle = '#ffffff';
+          } else if (boss.kind === 'steam_dragon') {
+            // Giant Christmas Steam-Dragon Locomotive!
+            ctx.fillStyle = '#d92626';
             ctx.beginPath();
-            ctx.arc(0, 18, 34, 0, Math.PI * 2);
-            ctx.arc(0, -20, 26, 0, Math.PI * 2);
+            ctx.roundRect(-48, -28, 96, 72, 16);
             ctx.fill();
             ctx.stroke();
+            // Chimney + Puffing Smoke
+            ctx.fillStyle = '#221b18';
+            ctx.fillRect(-16, -64, 24, 36);
+            ctx.strokeRect(-16, -64, 24, 36);
+            ctx.fillStyle = '#ffe055';
+            ctx.beginPath();
+            ctx.arc(-44, 2, 13, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            // Gold Cowcatcher & Wheels
+            ctx.fillStyle = '#221b18';
+            ctx.beginPath();
+            ctx.arc(-26, 44, 14, 0, Math.PI * 2);
+            ctx.arc(26, 44, 14, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+          } else if (boss.kind === 'nutcracker') {
+            // Royal Christmas Mechanical Nutcracker!
+            ctx.fillStyle = '#d92626';
+            ctx.beginPath();
+            ctx.roundRect(-34, -8, 68, 54, 12);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = '#ffe055';
+            ctx.fillRect(-34, 12, 68, 8);
+            ctx.fillStyle = '#fbd8b6';
+            ctx.beginPath();
+            ctx.roundRect(-28, -42, 56, 38, 10);
+            ctx.fill();
+            ctx.stroke();
+            // Tall Royal Guard Hat
+            ctx.fillStyle = '#221b18';
+            ctx.beginPath();
+            ctx.roundRect(-30, -80, 60, 40, 10);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = '#ffe055';
+            ctx.beginPath();
+            ctx.arc(0, -60, 8, 0, Math.PI * 2);
+            ctx.fill();
+            // Big White Mustache
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.ellipse(-14, -12, 16, 6, -0.15, 0, Math.PI * 2);
+            ctx.ellipse(14, -12, 16, 6, 0.15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+          } else {
+            // Giant Snowman with Cat-in-the-Hat Striped Top Hat!
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(0, 18, 36, 0, Math.PI * 2);
+            ctx.arc(0, -20, 27, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            // Red scarf
+            ctx.fillStyle = '#d92626';
+            ctx.fillRect(-26, -2, 52, 10);
+            ctx.strokeRect(-26, -2, 52, 10);
+            // Striped Hat
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-20, -76, 40, 32);
+            ctx.strokeRect(-20, -76, 40, 32);
+            ctx.fillStyle = '#d92626';
+            ctx.fillRect(-20, -68, 40, 8);
+            ctx.fillRect(-20, -52, 40, 8);
             ctx.fillStyle = '#ff7b00';
             ctx.beginPath();
             ctx.moveTo(0, -20);
-            ctx.lineTo(-22, -16);
-            ctx.lineTo(0, -12);
+            ctx.lineTo(-26, -15);
+            ctx.lineTo(0, -10);
             ctx.closePath();
             ctx.fill();
+            ctx.stroke();
           }
 
           ctx.fillStyle = '#ffe055';
+          ctx.strokeStyle = '#221b18';
+          ctx.lineWidth = 2.4;
           ctx.beginPath();
-          ctx.arc(-14, -6, 7, 0, Math.PI * 2);
-          ctx.arc(14, -6, 7, 0, Math.PI * 2);
+          ctx.arc(-14, -12, 7.5, 0, Math.PI * 2);
+          ctx.arc(14, -12, 7.5, 0, Math.PI * 2);
           ctx.fill();
+          ctx.stroke();
           ctx.fillStyle = '#221b18';
           ctx.beginPath();
-          ctx.arc(-14, -6, 3, 0, Math.PI * 2);
-          ctx.arc(14, -6, 3, 0, Math.PI * 2);
+          ctx.arc(-14, -12, 3.2, 0, Math.PI * 2);
+          ctx.arc(14, -12, 3.2, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         }

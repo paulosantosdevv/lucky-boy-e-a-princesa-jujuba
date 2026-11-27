@@ -1,4 +1,4 @@
-export type LevelId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type LevelId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export type LevelMode = 'platform' | 'kart' | 'plane' | 'water' | 'boss3d';
 
@@ -35,7 +35,7 @@ export interface LevelMeta {
   description: string;
   themeColor: string;
   accentColor: string;
-  mapPos: { x: number; y: number }; // percentage 0..100 on Jubalandia map
+  mapPos: { x: number; y: number };
   allyAppearance?: CharacterId[];
   miniBossName?: string;
   unlocksSkill?: PermanentSkill;
@@ -59,15 +59,15 @@ export type MusicTrack =
 
 export interface LevelProgress {
   completed: boolean;
-  stars: number; // 0..3
+  stars: number;
   goldenPaws: [boolean, boolean, boolean];
   bestTreats: number;
   bestTimeSec: number;
 }
 
 export interface GameSettings {
-  musicVolume: number; // 0..1
-  sfxVolume: number; // 0..1
+  musicVolume: number;
+  sfxVolume: number;
   showTouchControls: 'always' | 'auto' | 'hidden';
   unlockAllMode: boolean;
 }
@@ -78,7 +78,7 @@ export interface SaveData {
   completedLevels: LevelId[];
   levelStats: Record<number, LevelProgress>;
   totalTreats: number;
-  treatsBank: number; // resets every 100 treats -> +1 life
+  treatsBank: number;
   lives: number;
   unlockedSkills: PermanentSkill[];
   unlockedCostumes: CostumeId[];
@@ -143,42 +143,42 @@ export const POWERUP_INFO: Record<
   golden_bone: {
     name: 'Osso Dourado',
     emoji: '🦴',
-    color: '#ffd166',
+    color: '#ffe055',
     desc: 'Invencibilidade brilhante por 10s!',
     duration: 10,
   },
   spicy_treat: {
     name: 'Petisco Apimentado',
     emoji: '🌶️',
-    color: '#ff4d4d',
+    color: '#f24242',
     desc: 'Dispara bolas de fogo com Y ou B!',
     duration: 14,
   },
   frost_biscuit: {
     name: 'Biscoito Congelante',
     emoji: '❄️',
-    color: '#6ce5ff',
+    color: '#6fd3f7',
     desc: 'Congela inimigos e obstáculos próximos!',
     duration: 12,
   },
   spring_paws: {
     name: 'Patinhas de Mola',
     emoji: '🐾',
-    color: '#7bf1a8',
+    color: '#86db58',
     desc: 'Super pulo elástico por 14s!',
     duration: 14,
   },
   bubble_shield: {
     name: 'Bolha Protetora',
     emoji: '🫧',
-    color: '#ff85d8',
+    color: '#e47bb8',
     desc: 'Absorve 1 dano sem perder coração!',
     duration: 999,
   },
   super_bark: {
     name: 'Superlatido',
     emoji: '📢',
-    color: '#ffb703',
+    color: '#ff9f43',
     desc: 'Onda sonora gigante que afasta inimigos e revela segredos!',
     duration: 12,
   },
@@ -221,7 +221,7 @@ export const COSTUME_INFO: Record<
   starlight: {
     name: 'Herói da Estrela',
     desc: 'Brilho dourado de quem salvou o Natal e a Princesa Jujuba!',
-    unlockHint: 'Derrote Lula na Fase 10',
+    unlockHint: 'Derrote Lula na Fase 12',
     badge: '⭐',
   },
 };

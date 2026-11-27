@@ -158,7 +158,7 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
           >
             <div>
               <div style={{ fontWeight: 900, fontSize: 14, color: '#c91d1d' }}>
-                🔓 Modo Livre (Desbloquear Todas as 10 Fases)
+                🔓 Modo Livre (Desbloquear Todas as 12 Fases)
               </div>
               <div style={{ fontSize: 12, color: '#4a3d33', fontWeight: 700 }}>
                 Permite testar o Kart 3D, Avião 3D, Água e o Chefão Lula imediatamente!

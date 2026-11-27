@@ -161,7 +161,7 @@ export function App() {
         const outro = LEVEL_OUTROS[result.levelId];
         const showAfterOutro = () => {
           setDialogue(null);
-          if (result.levelId === 10) {
+          if (result.levelId === 12) {
             setScreen('ending');
           } else {
             setResultModal({ result, extraLives: extraLivesGained, newlyUnlocked });
@@ -508,7 +508,7 @@ export function App() {
                 )}
 
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
-                  {resultModal.result.won && activeLevelId < 10 && (
+                  {resultModal.result.won && activeLevelId < 12 && (
                     <button
                       type="button"
                       className="seuss-btn seuss-btn-primary"

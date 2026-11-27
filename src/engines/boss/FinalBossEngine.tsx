@@ -42,6 +42,7 @@ interface Proj {
   life: number;
   bounces?: number;
   color: string;
+  parryable?: boolean;
 }
 
 interface Wave {
@@ -240,7 +241,10 @@ export const FinalBossEngine: React.FC<Props> = ({
         vy: -120,
         active: true,
       });
+      // Paulo & Lully on the left balcony also cheer and boost Lucky's Star Meter!
+      player.starMeter = Math.min(100, player.starMeter + 40);
       spawnParticles(1040, 195, '#ff5d8f', 12, 130, 'heart');
+      spawnParticles(220, 210, '#ffe055', 14, 140, 'star');
     };
 
     const damagePlayer = () => {
@@ -257,19 +261,42 @@ export const FinalBossEngine: React.FC<Props> = ({
         finished = true;
         onSpecialYLabelChange?.(undefined);
         onFinish({
-          levelId: 10,
+          levelId: 12,
           won: false,
           treatsCollected: 25,
           goldenPaws: [goldenPaws[0].collected, goldenPaws[1].collected, goldenPaws[2].collected],
           timeSec,
           heartsRemaining: 0,
           starsEarned: 0,
-          extraNote: 'Não desista! Use X para rolar pelos ataques e Y quando a Super Estrela carregar!',
+          extraNote: 'Dica: LATE (B) perto dos ataques DOURADOS para rebatê-los no Lula com Dano Crítico!',
         });
       }
     };
 
     const fireStarShot = (isSuper = false) => {
+      // PARRY / REFLECT MECHANIC: Barking near any GOLDEN parryable attack sends it rocketing back at Lula for 3x Critical Damage!
+      for (const pr of projs) {
+        if (!pr.fromPlayer && pr.parryable && Math.hypot(pr.x - (player.x + 22), pr.y - (player.y + 20)) < 115) {
+          pr.fromPlayer = true;
+          pr.kind = 'super_star';
+          pr.parryable = false;
+          pr.color = '#ffe055';
+          const tx = stage === 3 ? lula.x : 640;
+          const ty = stage === 3 ? lula.y : FLOOR_Y - 140;
+          const ang = Math.atan2(ty - pr.y, tx - pr.x);
+          pr.vx = Math.cos(ang) * 860;
+          pr.vy = Math.sin(ang) * 860;
+          pr.r = 22;
+          pr.life = 1.6;
+          player.starMeter = Math.min(100, player.starMeter + 32);
+          screenShake = 0.25;
+          haptics.impact();
+          audioSystem.playSfx('super_bark');
+          spawnParticles(pr.x, pr.y, '#ffe055', 22, 260, 'star');
+          showBanner('⚡ REBATEU O ATAQUE DOURADO! DANO CRÍTICO!', 2.0);
+        }
+      }
+
       if (isSuper) {
         audioSystem.playSfx('super_bark');
         haptics.impact();
@@ -446,7 +473,7 @@ export const FinalBossEngine: React.FC<Props> = ({
           const pawsCount = goldenPaws.filter((g) => g.collected).length;
           const starsEarned = Math.min(3, 1 + (pawsCount >= 2 ? 1 : 0) + (player.hearts >= 3 ? 1 : 0));
           onFinish({
-            levelId: 10,
+            levelId: 12,
             won: true,
             treatsCollected: 60,
             goldenPaws: [goldenPaws[0].collected, goldenPaws[1].collected, goldenPaws[2].collected],
@@ -609,6 +636,20 @@ export const FinalBossEngine: React.FC<Props> = ({
 
       if (Math.abs(player.vx) > 25) player.runAnim += dt * 12;
 
+      // Stage 2 Golden Launch Springs at left & right corners for awesome high-flying movement!
+      if (stage === 2) {
+        for (const sx of [90, W - 90]) {
+          if (Math.hypot(player.x + 22 - sx, player.y + player.h - FLOOR_Y) < 42 && player.vy >= 0) {
+            player.vy = -880;
+            player.grounded = false;
+            player.jumpsUsed = 1;
+            haptics.bounce();
+            audioSystem.playSfx('double_jump');
+            spawnParticles(sx, FLOOR_Y - 12, '#ffe055', 14, 180, 'star');
+          }
+        }
+      }
+
       // Collect Golden Paw of current stage
       for (let i = 0; i < goldenPaws.length; i++) {
         const gp = goldenPaws[i];
@@ -654,32 +695,36 @@ export const FinalBossEngine: React.FC<Props> = ({
           // Alternate between Explosive Ornaments fan and Bouncing Gift-Bombs!
           if (Math.random() < 0.55) {
             for (const dir of [-1, 1]) {
+              const isGoldenParry = dir === 1 && Math.random() < 0.65;
               projs.push({
                 x: 640 + dir * 75,
                 y: FLOOR_Y - 190,
                 vx: dir * (190 + Math.random() * 140),
                 vy: -240 - Math.random() * 100,
-                r: 16,
+                r: isGoldenParry ? 19 : 16,
                 fromPlayer: false,
                 kind: 'gift_bomb',
                 life: 4.5,
                 bounces: 3,
-                color: '#d92626',
+                color: isGoldenParry ? '#ffe055' : '#d92626',
+                parryable: isGoldenParry,
               });
             }
           } else {
             const angToP = Math.atan2(player.y - (FLOOR_Y - 200), player.x - 640);
-            [-0.28, 0, 0.28].forEach((off) => {
+            [-0.28, 0, 0.28].forEach((off, idx) => {
+              const isGoldenParry = idx === 1;
               projs.push({
                 x: 640,
                 y: FLOOR_Y - 200,
                 vx: Math.cos(angToP + off) * 330,
                 vy: Math.sin(angToP + off) * 330,
-                r: 13,
+                r: isGoldenParry ? 16 : 13,
                 fromPlayer: false,
                 kind: 'ornament',
                 life: 3.4,
-                color: '#9f7aea',
+                color: isGoldenParry ? '#ffe055' : '#9f7aea',
+                parryable: isGoldenParry,
               });
             });
           }
@@ -815,16 +860,18 @@ export const FinalBossEngine: React.FC<Props> = ({
             const baseA = timeSec * 2.8;
             for (let k = 0; k < 4; k++) {
               const a = baseA + (k * Math.PI) / 2;
+              const isGoldenParry = k === 0;
               projs.push({
                 x: lula.x,
                 y: lula.y,
                 vx: Math.cos(a) * 300,
                 vy: Math.sin(a) * 300,
-                r: 13,
+                r: isGoldenParry ? 16 : 13,
                 fromPlayer: false,
                 kind: 'lula_orb',
                 life: 3.5,
-                color: '#c38ef5',
+                color: isGoldenParry ? '#ffe055' : '#c38ef5',
+                parryable: isGoldenParry,
               });
             }
             audioSystem.playSfx('shoot');
@@ -1433,8 +1480,111 @@ export const FinalBossEngine: React.FC<Props> = ({
         ctx.restore();
       }
 
+      // Volumetric Cathedral Light Shafts from the 3 Gothic Windows!
+      ctx.save();
+      ctx.fillStyle = stage === 4 ? 'rgba(255, 240, 170, 0.16)' : 'rgba(200, 235, 255, 0.08)';
+      [210, 640, 1070].forEach((wx) => {
+        ctx.beginPath();
+        ctx.moveTo(wx - 90, 90);
+        ctx.lineTo(wx + 90, 90);
+        ctx.lineTo(wx + 190, FLOOR_Y);
+        ctx.lineTo(wx - 10, FLOOR_Y);
+        ctx.closePath();
+        ctx.fill();
+      });
+      ctx.restore();
+
+      // Left Cheering Balcony with PAULO (SPFC) & LULLY rooting for Lucky Boy!
+      {
+        const bx = 215;
+        const by = 215;
+        const cheerBob = Math.sin(timeSec * 6) * 4;
+        ctx.save();
+        ctx.translate(bx, by);
+        ctx.fillStyle = '#ffe055';
+        ctx.strokeStyle = '#221b18';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(-68, 22, 136, 18, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        // Paulo (SPFC) cheering on left of balcony
+        ctx.save();
+        ctx.translate(-26, 22 + cheerBob * 0.6);
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(-12, -32, 24, 26, 5);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#d92626';
+        ctx.fillRect(-11, -24, 22, 4);
+        ctx.fillStyle = '#111111';
+        ctx.fillRect(-11, -18, 22, 4);
+        ctx.fillStyle = '#fbd8b6';
+        ctx.beginPath();
+        ctx.arc(0, -42, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#4a3222';
+        ctx.beginPath();
+        ctx.arc(0, -45, 9.5, Math.PI, 0);
+        ctx.fill();
+        ctx.restore();
+
+        // Lully (black & white Shih Tzu with red bow) cheering next to Paulo!
+        ctx.save();
+        ctx.translate(28, 22 - cheerBob * 0.6);
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.ellipse(0, -10, 14, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#221b18';
+        ctx.beginPath();
+        ctx.ellipse(-11, -22, 5, 9, 0.2, 0, Math.PI * 2);
+        ctx.ellipse(11, -22, 5, 9, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(0, -24, 11, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#221b18';
+        ctx.beginPath();
+        ctx.arc(-4.5, -25, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#e63946';
+        ctx.beginPath();
+        ctx.arc(0, -35, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.restore();
+      }
+
       // Princesa Jujuba in her Glowing Tower Cage!
       drawPrincesaJujubaTower();
+
+      // Stage 2 Golden Launch Springs Visuals on Arena Floor Corners!
+      if (stage === 2) {
+        for (const sx of [90, W - 90]) {
+          ctx.fillStyle = '#ffe055';
+          ctx.strokeStyle = '#221b18';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.ellipse(sx, FLOOR_Y - 12, 34, 14, 0, Math.PI, 0);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#d92626';
+          ctx.font = 'bold 13px Nunito, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('▲', sx, FLOOR_Y - 14);
+        }
+      }
 
       // Grand 2.5D Carpeted Fortress Floor
       ctx.fillStyle = '#d92626';
@@ -1683,10 +1833,19 @@ export const FinalBossEngine: React.FC<Props> = ({
         ctx.stroke();
       }
 
-      // Projectiles
+      // Projectiles (with gleaming golden aura on PARRYABLE attacks!)
       for (const pr of projs) {
         ctx.save();
         ctx.translate(pr.x, pr.y);
+        if (pr.parryable) {
+          ctx.fillStyle = 'rgba(255, 224, 85, 0.48)';
+          ctx.strokeStyle = '#ffe055';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(0, 0, pr.r + 9 + Math.sin(timeSec * 14) * 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
         if (pr.kind === 'star' || pr.kind === 'super_star') {
           ctx.fillStyle = 'rgba(255, 224, 85, 0.45)';
           ctx.beginPath();

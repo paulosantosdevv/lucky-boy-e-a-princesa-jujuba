@@ -71,7 +71,7 @@ export interface ChristmasTreeSwitch {
 
 export interface MiniBossDef {
   name: string;
-  kind: 'mushroom' | 'baker_bot' | 'octopus' | 'snowman';
+  kind: 'mushroom' | 'baker_bot' | 'octopus' | 'snowman' | 'steam_dragon' | 'nutcracker';
   x: number;
   y: number;
   hp: number;
@@ -84,6 +84,8 @@ export interface Level2DBlueprint {
   isWater?: boolean;
   is25D?: boolean;
   isIndoor?: boolean;
+  isTrain?: boolean;
+  isPinball?: boolean;
   snowIntensity: number;
   skyTop: string;
   skyMid: string;
@@ -679,5 +681,175 @@ export function build2DLevel(levelId: LevelId): Level2DBlueprint {
           { id: 't5', x: 3480, y: 465 },
         ],
       };
+
+    // =========================================================================
+    // FASE 10 · O EXPRESSO DO POLO NORTE (Vagões de Trem em Alta Velocidade!)
+    // =========================================================================
+    case 10:
+      return {
+        levelId: 10,
+        worldWidth: 4300,
+        worldHeight: 720,
+        is25D: true,
+        isTrain: true,
+        snowIntensity: 0.95,
+        skyTop: '#24589c',
+        skyMid: '#68b6eb',
+        skyBottom: '#e8f8ff',
+        hillColor1: '#4d9a31',
+        hillColor2: '#ffffff',
+        platformFill: '#c91d1d',
+        platformTop: '#ffe055',
+        spawn: { x: 100, y: 470 },
+        checkpoint: { x: 2140, y: 480 },
+        goal: { x: 4120, y: 480 },
+        platforms: [
+          // Train cars rushing over snowy bridges!
+          { id: 'car1', x: 20, y: 560, w: 560, h: 115, kind: 'normal' },
+          { id: 'crate1', x: 340, y: 465, w: 145, h: 28, kind: 'normal' },
+          { id: 'car2', x: 675, y: 545, w: 510, h: 130, kind: 'normal' },
+          { id: 'b_car2', x: 960, y: 507, w: 74, h: 38, kind: 'bounce' },
+          { id: 'roof2', x: 890, y: 315, w: 195, h: 24, kind: 'normal' },
+          { id: 'car3', x: 1290, y: 560, w: 540, h: 115, kind: 'conveyor', conveyorDir: -1 },
+          { id: 'm_car', x: 1915, y: 480, w: 145, h: 28, kind: 'moving', moveAxis: 'y', moveRange: 50, moveSpeed: 2.0 },
+          { id: 'car4', x: 2110, y: 555, w: 580, h: 120, kind: 'normal' },
+          { id: 'crate2', x: 2430, y: 445, w: 165, h: 28, kind: 'normal' },
+          { id: 'car5', x: 2790, y: 535, w: 470, h: 140, kind: 'ice' },
+          { id: 'loco_deck', x: 3360, y: 560, w: 920, h: 125, kind: 'normal' },
+          { id: 'loco_top', x: 3500, y: 445, w: 160, h: 26, kind: 'normal' },
+        ],
+        enemies: [
+          { id: 'e1', x: 360, y: 520, kind: 'grinch_elf', patrolMin: 240, patrolMax: 540, speed: 95 },
+          { id: 'e2', x: 810, y: 505, kind: 'candy_bot', patrolMin: 700, patrolMax: 940, speed: 105 },
+          { id: 'e3', x: 1510, y: 520, kind: 'snowball_roller', patrolMin: 1320, patrolMax: 1780, speed: 120 },
+          { id: 'e4', x: 2350, y: 515, kind: 'grinch_elf', patrolMin: 2220, patrolMax: 2640, speed: 110 },
+          { id: 'e5', x: 2980, y: 495, kind: 'candy_bot', patrolMin: 2820, patrolMax: 3200, speed: 115 },
+        ],
+        treats: [
+          ...makeTreatArc(240, 480, 5),
+          ...makeTreatArc(730, 465, 5),
+          ...makeTreatArc(1360, 475, 6),
+          ...makeTreatArc(2260, 475, 5),
+          ...makeTreatArc(2860, 455, 5),
+          ...makeTreatArc(3460, 385, 5),
+        ],
+        goldenPaws: [
+          { x: 985, y: 255 },
+          { x: 2515, y: 370 },
+          { x: 3580, y: 370 },
+        ],
+        powerUps: [
+          { id: 'pu1', x: 410, y: 420, type: 'bubble_shield' },
+          { id: 'pu2', x: 1620, y: 505, type: 'golden_bone' },
+          { id: 'pu3', x: 3420, y: 515, type: 'spicy_treat' },
+        ],
+        allies: [
+          {
+            character: 'paulo',
+            x: 185,
+            y: 560,
+            message: 'SEGURA O CACHECOL! Pula entre os vagões até a Locomotiva-Dragão!',
+          },
+          {
+            character: 'paulo',
+            x: 2210,
+            y: 555,
+            message: 'Você tá voando! Derrote a Locomotiva-Dragão lá na frente!',
+          },
+        ],
+        miniBoss: {
+          name: 'Locomotiva-Dragão de Vapor',
+          kind: 'steam_dragon',
+          x: 3820,
+          y: 560,
+          hp: 7,
+        },
+      };
+
+    // =========================================================================
+    // FASE 11 · O PINBALL DOS PRESENTES (Molas, Bumpers Musicais & Quebra-Nozes!)
+    // =========================================================================
+    case 11:
+      return {
+        levelId: 11,
+        worldWidth: 4200,
+        worldHeight: 720,
+        isIndoor: true,
+        isPinball: true,
+        snowIntensity: 0.25,
+        skyTop: '#fce4ec',
+        skyMid: '#fff3e0',
+        skyBottom: '#e8f5e9',
+        hillColor1: '#f46d75',
+        hillColor2: '#ffe055',
+        platformFill: '#e24b78',
+        platformTop: '#ffe055',
+        spawn: { x: 90, y: 500 },
+        checkpoint: { x: 2080, y: 500 },
+        goal: { x: 4030, y: 510 },
+        platforms: [
+          { id: 'g1', x: 0, y: 580, w: 620, h: 160, kind: 'normal' },
+          { id: 'bp1', x: 460, y: 542, w: 76, h: 38, kind: 'bounce' },
+          { id: 'p1', x: 580, y: 360, w: 185, h: 28, kind: 'normal' },
+          { id: 'bp2', x: 840, y: 495, w: 76, h: 38, kind: 'bounce' },
+          { id: 'p2', x: 960, y: 300, w: 195, h: 28, kind: 'normal' },
+          { id: 'g2', x: 1180, y: 580, w: 680, h: 160, kind: 'normal' },
+          { id: 'bp3', x: 1460, y: 542, w: 76, h: 38, kind: 'bounce' },
+          { id: 'm1', x: 1560, y: 355, w: 170, h: 28, kind: 'moving', moveAxis: 'x', moveRange: 80, moveSpeed: 2.1 },
+          { id: 'g3', x: 1960, y: 580, w: 680, h: 160, kind: 'normal' },
+          { id: 'bp4', x: 2350, y: 542, w: 76, h: 38, kind: 'bounce' },
+          { id: 'p3', x: 2470, y: 345, w: 190, h: 28, kind: 'normal' },
+          { id: 'bp5', x: 2740, y: 485, w: 76, h: 38, kind: 'bounce' },
+          { id: 'g4', x: 2940, y: 580, w: 1260, h: 160, kind: 'normal' },
+          { id: 'bp6', x: 3200, y: 542, w: 76, h: 38, kind: 'bounce' },
+          { id: 'p4', x: 3320, y: 415, w: 175, h: 26, kind: 'normal' },
+        ],
+        enemies: [
+          { id: 'e1', x: 320, y: 540, kind: 'candy_bot', patrolMin: 220, patrolMax: 440, speed: 95 },
+          { id: 'e2', x: 1320, y: 540, kind: 'living_chair', patrolMin: 1210, patrolMax: 1440, speed: 95 },
+          { id: 'e3', x: 1650, y: 540, kind: 'grinch_elf', patrolMin: 1550, patrolMax: 1820, speed: 105 },
+          { id: 'e4', x: 2220, y: 540, kind: 'candy_bot', patrolMin: 2040, patrolMax: 2330, speed: 100 },
+          { id: 'e5', x: 3060, y: 540, kind: 'grinch_elf', patrolMin: 2960, patrolMax: 3180, speed: 110 },
+        ],
+        treats: [
+          ...makeTreatArc(460, 390, 5, 45, 55),
+          ...makeTreatArc(850, 340, 5, 45, 55),
+          ...makeTreatArc(1260, 505, 5),
+          ...makeTreatArc(2360, 375, 5, 45, 55),
+          ...makeTreatArc(3210, 385, 5, 45, 55),
+        ],
+        goldenPaws: [
+          { x: 1055, y: 235 },
+          { x: 1645, y: 270 },
+          { x: 2565, y: 275 },
+        ],
+        powerUps: [
+          { id: 'pu1', x: 670, y: 315, type: 'spring_paws' },
+          { id: 'pu2', x: 1360, y: 535, type: 'super_bark' },
+          { id: 'pu3', x: 3020, y: 535, type: 'spicy_treat' },
+        ],
+        allies: [
+          {
+            character: 'lully',
+            x: 185,
+            y: 580,
+            message: 'Quique nos bumpers de Pinball para voar alto! O Quebra-Nozes tá lá no fim!',
+          },
+          {
+            character: 'pinhao',
+            x: 2020,
+            y: 580,
+            message: 'Hoo-hoo! Último Fragmento antes da Fortaleza do Lula — capricha!',
+          },
+        ],
+        miniBoss: {
+          name: 'Quebra-Nozes Mecânico Real',
+          kind: 'nutcracker',
+          x: 3680,
+          y: 580,
+          hp: 7,
+        },
+      };
   }
 }
+

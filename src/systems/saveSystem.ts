@@ -9,10 +9,12 @@ import {
 import { getLevelMeta } from '../data/levels';
 
 const STORAGE_KEY = 'lucky_boy_jujuba_save_v1';
+export const TOTAL_LEVELS = 12;
+export const FRAGMENTS_REQUIRED = 11;
 
 export function createDefaultSave(): SaveData {
   const levelStats: Record<number, LevelProgress> = {};
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= TOTAL_LEVELS; i++) {
     levelStats[i] = {
       completed: false,
       stars: 0,
@@ -22,7 +24,7 @@ export function createDefaultSave(): SaveData {
     };
   }
   return {
-    version: 1,
+    version: 2,
     lastPlayedAt: new Date().toISOString(),
     completedLevels: [],
     levelStats,
@@ -61,6 +63,20 @@ export function loadSave(): SaveData {
         ...(parsed.levelStats || {}),
       },
     };
+    // Smooth migration from 10-level v1 save -> 12-level v2 save without losing progress!
+    if ((parsed.version || 1) < 2) {
+      merged.version = 2;
+      if (merged.completedLevels.includes(10 as LevelId)) {
+        merged.completedLevels = merged.completedLevels.filter((x) => x !== 10);
+        if (!merged.completedLevels.includes(12)) merged.completedLevels.push(12);
+        merged.levelStats[12] = merged.levelStats[10] || base.levelStats[12];
+        merged.levelStats[10] = base.levelStats[10];
+      }
+      if (merged.selectedLevel === 10 && !merged.completedLevels.includes(10)) {
+        merged.selectedLevel = 10;
+      }
+      persistSave(merged);
+    }
     return merged;
   } catch {
     return createDefaultSave();
@@ -75,7 +91,7 @@ export function persistSave(data: SaveData): void {
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch {
-    // Ignore storage quota errors in restricted browsing modes
+    // Ignore storage quota errors
   }
 }
 
@@ -85,7 +101,7 @@ export function hasExistingProgress(data: SaveData): boolean {
 
 export function getFragmentsCount(data: SaveData): number {
   let count = 0;
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= FRAGMENTS_REQUIRED; i++) {
     if (data.completedLevels.includes(i as LevelId)) count++;
   }
   return count;
@@ -94,19 +110,19 @@ export function getFragmentsCount(data: SaveData): number {
 export function getCompletionPercent(data: SaveData): number {
   const levelsDone = data.completedLevels.length;
   let paws = 0;
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= TOTAL_LEVELS; i++) {
     const st = data.levelStats[i];
     if (st) paws += st.goldenPaws.filter(Boolean).length;
   }
-  const levelWeight = (levelsDone / 10) * 75;
-  const pawWeight = (paws / 30) * 25;
+  const levelWeight = (levelsDone / TOTAL_LEVELS) * 75;
+  const pawWeight = (paws / (TOTAL_LEVELS * 3)) * 25;
   return Math.min(100, Math.round(levelWeight + pawWeight));
 }
 
 export function isLevelUnlocked(data: SaveData, levelId: LevelId): boolean {
   if (data.settings.unlockAllMode) return true;
   if (levelId === 1) return true;
-  if (levelId === 10) return getFragmentsCount(data) >= 9;
+  if (levelId === 12) return getFragmentsCount(data) >= FRAGMENTS_REQUIRED || data.gameCompleted;
   return data.completedLevels.includes((levelId - 1) as LevelId);
 }
 
@@ -117,7 +133,6 @@ export function applyLevelResult(
   const next: SaveData = JSON.parse(JSON.stringify(prev));
   const newlyUnlocked: string[] = [];
 
-  // Treats & extra lives every 100 treats
   next.totalTreats += result.treatsCollected;
   const newBank = next.treatsBank + result.treatsCollected;
   const extraLivesGained = Math.floor(newBank / 100);
@@ -132,7 +147,6 @@ export function applyLevelResult(
     bestTimeSec: 0,
   };
 
-  // Merge golden paws
   const mergedPaws: [boolean, boolean, boolean] = [
     curStat.goldenPaws[0] || result.goldenPaws[0],
     curStat.goldenPaws[1] || result.goldenPaws[1],
@@ -186,7 +200,7 @@ export function applyLevelResult(
       addCostume('santa', 'Traje: Lucky Papai Noel');
     }
 
-    if (result.levelId < 10) {
+    if (result.levelId < TOTAL_LEVELS) {
       next.selectedLevel = (result.levelId + 1) as LevelId;
     } else {
       next.gameCompleted = true;

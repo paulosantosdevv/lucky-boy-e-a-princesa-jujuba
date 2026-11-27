@@ -13,20 +13,19 @@ export const CoverArt: React.FC<Props> = ({ costume }) => {
         position: 'relative',
         width: '100%',
         maxWidth: 780,
-        aspectRatio: '16 / 9',
         borderRadius: 24,
         overflow: 'hidden',
         border: '4px solid #221b18',
-        boxShadow: '0 10px 0 rgba(34,27,24,0.28), 0 18px 38px rgba(20,55,75,0.28)',
+        boxShadow: '0 10px 0 rgba(34,27,24,0.28), 0 18px 36px rgba(20,55,75,0.26)',
         display: 'flex',
+        background: '#74d4f7',
       }}
     >
-      {/* Classic Big Golden Book Decorative Spine on Left */}
+      {/* Classic Big Golden Book Spine on Left */}
       <div
         className="golden-spine"
         style={{
-          width: 'clamp(22px, 4.2vw, 38px)',
-          height: '100%',
+          width: 'clamp(22px, 5vw, 38px)',
           flexShrink: 0,
           display: 'flex',
           flexDirection: 'column',
@@ -46,215 +45,192 @@ export const CoverArt: React.FC<Props> = ({ costume }) => {
         <span>🐾</span>
       </div>
 
-      {/* Main Dr. Seuss / Lorax / Cat in the Hat Christmas Storybook Scene */}
-      <div style={{ position: 'relative', flex: 1, height: '100%' }}>
-        <svg viewBox="0 0 920 540" style={{ width: '100%', height: '100%', display: 'block' }}>
+      {/* Main Cover Content: Clean Stacked Layout so Title & Cast NEVER Overlap on Mobile! */}
+      <div
+        style={{
+          position: 'relative',
+          flex: 1,
+          minWidth: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: 'clamp(10px, 2.5vw, 18px) clamp(10px, 2.5vw, 20px) clamp(12px, 2.6vw, 20px)',
+          gap: 'clamp(10px, 2.2vw, 16px)',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Background Storybook SVG Illustration */}
+        <svg
+          viewBox="0 0 920 540"
+          preserveAspectRatio="xMidYMid slice"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0 }}
+        >
           <defs>
-            <linearGradient id="seussSky" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="seussSky2" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#66cef5" />
-              <stop offset="65%" stopColor="#a7e7ff" />
-              <stop offset="100%" stopColor="#dcf7ff" />
+              <stop offset="68%" stopColor="#b0ebff" />
+              <stop offset="100%" stopColor="#e2f9ff" />
             </linearGradient>
-            <linearGradient id="seussHill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#80cb4b" />
+            <linearGradient id="seussHill2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#82ce4c" />
               <stop offset="100%" stopColor="#4f9932" />
             </linearGradient>
-            <radialGradient id="bellGold" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#fff7a8" />
-              <stop offset="60%" stopColor="#ffd23f" />
-              <stop offset="100%" stopColor="#d48c11" />
-            </radialGradient>
           </defs>
 
-          {/* Bright Lorax Sky */}
-          <rect width="920" height="540" fill="url(#seussSky)" />
+          <rect width="920" height="540" fill="url(#seussSky2)" />
 
-          {/* Sunburst sketchy white lines (like The Lorax cover!) */}
-          <g stroke="#ffffff" strokeWidth="4" strokeLinecap="round" opacity="0.62">
-            <line x1="460" y1="220" x2="210" y2="95" />
-            <line x1="460" y1="220" x2="155" y2="195" />
-            <line x1="460" y1="220" x2="710" y2="105" />
-            <line x1="460" y1="220" x2="780" y2="210" />
-            <line x1="460" y1="220" x2="310" y2="55" />
-            <line x1="460" y1="220" x2="625" y2="55" />
+          {/* Lorax Sunburst Rays */}
+          <g stroke="#ffffff" strokeWidth="4" strokeLinecap="round" opacity="0.55">
+            <line x1="460" y1="250" x2="170" y2="90" />
+            <line x1="460" y1="250" x2="120" y2="220" />
+            <line x1="460" y1="250" x2="750" y2="95" />
+            <line x1="460" y1="250" x2="810" y2="230" />
           </g>
 
-          {/* Lorax Truffula Tree Left (Yellow Fluffy Tuft) */}
-          <path d="M112 435 Q82 285 118 145" fill="none" stroke="#f7da59" strokeWidth="14" strokeLinecap="round" />
-          <path d="M112 435 Q82 285 118 145" fill="none" stroke="#221b18" strokeWidth="2.8" strokeDasharray="3 10" />
+          {/* Left Yellow Truffula Tree */}
+          <path d="M90 450 Q62 300 95 165" fill="none" stroke="#f7da59" strokeWidth="14" strokeLinecap="round" />
+          <path d="M90 450 Q62 300 95 165" fill="none" stroke="#221b18" strokeWidth="2.8" strokeDasharray="3 10" />
           <path
-            d="M52 145 C42 95, 90 62, 125 70 C168 62, 198 102, 182 148 C166 176, 86 184, 52 145 Z"
+            d="M36 168 C28 122, 72 90, 102 96 C142 90, 170 126, 155 168 C140 194, 68 200, 36 168 Z"
             fill="#ffe566"
             stroke="#221b18"
             strokeWidth="3.2"
           />
 
-          {/* Lorax Truffula Tree Right (Coral Pink Fluffy Tuft) */}
-          <path d="M810 445 Q842 290 795 148" fill="none" stroke="#f7da59" strokeWidth="15" strokeLinecap="round" />
-          <path d="M810 445 Q842 290 795 148" fill="none" stroke="#221b18" strokeWidth="2.8" strokeDasharray="3 10" />
+          {/* Right Coral-Pink Truffula Tree */}
+          <path d="M835 450 Q862 300 822 165" fill="none" stroke="#f7da59" strokeWidth="14" strokeLinecap="round" />
+          <path d="M835 450 Q862 300 822 165" fill="none" stroke="#221b18" strokeWidth="2.8" strokeDasharray="3 10" />
           <path
-            d="M726 146 C714 96, 766 56, 812 66 C862 60, 892 108, 868 152 C846 184, 756 186, 726 146 Z"
+            d="M758 168 C746 122, 794 86, 834 94 C878 88, 906 130, 886 172 C866 202, 784 202, 758 168 Z"
             fill="#f46d75"
             stroke="#221b18"
             strokeWidth="3.2"
           />
 
-          {/* Giant Lush Dr. Seuss Christmas Tree in Center (like Cat in the Hat Christmas!) */}
-          <rect x="430" y="325" width="60" height="100" fill="#8b623f" stroke="#221b18" strokeWidth="3.5" />
+          {/* Giant Lush Christmas Tree Center */}
+          <rect x="432" y="340" width="56" height="90" fill="#8b623f" stroke="#221b18" strokeWidth="3.5" />
           <path
-            d="M460 22 C375 55, 250 105, 192 162 C240 165, 278 168, 290 175 C215 210, 156 268, 130 315 C208 320, 260 314, 292 308 C222 355, 185 385, 175 402 L745 402 C735 385, 698 355, 628 308 C660 314, 712 320, 790 315 C764 268, 705 210, 630 175 C642 168, 680 165, 728 162 C670 105, 545 55, 460 22 Z"
+            d="M460 72 C380 105, 275 152, 224 202 C264 205, 295 208, 305 215 C240 248, 190 296, 168 338 C236 342, 282 336, 310 330 C252 372, 220 398, 212 414 L708 414 C700 398, 668 372, 610 330 C638 336, 684 342, 752 338 C730 296, 680 248, 615 215 C625 208, 656 205, 696 202 C645 152, 540 105, 460 72 Z"
             fill="#5ea93f"
             stroke="#221b18"
             strokeWidth="3.8"
             strokeLinejoin="round"
           />
+          <path d="M268 195 Q395 232 540 184 Q615 166 664 204" fill="none" stroke="#e47bb8" strokeWidth="14" strokeLinecap="round" />
+          <path d="M222 308 Q390 344 560 300 Q645 282 708 318" fill="none" stroke="#e47bb8" strokeWidth="13" strokeLinecap="round" />
 
-          {/* Pink Fluffy Christmas Garland draped across tree */}
-          <path
-            d="M245 145 Q385 182 545 130 Q625 110 688 158"
-            fill="none"
-            stroke="#e47bb8"
-            strokeWidth="15"
-            strokeLinecap="round"
-          />
-          <path
-            d="M245 145 Q385 182 545 130 Q625 110 688 158"
-            fill="none"
-            stroke="#f7b5dc"
-            strokeWidth="6"
-            strokeLinecap="round"
-            strokeDasharray="6 10"
-          />
-          <path
-            d="M196 276 Q375 316 565 268 Q660 250 732 288"
-            fill="none"
-            stroke="#e47bb8"
-            strokeWidth="14"
-            strokeLinecap="round"
-          />
-
-          {/* 3 Giant Golden Bells in center of tree (iconic from reference #1!) */}
+          {/* Ornaments & Golden Bells */}
           {[
-            { x: 412, y: 238, r: -14, s: 0.9 },
-            { x: 508, y: 238, r: 14, s: 0.9 },
-            { x: 460, y: 244, r: 0, s: 1.08 },
-          ].map((b, i) => (
-            <g key={i} transform={`translate(${b.x}, ${b.y}) rotate(${b.r}) scale(${b.s})`}>
-              <path
-                d="M-24 22 C-22 -8, -16 -24, 0 -24 C16 -24, 22 -8, 24 22 C28 28, -28 28, -24 22 Z"
-                fill="url(#bellGold)"
-                stroke="#8c5807"
-                strokeWidth="3"
-              />
-              <circle cx="0" cy="26" r="6" fill="#d99316" stroke="#221b18" strokeWidth="2.2" />
-            </g>
-          ))}
-
-          {/* Bright Ornaments & Candy Canes */}
-          {[
-            [310, 198, '#e63946'],
-            [355, 260, '#ffd447'],
-            [565, 255, '#4cc9f0'],
-            [622, 200, '#ff9f1c'],
-            [275, 290, '#4cc9f0'],
-            [650, 295, '#e63946'],
-            [458, 120, '#ffd447'],
+            [330, 240, '#e63946'],
+            [380, 295, '#ffd447'],
+            [545, 290, '#4cc9f0'],
+            [598, 242, '#ff9f1c'],
+            [460, 255, '#ffd447'],
           ].map(([cx, cy, fill], idx) => (
-            <circle key={idx} cx={cx as number} cy={cy as number} r="10" fill={fill as string} stroke="#221b18" strokeWidth="2.5" />
+            <circle key={idx} cx={cx as number} cy={cy as number} r="11" fill={fill as string} stroke="#221b18" strokeWidth="2.6" />
           ))}
 
-          {/* Rolling Storybook Green Meadow Hill */}
-          <path d="M0 398 Q230 342 460 375 Q690 408 920 356 L920 540 L0 540 Z" fill="url(#seussHill)" stroke="#221b18" strokeWidth="3.8" />
-          <path d="M0 456 Q280 412 560 460 Q760 490 920 448 L920 540 L0 540 Z" fill="#89d455" opacity="0.7" />
+          {/* Green Storybook Hill */}
+          <path d="M0 390 Q240 345 460 375 Q680 405 920 355 L920 540 L0 540 Z" fill="url(#seussHill2)" stroke="#221b18" strokeWidth="3.8" />
         </svg>
 
-        {/* Big Golden Book Badge */}
+        {/* Crisp, High-Legibility Big Golden Book Header Plaque (ZERO overlap!) */}
         <div
           style={{
-            position: 'absolute',
-            top: 10,
-            left: 16,
-            background: '#fff8dc',
-            border: '2.5px solid #221b18',
-            borderRadius: 99,
-            padding: '3px 11px',
-            fontSize: 11,
-            fontWeight: 900,
-            color: '#7a4d09',
-            boxShadow: '0 3px 0 rgba(34,27,24,0.22)',
-          }}
-        >
-          📖 Edição Especial de Natal · Jubalândia
-        </div>
-
-        {/* Storybook Title (Curved / Festive like Cat in the Hat Christmas!) */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '9%',
-            left: '50%',
-            transform: 'translateX(-50%)',
+            position: 'relative',
+            zIndex: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 6,
             textAlign: 'center',
-            width: '92%',
-            pointerEvents: 'none',
           }}
         >
+          {/* Top Golden Book Tag */}
           <div
-            className="seuss-title"
             style={{
-              fontSize: 'clamp(1.3rem, 3.6vw, 2.45rem)',
-              fontWeight: 700,
-              color: '#fffdf2',
-              WebkitTextStroke: '2px #221b18',
-              textShadow: '0 4px 0 #221b18',
-              lineHeight: 1.04,
+              background: '#fff8dc',
+              border: '2.5px solid #221b18',
+              borderRadius: 99,
+              padding: '2px 12px',
+              fontSize: 'clamp(10px, 2.3vw, 12px)',
+              fontWeight: 900,
+              color: '#7a4d09',
+              boxShadow: '0 2px 0 #221b18',
             }}
           >
-            Lucky Boy e a Princesa Jujuba
+            📖 Edição Especial de Natal · 12 Fases em Jubalândia
           </div>
+
+          {/* Title Box with warm cream pill & clean bold shadow */}
           <div
-            className="seuss-title"
             style={{
-              marginTop: 2,
-              fontSize: 'clamp(0.92rem, 2.2vw, 1.4rem)',
-              fontWeight: 700,
-              color: '#d92626',
-              WebkitTextStroke: '1px #fffdf2',
-              textShadow: '0 2px 0 #221b18',
+              background: 'linear-gradient(180deg, #fffdf5 0%, #fff0c2 100%)',
+              border: '3.5px solid #221b18',
+              borderRadius: '22px 14px 22px 14px',
+              padding: 'clamp(6px, 1.8vw, 10px) clamp(12px, 3vw, 24px)',
+              boxShadow: '0 5px 0 #221b18',
+              maxWidth: '98%',
             }}
           >
-            Uma Aventura Extraordinária de Natal!
+            <h1
+              className="seuss-title"
+              style={{
+                margin: 0,
+                fontSize: 'clamp(1.2rem, 4.4vw, 2.25rem)',
+                fontWeight: 700,
+                color: '#c91d1d',
+                lineHeight: 1.08,
+                textShadow: '0 2px 0 #ffe055',
+              }}
+            >
+              Lucky Boy e a Princesa Jujuba
+            </h1>
+            <div
+              style={{
+                marginTop: 4,
+                display: 'inline-block',
+                background: '#d92626',
+                color: '#fffef9',
+                border: '2px solid #221b18',
+                borderRadius: 99,
+                padding: '2px 12px',
+                fontSize: 'clamp(0.72rem, 2.2vw, 0.95rem)',
+                fontWeight: 800,
+                letterSpacing: '0.02em',
+              }}
+            >
+              ★ Uma Aventura Extraordinária de Natal ★
+            </div>
           </div>
         </div>
 
-        {/* Princesa Jujuba & Villain Lula positioned playfully */}
-        <div style={{ position: 'absolute', left: '6%', bottom: '28%' }} className="animate-float">
-          <CharacterPortrait character="jujuba" size={74} />
-        </div>
-        <div style={{ position: 'absolute', right: '6%', bottom: '28%' }}>
-          <CharacterPortrait character="lula" size={76} />
-        </div>
-
-        {/* Foreground Cast Trio on Green Meadow: Lully + LUCKY BOY + Paulo (SPFC) */}
+        {/* Clean Non-Overlapping Cast Showcase (Responsive for Portrait Mobile & Desktop!) */}
         <div
           style={{
-            position: 'absolute',
-            left: '50%',
-            bottom: '5%',
-            transform: 'translateX(-50%)',
+            position: 'relative',
+            zIndex: 2,
             display: 'flex',
             alignItems: 'flex-end',
-            gap: 'clamp(8px, 2vw, 20px)',
+            justifyContent: 'center',
+            gap: 'clamp(4px, 1.5vw, 14px)',
+            paddingTop: 4,
           }}
         >
-          <div style={{ transform: 'rotate(-5deg)' }}>
-            <CharacterPortrait character="lully" size={82} />
+          <div style={{ transform: 'translateY(-10px)' }}>
+            <CharacterPortrait character="jujuba" size={58} />
           </div>
-          <div className="animate-float" style={{ transform: 'translateY(-6px)' }}>
-            <CharacterPortrait character="lucky" size={114} costume={costume} />
+          <div style={{ transform: 'rotate(-4deg)' }}>
+            <CharacterPortrait character="lully" size={68} />
           </div>
-          <div style={{ transform: 'rotate(5deg)' }}>
-            <CharacterPortrait character="paulo" size={82} />
+          <div className="animate-float">
+            <CharacterPortrait character="lucky" size={94} costume={costume} />
+          </div>
+          <div style={{ transform: 'rotate(4deg)' }}>
+            <CharacterPortrait character="paulo" size={68} />
+          </div>
+          <div style={{ transform: 'translateY(-10px)' }}>
+            <CharacterPortrait character="lula" size={58} />
           </div>
         </div>
       </div>

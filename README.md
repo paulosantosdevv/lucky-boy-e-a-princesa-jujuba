@@ -17,20 +17,22 @@ Surge então o herói improvável: **Lucky Boy**, um pequeno Shih-tzu todo branc
 
 ---
 
-## 🗺️ As 10 Fases do Jogo
+## 🗺️ As 12 Fases do Jogo
 
 | Fase | Nome | Modalidade | Destaques |
 |---:|---|---|---|
-| **01** | As Colinas de Jubalândia | Plataforma 2D | Cogumelos saltitantes, **Paulo (SPFC)** e mini-chefe **Cogumelo Gigante Espirrão** |
+| **01** | As Colinas de Jubalândia | Plataforma 2D | Árvores Truffula, cogumelos saltitantes, **Paulo (SPFC)** e **Cogumelo Gigante Espirrão** |
 | **02** | A Floresta dos Trambolhos | Plataforma 2D | **Lully** ensina o **Pulo Duplo** e a **Barrigada Aérea**; plantas carnívoras e segredos |
-| **03** | O Grande Prêmio dos Doces | **Corrida Kart 3D** | Kart em formato de osso, 5 adversários (incluindo Lully!), 3 voltas, drift, itens e **Paulo** na arquibancada |
-| **04** | A Fábrica de Guloseimas Malucas | Plataforma 2.5D | Esteiras, prensas, rio de chocolate, Faro Secreto do **Paulo** e mini-chefe **Robô Confeiteiro** |
-| **05** | O Oceano das Bolhas Perdidas | **Exploração Aquática 2D** | Capacete de mergulho, nado 360°, águas-vivas e mini-chefe **Polvo Gigante do Tesouro** |
-| **06** | Os Céus de Algodão-Doce | **Combate Aéreo 3D** | Biplano natalino 3D, anéis dourados, nuvens elétricas e chefe **Dirigível Robótico do Lula** |
-| **07** | A Mansão dos Sustinhos | Plataforma & Puzzles 2D | Fantasmas, móveis vivos e plataformas mágicas que só aparecem quando Lucky **late** |
-| **08** | A Montanha dos Narizes Gelados | Plataforma 2.5D | Piso de gelo escorregadio, plataformas quebráveis, **Paulo (SPFC)** e mini-chefe **Boneco de Neve Gigante** |
-| **09** | A Vila do Natal Esquecido | Exploração Natalina 2D | Religue as 5 árvores apagadas com **Lully** e **Paulo** para restaurar a Estrela Encantada |
-| **10** | A Fortaleza do Último Natal | **Arena & Boss Final 3D** | Batalha em **4 etapas** contra **Lula** até oferecer o último petisco e libertar a **Princesa Jujuba**! |
+| **03** | O Grande Prêmio dos Doces | **Corrida Kart 3D** | Colinas 3D, túneis de bengala doce, contagem `3-2-1-JÁ!`, mini-mapa, 3 itens e **Lully 3D** |
+| **04** | A Fábrica de Guloseimas Malucas | Plataforma 2.5D | Esteiras, prensas, rio de chocolate, Faro Secreto do **Paulo** e **Robô Confeiteiro** |
+| **05** | O Oceano das Bolhas Perdidas | **Exploração Aquática 2D** | Capacete de mergulho, nado 360°, águas-vivas e **Polvo Gigante do Tesouro** |
+| **06** | Os Céus de Algodão-Doce | **Combate Aéreo 3D** | Ilhas flutuantes Truffula, combo de anéis, mira inteligente e **Dirigível do Lula** |
+| **07** | A Mansão dos Sustinhos | Plataforma & Puzzles 2D | Fantasmas de cartola, poltronas vivas e plataformas reveladas ao **latir** |
+| **08** | A Montanha dos Narizes Gelados | Plataforma 2.5D | Piso de gelo escorregadio, plataformas quebráveis e **Boneco de Neve Gigante** |
+| **09** | A Vila do Natal Esquecido | Exploração Natalina 2D | Religue as 5 árvores apagadas com **Lully** e **Paulo** |
+| **10** | O Expresso do Polo Norte | **Trem 2D Veloz** | Salte pelos vagões do Trem de Natal com **Paulo** contra a **Locomotiva-Dragão de Vapor** |
+| **11** | O Pinball dos Presentes | **Pinball & Molas 2D** | Bumpers musicais gigantes com **Lully** e **Prof. Pinhão** contra o **Quebra-Nozes Mecânico** |
+| **12** | A Fortaleza do Último Natal | **Grande Final 2.5D** | Batalha épica em **4 etapas** contra **Lula** (com parry dourado, Paulo & Lully na torcida) para libertar a **Princesa Jujuba**! |
 
 ---
 

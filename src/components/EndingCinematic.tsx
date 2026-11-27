@@ -126,11 +126,11 @@ export const EndingCinematic: React.FC<Props> = ({ save, onContinueExploring }) 
           >
             <div>
               <div style={{ fontSize: 12, color: '#5b4c3f' }}>Estrelas</div>
-              <div style={{ fontSize: 20, color: '#c98a00' }}>★ {totalStars}/30</div>
+              <div style={{ fontSize: 20, color: '#c98a00' }}>★ {totalStars}/36</div>
             </div>
             <div>
               <div style={{ fontSize: 12, color: '#5b4c3f' }}>Patinhas Douradas</div>
-              <div style={{ fontSize: 20, color: '#c91d1d' }}>🐾 {totalPaws}/30</div>
+              <div style={{ fontSize: 20, color: '#c91d1d' }}>🐾 {totalPaws}/36</div>
             </div>
             <div>
               <div style={{ fontSize: 12, color: '#5b4c3f' }}>Petiscos</div>
