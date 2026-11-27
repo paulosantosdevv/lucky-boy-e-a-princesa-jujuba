@@ -31,7 +31,7 @@ import { EndingCinematic } from './components/EndingCinematic';
 import { Platform2DEngine } from './engines/platform2d/Platform2DEngine';
 import { Kart3DEngine } from './engines/three3d/Kart3DEngine';
 import { Plane3DEngine } from './engines/three3d/Plane3DEngine';
-import { Boss3DEngine } from './engines/three3d/Boss3DEngine';
+import { FinalBossEngine } from './engines/boss/FinalBossEngine';
 import { BookOpen, Map as MapIcon, Play, RotateCcw, Settings, Shirt, Sparkles } from 'lucide-react';
 
 type Screen = 'menu' | 'map' | 'playing' | 'ending';
@@ -345,7 +345,7 @@ export function App() {
               onPauseRequest={handlePauseRequest}
             />
           ) : activeLevelMeta.mode === 'boss3d' ? (
-            <Boss3DEngine
+            <FinalBossEngine
               key={runKey}
               costume={save.equippedCostume}
               lives={save.lives}
