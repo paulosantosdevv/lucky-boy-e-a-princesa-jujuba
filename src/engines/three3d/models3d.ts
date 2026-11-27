@@ -144,6 +144,64 @@ export function createTruffulaTrunkTexture(): THREE.CanvasTexture {
   });
 }
 
+export function createBoostPadTexture(): THREE.CanvasTexture {
+  return makeCanvasTexture(256, 256, (ctx, w, h) => {
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#ffe055');
+    g.addColorStop(0.5, '#ff9f1c');
+    g.addColorStop(1, '#f46d75');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = '#fffdf5';
+    ctx.lineWidth = 20;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    for (let y = 64; y <= 210; y += 72) {
+      ctx.beginPath();
+      ctx.moveTo(42, y + 26);
+      ctx.lineTo(w / 2, y - 24);
+      ctx.lineTo(w - 42, y + 26);
+      ctx.stroke();
+    }
+  });
+}
+
+export function createItemBoxTexture(): THREE.CanvasTexture {
+  return makeCanvasTexture(256, 256, (ctx, w, h) => {
+    const g = ctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, '#ff5d8f');
+    g.addColorStop(0.5, '#ffe055');
+    g.addColorStop(1, '#6fd3f7');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 18;
+    ctx.strokeRect(12, 12, w - 24, h - 24);
+    ctx.fillStyle = '#221b18';
+    ctx.font = '900 155px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('?', w / 2 + 5, h / 2 + 12);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('?', w / 2, h / 2 + 6);
+  });
+}
+
+export function createLicensePlateTexture(label: string, bgColor = '#ffe055'): THREE.CanvasTexture {
+  return makeCanvasTexture(256, 96, (ctx, w, h) => {
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = '#221b18';
+    ctx.lineWidth = 10;
+    ctx.strokeRect(6, 6, w - 12, h - 12);
+    ctx.fillStyle = '#221b18';
+    ctx.font = '900 44px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, w / 2, h / 2 + 3);
+  });
+}
+
 /** Detailed Cute 3D Lucky Boy (Chubby All-White Shih Tzu + Red Scarf + Costumes) */
 export function createLucky3D(costume: CostumeId = 'classic', scale = 1): THREE.Group {
   const g = new THREE.Group();
