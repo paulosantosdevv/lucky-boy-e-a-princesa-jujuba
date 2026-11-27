@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CostumeId, DialogueLine } from '../types/game';
 import { CharacterPortrait } from './CharacterArt';
 import { audioSystem } from '../systems/audioSystem';
+import { haptics } from '../systems/haptics';
 
 interface Props {
   lines: DialogueLine[];
@@ -11,12 +12,26 @@ interface Props {
 
 export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => {
   const [index, setIndex] = useState(0);
-  const current = lines[index];
+
+  // CRITICAL FIX: Always reset index to 0 when a new dialogue sequence arrives!
+  useEffect(() => {
+    setIndex(0);
+  }, [lines]);
+
+  const current = lines[index] || lines[0];
+
+  // Safety guard: never stay stuck returning null if lines is empty
+  useEffect(() => {
+    if (!lines || lines.length === 0) {
+      onComplete();
+    }
+  }, [lines, onComplete]);
 
   const advance = () => {
+    haptics.tapUi();
     audioSystem.playSfx('click');
     if (index + 1 < lines.length) {
-      setIndex(index + 1);
+      setIndex((i) => i + 1);
     } else {
       onComplete();
     }
@@ -47,7 +62,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'center',
-        padding: '18px 16px max(22px, env(safe-area-inset-bottom)) 16px',
+        padding: '18px 14px max(24px, env(safe-area-inset-bottom)) 14px',
       }}
     >
       <div
@@ -58,16 +73,16 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
         }}
         style={{
           width: 'min(760px, 96vw)',
-          padding: '16px 20px',
+          padding: '14px 16px',
           display: 'flex',
           alignItems: 'center',
-          gap: 16,
+          gap: 14,
           cursor: 'pointer',
         }}
       >
         <CharacterPortrait
           character={current.speaker}
-          size={86}
+          size={78}
           costume={current.speaker === 'lucky' ? costume : 'classic'}
         />
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -75,7 +90,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
             <span
               className="seuss-title"
               style={{
-                fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+                fontSize: 'clamp(0.98rem, 2.5vw, 1.25rem)',
                 color: '#c91d1d',
                 fontWeight: 700,
               }}
@@ -83,14 +98,14 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
               {current.speakerName}
             </span>
             <span style={{ fontSize: 12, color: '#6b5c4d', fontWeight: 800 }}>
-              {index + 1} / {lines.length}
+              {Math.min(index + 1, lines.length)} / {lines.length}
             </span>
           </div>
           <p
             style={{
               margin: '6px 0 10px',
-              fontSize: 'clamp(0.92rem, 2.2vw, 1.06rem)',
-              lineHeight: 1.45,
+              fontSize: 'clamp(0.9rem, 2.2vw, 1.05rem)',
+              lineHeight: 1.42,
               color: '#221b18',
               fontWeight: 800,
             }}
@@ -102,6 +117,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
+                haptics.tapUi();
                 audioSystem.playSfx('click');
                 onComplete();
               }}

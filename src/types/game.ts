@@ -70,6 +70,7 @@ export interface GameSettings {
   sfxVolume: number; // 0..1
   showTouchControls: 'always' | 'auto' | 'hidden';
   unlockAllMode: boolean;
+  vibrationEnabled: boolean;
 }
 
 export interface SaveData {

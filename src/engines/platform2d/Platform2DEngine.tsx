@@ -11,6 +11,7 @@ import {
 import { build2DLevel, EnemyDef, PlatformDef } from './levelData';
 import { inputManager } from '../../systems/inputSystem';
 import { audioSystem } from '../../systems/audioSystem';
+import { haptics } from '../../systems/haptics';
 
 interface Props {
   levelId: LevelId;
@@ -240,6 +241,7 @@ export const Platform2DEngine: React.FC<Props> = ({
       player.hearts--;
       player.invulnTimer = 1.8;
       audioSystem.playSfx('hurt');
+      haptics.impact();
       spawnParticles(player.x + 22, player.y + 20, '#d92626', 14);
 
       if (fromPit) {
@@ -711,6 +713,7 @@ export const Platform2DEngine: React.FC<Props> = ({
         if (!gp.collected && Math.hypot(gp.x - (player.x + 22), gp.y - (player.y + 20)) < 44) {
           gp.collected = true;
           audioSystem.playSfx('paw');
+          haptics.reward();
           spawnParticles(gp.x, gp.y, '#ffe055', 22, 220);
           showBanner(`🐾 Patinha Dourada #${idx + 1} encontrada!`, 2.2);
         }
@@ -931,10 +934,13 @@ export const Platform2DEngine: React.FC<Props> = ({
         }
       }
 
-      // Proportional Viewport Camera (ZERO distortion on mobile/desktop!)
-      const scale = canvas.clientHeight / bp.worldHeight;
+      // Responsive Proportional Camera (wide view even in portrait phones!)
+      const scale = Math.min(
+        canvas.clientHeight / bp.worldHeight,
+        Math.max(0.54, canvas.clientWidth / 640)
+      );
       const viewW = canvas.clientWidth / Math.max(0.25, scale);
-      const targetCam = Math.max(0, Math.min(Math.max(0, bp.worldWidth - viewW), player.x - viewW * 0.36));
+      const targetCam = Math.max(0, Math.min(Math.max(0, bp.worldWidth - viewW), player.x - viewW * 0.34));
       cameraX += (targetCam - cameraX) * Math.min(1, dt * 8.5);
 
       hudTick += dt;
@@ -1314,8 +1320,11 @@ export const Platform2DEngine: React.FC<Props> = ({
     const render = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      const scale = h / bp.worldHeight;
+      const scale = Math.min(h / bp.worldHeight, Math.max(0.54, w / 640));
       const viewW = w / Math.max(0.25, scale);
+      // On tall portrait mobile screens, sit world slightly above bottom virtual controls!
+      const extraY = Math.max(0, h - bp.worldHeight * scale);
+      const offsetY = extraY > 60 ? extraY * 0.42 : extraY;
 
       ctx.save();
       const grad = ctx.createLinearGradient(0, 0, 0, h);
@@ -1325,7 +1334,13 @@ export const Platform2DEngine: React.FC<Props> = ({
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
 
-      // Uniform proportional scale!
+      // Fill ground extension below world on tall portrait phones so it looks seamless
+      if (extraY > 2) {
+        ctx.fillStyle = bp.isWater ? bp.skyBottom : bp.platformFill;
+        ctx.fillRect(0, offsetY + bp.worldHeight * scale - 2, w, h);
+      }
+
+      ctx.translate(0, offsetY);
       ctx.scale(scale, scale);
 
       if (bp.isIndoor) {
