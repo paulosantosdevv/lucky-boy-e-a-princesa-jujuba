@@ -56,8 +56,8 @@ export const TouchControls: React.FC<Props> = ({
     onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
   });
 
-  const dpadSize = 'clamp(44px, 11vw, 58px)';
-  const actionSize = 'clamp(50px, 12.5vw, 66px)';
+  const dpadSize = 'clamp(44px, 11vw, 56px)';
+  const actionSize = 'clamp(50px, 12.2vw, 64px)';
 
   return (
     <div
@@ -69,7 +69,8 @@ export const TouchControls: React.FC<Props> = ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: 'max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left))',
+        padding:
+          'max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left))',
       }}
     >
       {/* Top-right pause button */}
@@ -80,16 +81,16 @@ export const TouchControls: React.FC<Props> = ({
           className="touch-pad-btn"
           style={{
             pointerEvents: 'auto',
-            width: 46,
-            height: 46,
+            width: 44,
+            height: 44,
             borderRadius: 15,
-            background: 'rgba(26, 17, 56, 0.82)',
-            color: '#ffd166',
+            background: '#fff9eb',
+            color: '#221b18',
             marginTop: 52,
           }}
           aria-label="Pausar jogo"
         >
-          <Pause size={22} />
+          <Pause size={20} />
         </button>
       </div>
 
@@ -120,9 +121,9 @@ export const TouchControls: React.FC<Props> = ({
             className={`touch-pad-btn ${active.up ? 'pressed' : ''}`}
             style={{
               borderRadius: '14px 14px 6px 6px',
-              background: 'rgba(30, 22, 62, 0.78)',
-              color: '#fff8eb',
-              fontSize: 20,
+              background: 'rgba(255, 249, 235, 0.92)',
+              color: '#221b18',
+              fontSize: 19,
               fontWeight: 900,
             }}
             {...bindBtn('up')}
@@ -137,9 +138,9 @@ export const TouchControls: React.FC<Props> = ({
             className={`touch-pad-btn ${active.left ? 'pressed' : ''}`}
             style={{
               borderRadius: '14px 6px 6px 14px',
-              background: 'rgba(30, 22, 62, 0.78)',
-              color: '#fff8eb',
-              fontSize: 20,
+              background: 'rgba(255, 249, 235, 0.92)',
+              color: '#221b18',
+              fontSize: 19,
               fontWeight: 900,
             }}
             {...bindBtn('left')}
@@ -150,8 +151,8 @@ export const TouchControls: React.FC<Props> = ({
           <div
             style={{
               borderRadius: 10,
-              background: 'rgba(255, 209, 102, 0.18)',
-              border: '2px solid rgba(255, 209, 102, 0.35)',
+              background: '#ffe770',
+              border: '2.5px solid #221b18',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -165,9 +166,9 @@ export const TouchControls: React.FC<Props> = ({
             className={`touch-pad-btn ${active.right ? 'pressed' : ''}`}
             style={{
               borderRadius: '6px 14px 14px 6px',
-              background: 'rgba(30, 22, 62, 0.78)',
-              color: '#fff8eb',
-              fontSize: 20,
+              background: 'rgba(255, 249, 235, 0.92)',
+              color: '#221b18',
+              fontSize: 19,
               fontWeight: 900,
             }}
             {...bindBtn('right')}
@@ -182,9 +183,9 @@ export const TouchControls: React.FC<Props> = ({
             className={`touch-pad-btn ${active.down ? 'pressed' : ''}`}
             style={{
               borderRadius: '6px 6px 14px 14px',
-              background: 'rgba(30, 22, 62, 0.78)',
-              color: '#fff8eb',
-              fontSize: 20,
+              background: 'rgba(255, 249, 235, 0.92)',
+              color: '#221b18',
+              fontSize: 19,
               fontWeight: 900,
             }}
             {...bindBtn('down')}
@@ -209,7 +210,6 @@ export const TouchControls: React.FC<Props> = ({
           }}
         >
           <div />
-          {/* Y Button */}
           <button
             type="button"
             className={`touch-pad-btn ${active.y ? 'pressed' : ''} ${specialYLabel ? 'animate-glow' : ''}`}
@@ -217,20 +217,19 @@ export const TouchControls: React.FC<Props> = ({
               width: actionSize,
               height: actionSize,
               borderRadius: '50%',
-              background: 'linear-gradient(180deg, #ffe066, #f4a216)',
-              color: '#221338',
+              background: 'linear-gradient(180deg, #ffe770, #f5b922)',
+              color: '#221b18',
             }}
             {...bindBtn('y')}
             aria-label={`Botão Y - ${specialYLabel || labels.y}`}
           >
             <span style={{ fontWeight: 900, fontSize: 16, lineHeight: 1 }}>Y</span>
-            <span style={{ fontSize: 9.5, fontWeight: 800, lineHeight: 1.05, textAlign: 'center', padding: '0 2px' }}>
+            <span style={{ fontSize: 9.5, fontWeight: 900, lineHeight: 1.05, textAlign: 'center', padding: '0 2px' }}>
               {specialYLabel || labels.y}
             </span>
           </button>
           <div />
 
-          {/* X Button */}
           <button
             type="button"
             className={`touch-pad-btn ${active.x ? 'pressed' : ''}`}
@@ -238,17 +237,16 @@ export const TouchControls: React.FC<Props> = ({
               width: actionSize,
               height: actionSize,
               borderRadius: '50%',
-              background: 'linear-gradient(180deg, #4cc9f0, #0077b6)',
+              background: 'linear-gradient(180deg, #6fd3f7, #2292c4)',
               color: '#ffffff',
             }}
             {...bindBtn('x')}
             aria-label={`Botão X - ${labels.x}`}
           >
             <span style={{ fontWeight: 900, fontSize: 16, lineHeight: 1 }}>X</span>
-            <span style={{ fontSize: 10, fontWeight: 800, lineHeight: 1.1 }}>{labels.x}</span>
+            <span style={{ fontSize: 10, fontWeight: 900, lineHeight: 1.1 }}>{labels.x}</span>
           </button>
           <div />
-          {/* B Button */}
           <button
             type="button"
             className={`touch-pad-btn ${active.b ? 'pressed' : ''}`}
@@ -256,18 +254,17 @@ export const TouchControls: React.FC<Props> = ({
               width: actionSize,
               height: actionSize,
               borderRadius: '50%',
-              background: 'linear-gradient(180deg, #ff5d6c, #c9182b)',
+              background: 'linear-gradient(180deg, #f46d75, #d92626)',
               color: '#ffffff',
             }}
             {...bindBtn('b')}
             aria-label={`Botão B - ${labels.b}`}
           >
             <span style={{ fontWeight: 900, fontSize: 16, lineHeight: 1 }}>B</span>
-            <span style={{ fontSize: 10, fontWeight: 800, lineHeight: 1.1 }}>{labels.b}</span>
+            <span style={{ fontSize: 10, fontWeight: 900, lineHeight: 1.1 }}>{labels.b}</span>
           </button>
 
           <div />
-          {/* A Button */}
           <button
             type="button"
             className={`touch-pad-btn ${active.a ? 'pressed' : ''}`}
@@ -275,14 +272,14 @@ export const TouchControls: React.FC<Props> = ({
               width: actionSize,
               height: actionSize,
               borderRadius: '50%',
-              background: 'linear-gradient(180deg, #4ce098, #19945d)',
-              color: '#0e241b',
+              background: 'linear-gradient(180deg, #86db58, #4d9a31)',
+              color: '#ffffff',
             }}
             {...bindBtn('a')}
             aria-label={`Botão A - ${labels.a}`}
           >
             <span style={{ fontWeight: 900, fontSize: 16, lineHeight: 1 }}>A</span>
-            <span style={{ fontSize: 10, fontWeight: 800, lineHeight: 1.1 }}>{labels.a}</span>
+            <span style={{ fontSize: 10, fontWeight: 900, lineHeight: 1.1 }}>{labels.a}</span>
           </button>
           <div />
         </div>

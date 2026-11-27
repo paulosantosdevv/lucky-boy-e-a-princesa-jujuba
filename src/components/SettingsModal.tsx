@@ -65,8 +65,8 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
         position: 'fixed',
         inset: 0,
         zIndex: 60,
-        background: 'rgba(10, 6, 26, 0.8)',
-        backdropFilter: 'blur(5px)',
+        background: 'rgba(20, 42, 62, 0.6)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -78,7 +78,7 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
         style={{ width: 'min(540px, 95vw)', maxHeight: '88vh', padding: '20px 22px' }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-          <h2 className="seuss-title" style={{ margin: 0, color: '#ffd166' }}>
+          <h2 className="seuss-title" style={{ margin: 0, color: '#c91d1d' }}>
             ⚙️ Configurações & Save
           </h2>
           <button
@@ -91,7 +91,6 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
           </button>
         </div>
 
-        {/* Audio Sliders */}
         <div style={{ display: 'grid', gap: 14, marginBottom: 18 }}>
           <label style={{ display: 'block', fontWeight: 800, fontSize: 14 }}>
             🎵 Volume da Música ({Math.round(save.settings.musicVolume * 100)}%)
@@ -102,7 +101,7 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
               step={0.05}
               value={save.settings.musicVolume}
               onChange={(e) => updateSetting('musicVolume', parseFloat(e.target.value))}
-              style={{ width: '100%', accentColor: '#ffd166', marginTop: 6 }}
+              style={{ width: '100%', accentColor: '#d92626', marginTop: 6 }}
             />
           </label>
 
@@ -115,11 +114,10 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
               step={0.05}
               value={save.settings.sfxVolume}
               onChange={(e) => updateSetting('sfxVolume', parseFloat(e.target.value))}
-              style={{ width: '100%', accentColor: '#2ec4b6', marginTop: 6 }}
+              style={{ width: '100%', accentColor: '#53a634', marginTop: 6 }}
             />
           </label>
 
-          {/* On-Screen Controls */}
           <div>
             <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 6 }}>
               🎮 Controles Virtuais na Tela (Direcional + A/B/X/Y)
@@ -145,24 +143,24 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
             </div>
           </div>
 
-          {/* Unlock All Mode */}
           <label
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: 10,
-              background: 'rgba(255,255,255,0.08)',
+              background: '#f2e4c4',
+              border: '2.5px solid #221b18',
               padding: '10px 14px',
-              borderRadius: 14,
+              borderRadius: 16,
               cursor: 'pointer',
             }}
           >
             <div>
-              <div style={{ fontWeight: 800, fontSize: 14, color: '#ffd166' }}>
+              <div style={{ fontWeight: 900, fontSize: 14, color: '#c91d1d' }}>
                 🔓 Modo Livre (Desbloquear Todas as 10 Fases)
               </div>
-              <div style={{ fontSize: 12, opacity: 0.8 }}>
+              <div style={{ fontSize: 12, color: '#4a3d33', fontWeight: 700 }}>
                 Permite testar o Kart 3D, Avião 3D, Água e o Chefão Lula imediatamente!
               </div>
             </div>
@@ -170,22 +168,21 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
               type="checkbox"
               checked={save.settings.unlockAllMode}
               onChange={(e) => updateSetting('unlockAllMode', e.target.checked)}
-              style={{ width: 22, height: 22, accentColor: '#ffd166' }}
+              style={{ width: 22, height: 22, accentColor: '#d92626' }}
             />
           </label>
         </div>
 
-        {/* Save Management */}
         <div
           style={{
-            borderTop: '1px solid rgba(255,255,255,0.18)',
+            borderTop: '2px dashed rgba(34,27,24,0.22)',
             paddingTop: 14,
             display: 'flex',
             flexDirection: 'column',
             gap: 10,
           }}
         >
-          <div style={{ fontWeight: 800, fontSize: 14 }}>💾 Backup do Progresso (localStorage + JSON)</div>
+          <div style={{ fontWeight: 900, fontSize: 14 }}>💾 Backup do Progresso (localStorage + JSON)</div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <button type="button" className="seuss-btn seuss-btn-mint" style={{ fontSize: '0.85rem', padding: '8px 14px' }} onClick={handleDownloadBackup}>
               <Download size={16} /> Exportar Save
@@ -209,9 +206,9 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
                   width: '100%',
                   borderRadius: 12,
                   padding: 10,
-                  background: '#120c2c',
-                  color: '#fff',
-                  border: '2px solid #ffd166',
+                  background: '#ffffff',
+                  color: '#221b18',
+                  border: '2.5px solid #221b18',
                   fontFamily: 'monospace',
                   fontSize: 12,
                 }}
@@ -222,7 +219,7 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
             </div>
           )}
 
-          {statusMsg && <div style={{ fontSize: 13, fontWeight: 800, color: '#7bf1a8' }}>{statusMsg}</div>}
+          {statusMsg && <div style={{ fontSize: 13, fontWeight: 900, color: '#2f7a24' }}>{statusMsg}</div>}
         </div>
       </div>
     </div>

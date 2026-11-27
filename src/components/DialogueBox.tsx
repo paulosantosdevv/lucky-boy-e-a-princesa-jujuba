@@ -42,8 +42,8 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
         position: 'fixed',
         inset: 0,
         zIndex: 50,
-        background: 'rgba(10, 6, 28, 0.72)',
-        backdropFilter: 'blur(4px)',
+        background: 'rgba(20, 42, 62, 0.56)',
+        backdropFilter: 'blur(3px)',
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'center',
@@ -76,13 +76,13 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
               className="seuss-title"
               style={{
                 fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
-                color: '#ffd166',
+                color: '#c91d1d',
                 fontWeight: 700,
               }}
             >
               {current.speakerName}
             </span>
-            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 700 }}>
+            <span style={{ fontSize: 12, color: '#6b5c4d', fontWeight: 800 }}>
               {index + 1} / {lines.length}
             </span>
           </div>
@@ -91,8 +91,8 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
               margin: '6px 0 10px',
               fontSize: 'clamp(0.92rem, 2.2vw, 1.06rem)',
               lineHeight: 1.45,
-              color: '#fff8eb',
-              fontWeight: 700,
+              color: '#221b18',
+              fontWeight: 800,
             }}
           >
             {current.text}
@@ -108,18 +108,15 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'rgba(255,255,255,0.65)',
-                fontWeight: 700,
+                color: '#6b5c4d',
+                fontWeight: 800,
                 fontSize: 12.5,
                 cursor: 'pointer',
               }}
             >
               Pular diálogo »
             </button>
-            <span
-              className="seuss-btn seuss-btn-gold"
-              style={{ padding: '6px 14px', fontSize: '0.88rem' }}
-            >
+            <span className="seuss-btn seuss-btn-gold" style={{ padding: '6px 14px', fontSize: '0.88rem' }}>
               {index + 1 < lines.length ? 'Continuar ▶' : 'Vamos lá! 🐾'}
             </span>
           </div>

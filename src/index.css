@@ -1,15 +1,19 @@
 :root {
-  --bg-night: #120c2c;
-  --bg-card: rgba(25, 18, 58, 0.9);
-  --crimson: #e63946;
-  --crimson-dark: #a61c2b;
-  --gold: #ffd166;
-  --gold-dark: #d99b18;
-  --mint: #2ec4b6;
-  --emerald: #2a9d8f;
-  --purple: #7209b7;
-  --cream: #fff8eb;
-  --ink: #1e1633;
+  --sky-blue: #6fd3f7;
+  --sky-light: #bfefff;
+  --grass-green: #69b543;
+  --grass-deep: #438a2d;
+  --truffula-pink: #f46d75;
+  --truffula-yellow: #ffe055;
+  --truffula-orange: #ff9f43;
+  --garland-pink: #e278b8;
+  --bell-gold: #ffd447;
+  --bell-gold-dark: #d99316;
+  --christmas-red: #d92626;
+  --paper-cream: #fff9eb;
+  --paper-warm: #f6ebd1;
+  --golden-spine: #d8b56c;
+  --ink: #221b18;
 }
 
 * {
@@ -27,34 +31,49 @@ body,
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--bg-night);
-  color: var(--cream);
+  background: linear-gradient(180deg, #6fd3f7 0%, #c6f1ff 68%, #69b543 100%);
+  color: var(--ink);
   font-family: 'Nunito', system-ui, -apple-system, sans-serif;
   touch-action: none;
 }
 
 h1, h2, h3, .seuss-title {
   font-family: 'Fredoka', cursive, sans-serif;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.015em;
 }
 
+/* Big Golden Book Storybook Card */
 .seuss-card {
-  background: linear-gradient(155deg, rgba(35, 24, 76, 0.94), rgba(18, 13, 44, 0.96));
-  border: 3px solid var(--gold);
+  background: linear-gradient(180deg, #fffdf5 0%, #f8edd6 100%);
+  color: var(--ink);
+  border: 3.5px solid var(--ink);
   border-radius: 26px 18px 28px 20px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55), inset 0 2px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 0 rgba(34, 27, 24, 0.25), 0 14px 28px rgba(24, 48, 66, 0.22), inset 0 3px 0 #ffffff;
+}
+
+/* Golden Book decorative left spine stripe */
+.golden-spine {
+  background-color: #d7b268;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(34, 27, 24, 0.14) 0px,
+    rgba(34, 27, 24, 0.14) 2px,
+    transparent 2px,
+    transparent 9px
+  );
+  border-right: 3px solid var(--ink);
 }
 
 .seuss-btn {
   font-family: 'Fredoka', cursive, sans-serif;
-  border: 3px solid #22153a;
-  border-radius: 20px 14px 22px 16px;
-  padding: 12px 22px;
-  font-size: 1.05rem;
+  border: 3px solid var(--ink);
+  border-radius: 22px 15px 24px 16px;
+  padding: 11px 20px;
+  font-size: 1.03rem;
   font-weight: 700;
   cursor: pointer;
   transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
-  box-shadow: 0 5px 0 #1b1030, 0 8px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 5px 0 var(--ink), 0 8px 16px rgba(0, 0, 0, 0.18);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -62,37 +81,36 @@ h1, h2, h3, .seuss-title {
 }
 
 .seuss-btn:hover {
-  transform: translateY(-2px) rotate(-0.5deg);
-  filter: brightness(1.07);
+  transform: translateY(-2px) rotate(-0.6deg);
+  filter: brightness(1.04);
 }
 
 .seuss-btn:active {
   transform: translateY(3px);
-  box-shadow: 0 2px 0 #1b1030;
+  box-shadow: 0 2px 0 var(--ink);
 }
 
 .seuss-btn-primary {
-  background: linear-gradient(180deg, #ff5d6c, #d92337);
-  color: #fff;
+  background: linear-gradient(180deg, #f24242, #c91d1d);
+  color: #fffef9;
 }
 
 .seuss-btn-gold {
-  background: linear-gradient(180deg, #ffe084, #f4b41a);
-  color: #241338;
+  background: linear-gradient(180deg, #ffe770, #f5b922);
+  color: var(--ink);
 }
 
 .seuss-btn-mint {
-  background: linear-gradient(180deg, #4ce0d2, #1ea896);
-  color: #10262a;
+  background: linear-gradient(180deg, #86db58, #53a634);
+  color: #fffef9;
 }
 
 .seuss-btn-ghost {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff8eb;
-  border-color: rgba(255, 209, 102, 0.5);
+  background: linear-gradient(180deg, #ffffff, #f2e6cc);
+  color: var(--ink);
 }
 
-/* On-screen controls */
+/* On-screen touch controls - crisp storybook buttons */
 .touch-pad-btn {
   touch-action: none;
   user-select: none;
@@ -101,8 +119,8 @@ h1, h2, h3, .seuss-title {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 3px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 5px 0 rgba(10, 6, 24, 0.65), 0 8px 16px rgba(0, 0, 0, 0.4);
+  border: 3px solid var(--ink);
+  box-shadow: 0 5px 0 var(--ink), 0 7px 14px rgba(0, 0, 0, 0.28);
   transition: transform 0.06s ease, filter 0.06s ease;
   cursor: pointer;
 }
@@ -110,8 +128,8 @@ h1, h2, h3, .seuss-title {
 .touch-pad-btn.pressed,
 .touch-pad-btn:active {
   transform: translateY(3px) scale(0.95);
-  filter: brightness(1.22);
-  box-shadow: 0 2px 0 rgba(10, 6, 24, 0.65);
+  filter: brightness(1.12);
+  box-shadow: 0 2px 0 var(--ink);
 }
 
 .scrollable-panel {
@@ -125,24 +143,24 @@ h1, h2, h3, .seuss-title {
 }
 
 .scrollable-panel::-webkit-scrollbar-thumb {
-  background: rgba(255, 209, 102, 0.45);
+  background: rgba(34, 27, 24, 0.32);
   border-radius: 99px;
 }
 
 @keyframes floatSlow {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-7px); }
+  50% { transform: translateY(-6px); }
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 12px rgba(255, 209, 102, 0.55); }
-  50% { box-shadow: 0 0 26px rgba(255, 209, 102, 0.95); }
+  0%, 100% { box-shadow: 0 5px 0 var(--ink), 0 0 12px rgba(255, 212, 71, 0.65); }
+  50% { box-shadow: 0 5px 0 var(--ink), 0 0 26px rgba(242, 66, 66, 0.85); }
 }
 
 .animate-float {
-  animation: floatSlow 3.2s ease-in-out infinite;
+  animation: floatSlow 3s ease-in-out infinite;
 }
 
 .animate-glow {
-  animation: pulseGlow 2.2s ease-in-out infinite;
+  animation: pulseGlow 2s ease-in-out infinite;
 }

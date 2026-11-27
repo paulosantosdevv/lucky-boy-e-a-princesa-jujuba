@@ -23,275 +23,231 @@ export const CharacterPortrait: React.FC<Props> = ({
       style={{ display: 'block', flexShrink: 0 }}
     >
       <defs>
-        <radialGradient id={`bg-${character}`} cx="50%" cy="40%" r="65%">
+        <radialGradient id={`bg-seuss-${character}`} cx="50%" cy="35%" r="68%">
           {character === 'lucky' && (
             <>
-              <stop offset="0%" stopColor="#6be6ff" />
-              <stop offset="100%" stopColor="#1b4d89" />
+              <stop offset="0%" stopColor="#d8f5ff" />
+              <stop offset="100%" stopColor="#6fd3f7" />
             </>
           )}
           {character === 'jujuba' && (
             <>
-              <stop offset="0%" stopColor="#ffe599" />
-              <stop offset="100%" stopColor="#c9184a" />
+              <stop offset="0%" stopColor="#fff7c2" />
+              <stop offset="100%" stopColor="#ff9ebb" />
             </>
           )}
           {character === 'lully' && (
             <>
-              <stop offset="0%" stopColor="#ffccd5" />
-              <stop offset="100%" stopColor="#6a4c93" />
+              <stop offset="0%" stopColor="#fff0f5" />
+              <stop offset="100%" stopColor="#e278b8" />
             </>
           )}
           {character === 'paulo' && (
             <>
-              <stop offset="0%" stopColor="#ff6b6b" />
-              <stop offset="100%" stopColor="#1d1e2c" />
+              <stop offset="0%" stopColor="#fff8eb" />
+              <stop offset="100%" stopColor="#86db58" />
             </>
           )}
           {character === 'lula' && (
             <>
-              <stop offset="0%" stopColor="#9d4edd" />
-              <stop offset="100%" stopColor="#240046" />
+              <stop offset="0%" stopColor="#ead6ff" />
+              <stop offset="100%" stopColor="#9f7aea" />
             </>
           )}
           {character === 'pinhao' && (
             <>
-              <stop offset="0%" stopColor="#ffd166" />
-              <stop offset="100%" stopColor="#5c3d2e" />
+              <stop offset="0%" stopColor="#fff5cc" />
+              <stop offset="100%" stopColor="#f5b922" />
             </>
           )}
         </radialGradient>
       </defs>
 
-      {/* Storybook Frame */}
-      <circle cx="70" cy="70" r="65" fill={`url(#bg-${character})`} stroke="#ffd166" strokeWidth="5" />
-      <circle cx="70" cy="70" r="59" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="2" strokeDasharray="6 5" />
+      {/* Hand-inked Storybook Medallion Frame */}
+      <circle cx="70" cy="70" r="65" fill={`url(#bg-seuss-${character})`} stroke="#221b18" strokeWidth="4.5" />
+      <circle cx="70" cy="70" r="59" fill="none" stroke="#fff9eb" strokeWidth="2.5" strokeDasharray="7 5" />
 
       {/* LUCKY BOY: Chubby all-white Shih Tzu with red scarf */}
       {character === 'lucky' && (
         <g>
-          {/* Chubby white body */}
-          <ellipse cx="70" cy="112" rx="34" ry="24" fill="#ffffff" stroke="#231942" strokeWidth="3.2" />
-          {/* SPFC costume jersey on body */}
+          <ellipse cx="70" cy="112" rx="34" ry="24" fill="#ffffff" stroke="#221b18" strokeWidth="3.2" />
           {costume === 'spfc' && (
             <g>
-              <path d="M40 104 Q70 96 100 104 L98 124 Q70 132 42 124 Z" fill="#ffffff" stroke="#231942" strokeWidth="2.4" />
-              <rect x="42" y="108" width="56" height="5" fill="#e63946" />
-              <rect x="42" y="116" width="56" height="5" fill="#111111" />
-              <polygon points="70,107 78,107 74,117" fill="#e63946" stroke="#111" strokeWidth="1.5" />
+              <path d="M40 104 Q70 96 100 104 L98 124 Q70 132 42 124 Z" fill="#ffffff" stroke="#221b18" strokeWidth="2.4" />
+              <rect x="42" y="108" width="56" height="5" fill="#d92626" />
+              <rect x="42" y="116" width="56" height="5" fill="#181818" />
+              <polygon points="70,107 78,107 74,117" fill="#d92626" stroke="#111" strokeWidth="1.5" />
             </g>
           )}
-          {/* Fluffy ears */}
-          <ellipse cx="34" cy="72" rx="16" ry="26" transform="rotate(14 34 72)" fill="#f8f9fa" stroke="#231942" strokeWidth="3.2" />
-          <ellipse cx="106" cy="72" rx="16" ry="26" transform="rotate(-14 106 72)" fill="#f8f9fa" stroke="#231942" strokeWidth="3.2" />
-          {/* Fluffy head */}
+          <ellipse cx="34" cy="72" rx="16" ry="26" transform="rotate(14 34 72)" fill="#fffef9" stroke="#221b18" strokeWidth="3.2" />
+          <ellipse cx="106" cy="72" rx="16" ry="26" transform="rotate(-14 106 72)" fill="#fffef9" stroke="#221b18" strokeWidth="3.2" />
           <path
             d="M36 66 C34 40, 54 29, 70 30 C86 29, 106 40, 104 66 C106 86, 90 98, 70 98 C50 98, 34 86, 36 66 Z"
             fill="#ffffff"
-            stroke="#231942"
+            stroke="#221b18"
             strokeWidth="3.2"
           />
-          {/* Top fluff tuft */}
-          <path d="M58 32 Q70 18 82 32" fill="#ffffff" stroke="#231942" strokeWidth="3" />
-          {/* Big expressive eyes */}
-          <circle cx="54" cy="64" r="8.5" fill="#231942" />
-          <circle cx="86" cy="64" r="8.5" fill="#231942" />
+          <path d="M58 32 Q70 16 82 32" fill="#ffffff" stroke="#221b18" strokeWidth="3" />
+          <circle cx="54" cy="64" r="8.2" fill="#221b18" />
+          <circle cx="86" cy="64" r="8.2" fill="#221b18" />
           <circle cx="56.5" cy="61" r="3" fill="#ffffff" />
           <circle cx="88.5" cy="61" r="3" fill="#ffffff" />
-          {/* Rosy cheeks */}
-          <ellipse cx="44" cy="74" rx="6" ry="3.5" fill="#ff9ebb" opacity="0.7" />
-          <ellipse cx="96" cy="74" rx="6" ry="3.5" fill="#ff9ebb" opacity="0.7" />
-          {/* Cute nose & happy tongue */}
-          <ellipse cx="70" cy="73" rx="6" ry="4.5" fill="#231942" />
-          <path d="M62 80 Q70 86 78 80" fill="none" stroke="#231942" strokeWidth="2.8" strokeLinecap="round" />
-          <path d="M66 82 Q70 93 74 82" fill="#ff5d8f" stroke="#231942" strokeWidth="2" />
-          {/* Red knitted scarf */}
-          <path d="M40 92 Q70 105 100 92 L103 103 Q70 116 37 103 Z" fill="#e63946" stroke="#231942" strokeWidth="2.8" />
-          <path d="M84 98 L95 122 L81 124 L74 102 Z" fill="#d62828" stroke="#231942" strokeWidth="2.6" />
-          <line x1="52" y1="97" x2="54" y2="106" stroke="#ffd166" strokeWidth="2.5" />
-          <line x1="70" y1="100" x2="70" y2="109" stroke="#ffd166" strokeWidth="2.5" />
-          {/* Optional Santa hat */}
+          <ellipse cx="44" cy="74" rx="6" ry="3.5" fill="#ff9ebb" opacity="0.8" />
+          <ellipse cx="96" cy="74" rx="6" ry="3.5" fill="#ff9ebb" opacity="0.8" />
+          <ellipse cx="70" cy="73" rx="6" ry="4.5" fill="#221b18" />
+          <path d="M62 80 Q70 86 78 80" fill="none" stroke="#221b18" strokeWidth="2.8" strokeLinecap="round" />
+          <path d="M66 82 Q70 93 74 82" fill="#f46d75" stroke="#221b18" strokeWidth="2" />
+          {/* Striped Seuss Red & Cream Scarf */}
+          <path d="M40 92 Q70 105 100 92 L103 103 Q70 116 37 103 Z" fill="#d92626" stroke="#221b18" strokeWidth="2.8" />
+          <path d="M84 98 L95 122 L81 124 L74 102 Z" fill="#d92626" stroke="#221b18" strokeWidth="2.6" />
+          <line x1="52" y1="97" x2="54" y2="106" stroke="#fff9eb" strokeWidth="3" />
+          <line x1="70" y1="100" x2="70" y2="109" stroke="#fff9eb" strokeWidth="3" />
+
           {costume === 'santa' && (
             <g>
-              <path d="M42 40 Q70 6 102 36 Q74 30 42 40 Z" fill="#e63946" stroke="#231942" strokeWidth="2.8" />
-              <rect x="40" y="34" width="60" height="10" rx="5" fill="#fff" stroke="#231942" strokeWidth="2.5" />
-              <circle cx="102" cy="34" r="7" fill="#fff" stroke="#231942" strokeWidth="2.5" />
+              <path d="M42 40 Q70 6 102 36 Q74 30 42 40 Z" fill="#d92626" stroke="#221b18" strokeWidth="2.8" />
+              <rect x="40" y="34" width="60" height="10" rx="5" fill="#fff" stroke="#221b18" strokeWidth="2.5" />
+              <circle cx="102" cy="34" r="7" fill="#fff" stroke="#221b18" strokeWidth="2.5" />
             </g>
           )}
-          {/* Optional Pilot goggles */}
           {costume === 'pilot' && (
             <g>
-              <rect x="42" y="38" width="56" height="10" rx="4" fill="#6f4e37" stroke="#231942" strokeWidth="2.4" />
-              <circle cx="56" cy="43" r="9" fill="#90e0ef" stroke="#d4a373" strokeWidth="3" />
-              <circle cx="84" cy="43" r="9" fill="#90e0ef" stroke="#d4a373" strokeWidth="3" />
+              <rect x="42" y="38" width="56" height="10" rx="4" fill="#6f4e37" stroke="#221b18" strokeWidth="2.4" />
+              <circle cx="56" cy="43" r="9" fill="#a8e6ff" stroke="#d99316" strokeWidth="3" />
+              <circle cx="84" cy="43" r="9" fill="#a8e6ff" stroke="#d99316" strokeWidth="3" />
             </g>
           )}
-          {/* Optional Diver glass dome */}
           {costume === 'diver' && (
-            <circle cx="70" cy="66" r="46" fill="rgba(144,224,239,0.22)" stroke="#90e0ef" strokeWidth="3.5" />
+            <circle cx="70" cy="66" r="46" fill="rgba(168,230,255,0.28)" stroke="#221b18" strokeWidth="3" />
           )}
-          {/* Starlight crown */}
           {costume === 'starlight' && (
-            <polygon points="70,12 75,24 88,24 77,31 81,43 70,35 59,43 63,31 52,24 65,24" fill="#ffd166" stroke="#231942" strokeWidth="2.4" />
+            <polygon points="70,12 75,24 88,24 77,31 81,43 70,35 59,43 63,31 52,24 65,24" fill="#ffe055" stroke="#221b18" strokeWidth="2.4" />
           )}
         </g>
       )}
 
-      {/* PRINCESA JUJUBA: Radiant blonde woman in festive royal gown */}
+      {/* PRINCESA JUJUBA: Cheerful Golden-Blonde Princess */}
       {character === 'jujuba' && (
         <g>
-          {/* Flowing golden blonde hair back */}
-          <path d="M32 62 C26 95, 36 122, 48 128 L92 128 C104 122, 114 95, 108 62 C104 30, 36 30, 32 62 Z" fill="#f7c948" stroke="#231942" strokeWidth="3" />
-          {/* Royal Christmas dress shoulders */}
-          <path d="M36 126 Q70 98 104 126 L108 138 L32 138 Z" fill="#e63946" stroke="#231942" strokeWidth="3" />
+          <path d="M32 62 C26 95, 36 122, 48 128 L92 128 C104 122, 114 95, 108 62 C104 30, 36 30, 32 62 Z" fill="#ffe055" stroke="#221b18" strokeWidth="3" />
+          <path d="M36 126 Q70 98 104 126 L108 138 L32 138 Z" fill="#e24b78" stroke="#221b18" strokeWidth="3" />
           <path d="M44 114 Q70 124 96 114" fill="none" stroke="#ffffff" strokeWidth="7" strokeLinecap="round" />
-          <circle cx="70" cy="118" r="5" fill="#ffd166" stroke="#231942" strokeWidth="2" />
-          {/* Neck & Face */}
+          <circle cx="70" cy="118" r="5" fill="#ffd447" stroke="#221b18" strokeWidth="2" />
           <rect x="63" y="92" width="14" height="16" fill="#ffe0bd" />
-          <ellipse cx="70" cy="68" rx="25" ry="28" fill="#ffe5c4" stroke="#231942" strokeWidth="3" />
-          {/* Blonde bangs & waves */}
-          <path d="M43 60 Q56 36 78 42 Q96 46 97 64 Q86 48 72 52 Q56 54 43 60 Z" fill="#ffe066" stroke="#231942" strokeWidth="2.6" />
-          {/* Star Tiara */}
-          <path d="M50 42 L58 30 L70 36 L82 30 L90 42 Z" fill="#ffd166" stroke="#231942" strokeWidth="2.5" />
-          <polygon points="70,18 73,27 82,27 75,32 78,40 70,35 62,40 65,32 58,27 67,27" fill="#fff3b0" stroke="#d97706" strokeWidth="1.8" />
-          {/* Kind sparkling eyes */}
-          <circle cx="60" cy="68" r="4.5" fill="#2b59c3" />
-          <circle cx="80" cy="68" r="4.5" fill="#2b59c3" />
+          <ellipse cx="70" cy="68" rx="25" ry="28" fill="#ffe7c8" stroke="#221b18" strokeWidth="3" />
+          <path d="M43 60 Q56 36 78 42 Q96 46 97 64 Q86 48 72 52 Q56 54 43 60 Z" fill="#ffeb75" stroke="#221b18" strokeWidth="2.6" />
+          <path d="M50 42 L58 30 L70 36 L82 30 L90 42 Z" fill="#ffd447" stroke="#221b18" strokeWidth="2.5" />
+          <polygon points="70,18 73,27 82,27 75,32 78,40 70,35 62,40 65,32 58,27 67,27" fill="#fff7b0" stroke="#221b18" strokeWidth="1.8" />
+          <circle cx="60" cy="68" r="4.5" fill="#221b18" />
+          <circle cx="80" cy="68" r="4.5" fill="#221b18" />
           <circle cx="61.5" cy="66.5" r="1.6" fill="#ffffff" />
           <circle cx="81.5" cy="66.5" r="1.6" fill="#ffffff" />
-          {/* Cheeks & warm smile */}
-          <ellipse cx="52" cy="76" rx="5" ry="3" fill="#ff8fab" opacity="0.6" />
-          <ellipse cx="88" cy="76" rx="5" ry="3" fill="#ff8fab" opacity="0.6" />
+          <ellipse cx="52" cy="76" rx="5" ry="3" fill="#ff8fab" opacity="0.7" />
+          <ellipse cx="88" cy="76" rx="5" ry="3" fill="#ff8fab" opacity="0.7" />
           <path d="M62 82 Q70 89 78 82" fill="none" stroke="#c9184a" strokeWidth="3" strokeLinecap="round" />
         </g>
       )}
 
-      {/* LULLY: Cute black-and-white Shih Tzu with Christmas bow */}
+      {/* LULLY: Black-and-white Shih Tzu */}
       {character === 'lully' && (
         <g>
-          {/* Body */}
-          <ellipse cx="70" cy="112" rx="30" ry="22" fill="#ffffff" stroke="#231942" strokeWidth="3.2" />
-          {/* Black spot on shoulder */}
-          <ellipse cx="84" cy="112" rx="12" ry="10" fill="#22223b" />
-          {/* Black fluffy ears */}
-          <ellipse cx="35" cy="72" rx="15" ry="25" transform="rotate(14 35 72)" fill="#22223b" stroke="#111" strokeWidth="3" />
-          <ellipse cx="105" cy="72" rx="15" ry="25" transform="rotate(-14 105 72)" fill="#22223b" stroke="#111" strokeWidth="3" />
-          {/* White face */}
+          <ellipse cx="70" cy="112" rx="30" ry="22" fill="#ffffff" stroke="#221b18" strokeWidth="3.2" />
+          <ellipse cx="84" cy="112" rx="12" ry="10" fill="#221b18" />
+          <ellipse cx="35" cy="72" rx="15" ry="25" transform="rotate(14 35 72)" fill="#221b18" stroke="#111" strokeWidth="3" />
+          <ellipse cx="105" cy="72" rx="15" ry="25" transform="rotate(-14 105 72)" fill="#221b18" stroke="#111" strokeWidth="3" />
           <path
             d="M38 66 C36 42, 54 32, 70 33 C86 32, 104 42, 102 66 C104 86, 88 97, 70 97 C52 97, 36 86, 38 66 Z"
             fill="#ffffff"
-            stroke="#231942"
+            stroke="#221b18"
             strokeWidth="3.2"
           />
-          {/* Charming black patch around left eye */}
-          <ellipse cx="54" cy="62" rx="15" ry="14" fill="#22223b" />
-          {/* Eyes */}
+          <ellipse cx="54" cy="62" rx="15" ry="14" fill="#221b18" />
           <circle cx="54" cy="63" r="6.5" fill="#111" stroke="#fff" strokeWidth="1.5" />
-          <circle cx="86" cy="63" r="7" fill="#231942" />
+          <circle cx="86" cy="63" r="7" fill="#221b18" />
           <circle cx="56" cy="60.5" r="2.5" fill="#ffffff" />
           <circle cx="88" cy="60.5" r="2.5" fill="#ffffff" />
-          {/* Nose & Smile */}
-          <ellipse cx="70" cy="74" rx="5.5" ry="4" fill="#231942" />
-          <path d="M63 81 Q70 87 77 81" fill="none" stroke="#231942" strokeWidth="2.6" strokeLinecap="round" />
-          {/* Cute red Christmas bow on top of head */}
-          <path d="M70 33 L54 22 L56 38 Z" fill="#e63946" stroke="#231942" strokeWidth="2.4" />
-          <path d="M70 33 L86 22 L84 38 Z" fill="#e63946" stroke="#231942" strokeWidth="2.4" />
-          <circle cx="70" cy="31" r="5.5" fill="#ff4d6d" stroke="#231942" strokeWidth="2.2" />
-          {/* Green collar with golden bell */}
-          <path d="M44 93 Q70 103 96 93" fill="none" stroke="#2a9d8f" strokeWidth="6" strokeLinecap="round" />
-          <circle cx="70" cy="102" r="6" fill="#ffd166" stroke="#231942" strokeWidth="2" />
+          <ellipse cx="70" cy="74" rx="5.5" ry="4" fill="#221b18" />
+          <path d="M63 81 Q70 87 77 81" fill="none" stroke="#221b18" strokeWidth="2.6" strokeLinecap="round" />
+          <path d="M70 33 L54 22 L56 38 Z" fill="#d92626" stroke="#221b18" strokeWidth="2.4" />
+          <path d="M70 33 L86 22 L84 38 Z" fill="#d92626" stroke="#221b18" strokeWidth="2.4" />
+          <circle cx="70" cy="31" r="5.5" fill="#f46d75" stroke="#221b18" strokeWidth="2.2" />
+          <path d="M44 93 Q70 103 96 93" fill="none" stroke="#5ea93f" strokeWidth="6" strokeLinecap="round" />
+          <circle cx="70" cy="102" r="6" fill="#ffd447" stroke="#221b18" strokeWidth="2" />
         </g>
       )}
 
-      {/* PAULO: Friendly white man wearing classic SPFC jersey */}
+      {/* PAULO (SPFC) */}
       {character === 'paulo' && (
         <g>
-          {/* SPFC White Jersey with horizontal red & black chest stripes + tricolor crest */}
-          <path d="M28 128 Q35 96 70 96 Q105 96 112 128 L112 138 L28 138 Z" fill="#ffffff" stroke="#231942" strokeWidth="3" />
-          {/* Horizontal Tricolor stripes */}
-          <rect x="33" y="109" width="74" height="7" fill="#e63946" />
+          <path d="M28 128 Q35 96 70 96 Q105 96 112 128 L112 138 L28 138 Z" fill="#ffffff" stroke="#221b18" strokeWidth="3" />
+          <rect x="33" y="109" width="74" height="7" fill="#d92626" />
           <rect x="31" y="119" width="78" height="7" fill="#141414" />
-          {/* SPFC-style shield crest in center */}
           <polygon points="70,104 82,104 82,113 70,126 58,113 58,104" fill="#111111" stroke="#ffffff" strokeWidth="2" />
           <rect x="60" y="106" width="20" height="5" fill="#111111" />
-          <polygon points="60,113 69,113 69,122" fill="#e63946" />
+          <polygon points="60,113 69,113 69,122" fill="#d92626" />
           <polygon points="80,113 71,113 71,122" fill="#111111" />
           <text x="70" y="110.5" fontSize="5.2" fontWeight="900" fill="#ffffff" textAnchor="middle">SPFC</text>
-          {/* Neck & Head */}
-          <rect x="61" y="83" width="18" height="16" fill="#f5cda7" stroke="#231942" strokeWidth="2.5" />
-          <ellipse cx="70" cy="60" rx="26" ry="28" fill="#fbd8b6" stroke="#231942" strokeWidth="3" />
-          {/* Ears */}
-          <circle cx="43" cy="62" r="5.5" fill="#f5cda7" stroke="#231942" strokeWidth="2.5" />
-          <circle cx="97" cy="62" r="5.5" fill="#f5cda7" stroke="#231942" strokeWidth="2.5" />
-          {/* Short brown hair */}
-          <path d="M43 54 C42 28, 98 26, 97 54 C90 42, 76 40, 62 42 C52 44, 47 48, 43 54 Z" fill="#4a3222" stroke="#231942" strokeWidth="2.8" />
-          {/* Friendly eyes & eyebrows */}
+          <rect x="61" y="83" width="18" height="16" fill="#f5cda7" stroke="#221b18" strokeWidth="2.5" />
+          <ellipse cx="70" cy="60" rx="26" ry="28" fill="#fbd8b6" stroke="#221b18" strokeWidth="3" />
+          <circle cx="43" cy="62" r="5.5" fill="#f5cda7" stroke="#221b18" strokeWidth="2.5" />
+          <circle cx="97" cy="62" r="5.5" fill="#f5cda7" stroke="#221b18" strokeWidth="2.5" />
+          <path d="M43 54 C42 28, 98 26, 97 54 C90 42, 76 40, 62 42 C52 44, 47 48, 43 54 Z" fill="#4a3222" stroke="#221b18" strokeWidth="2.8" />
           <path d="M53 52 Q59 48 65 52" fill="none" stroke="#4a3222" strokeWidth="2.6" strokeLinecap="round" />
           <path d="M75 52 Q81 48 87 52" fill="none" stroke="#4a3222" strokeWidth="2.6" strokeLinecap="round" />
-          <circle cx="59" cy="60" r="4" fill="#231942" />
-          <circle cx="81" cy="60" r="4" fill="#231942" />
+          <circle cx="59" cy="60" r="4" fill="#221b18" />
+          <circle cx="81" cy="60" r="4" fill="#221b18" />
           <circle cx="60.5" cy="58.5" r="1.5" fill="#fff" />
           <circle cx="82.5" cy="58.5" r="1.5" fill="#fff" />
-          {/* Warm grin */}
-          <path d="M57 73 Q70 84 83 73 Z" fill="#ffffff" stroke="#231942" strokeWidth="2.5" />
+          <path d="M57 73 Q70 84 83 73 Z" fill="#ffffff" stroke="#221b18" strokeWidth="2.5" />
         </g>
       )}
 
-      {/* LULA: Comical Dr. Seuss / Grinch-style grumpy fairytale inventor boss */}
+      {/* LULA: Whimsical Seuss / Grinch-like Grumpy Cartoon Villain */}
       {character === 'lula' && (
         <g>
-          {/* Purple crooked villain coat */}
-          <path d="M26 132 L40 94 L70 105 L100 94 L114 132 Z" fill="#5a189a" stroke="#180a29" strokeWidth="3.2" />
-          <path d="M40 94 L56 114 L46 122 L34 104 Z" fill="#9d4edd" stroke="#180a29" strokeWidth="2.5" />
-          <path d="M100 94 L84 114 L94 122 L106 104 Z" fill="#9d4edd" stroke="#180a29" strokeWidth="2.5" />
-          {/* Quirky fuzzy head */}
+          <path d="M26 132 L40 94 L70 105 L100 94 L114 132 Z" fill="#6b2fa0" stroke="#221b18" strokeWidth="3.2" />
+          <path d="M40 94 L56 114 L46 122 L34 104 Z" fill="#b38cd9" stroke="#221b18" strokeWidth="2.5" />
+          <path d="M100 94 L84 114 L94 122 L106 104 Z" fill="#b38cd9" stroke="#221b18" strokeWidth="2.5" />
           <path
             d="M42 66 C38 36, 56 26, 70 28 C84 26, 102 36, 98 66 C98 86, 86 98, 70 98 C54 98, 42 86, 42 66 Z"
-            fill="#c77dff"
-            stroke="#180a29"
+            fill="#c38ef5"
+            stroke="#221b18"
             strokeWidth="3.2"
           />
-          {/* Wild Seuss-style hair tufts */}
-          <path d="M52 30 Q62 12 72 28 Q82 10 88 30" fill="none" stroke="#3c096c" strokeWidth="5" strokeLinecap="round" />
-          {/* Steampunk brass goggles on forehead */}
-          <rect x="42" y="37" width="56" height="9" rx="4" fill="#3c096c" stroke="#180a29" strokeWidth="2.4" />
-          <circle cx="56" cy="41" r="8.5" fill="#ffd166" stroke="#9c6644" strokeWidth="3" />
-          <circle cx="84" cy="41" r="8.5" fill="#ffd166" stroke="#9c6644" strokeWidth="3" />
-          {/* Exaggerated grumpy eyebrows */}
-          <path d="M48 54 L66 61" stroke="#180a29" strokeWidth="4.5" strokeLinecap="round" />
-          <path d="M92 54 L74 61" stroke="#180a29" strokeWidth="4.5" strokeLinecap="round" />
-          {/* Yellow glowing mischievous eyes */}
-          <ellipse cx="57" cy="65" rx="5.5" ry="4.5" fill="#ffea00" stroke="#180a29" strokeWidth="2" />
-          <ellipse cx="83" cy="65" rx="5.5" ry="4.5" fill="#ffea00" stroke="#180a29" strokeWidth="2" />
-          <circle cx="57" cy="65" r="2" fill="#180a29" />
-          <circle cx="83" cy="65" r="2" fill="#180a29" />
-          {/* Crooked grumpy smirk */}
-          <path d="M54 83 Q70 75 86 83" fill="none" stroke="#180a29" strokeWidth="3.5" strokeLinecap="round" />
+          {/* Wild Thing-1 / Seuss spiky hair tufts */}
+          <path d="M46 34 Q54 14 66 28 Q74 10 84 28 Q94 14 96 36" fill="none" stroke="#4c1d95" strokeWidth="5" strokeLinecap="round" />
+          <rect x="42" y="37" width="56" height="9" rx="4" fill="#4c1d95" stroke="#221b18" strokeWidth="2.4" />
+          <circle cx="56" cy="41" r="8.5" fill="#ffe055" stroke="#8c5807" strokeWidth="3" />
+          <circle cx="84" cy="41" r="8.5" fill="#ffe055" stroke="#8c5807" strokeWidth="3" />
+          <path d="M48 54 L66 61" stroke="#221b18" strokeWidth="4.5" strokeLinecap="round" />
+          <path d="M92 54 L74 61" stroke="#221b18" strokeWidth="4.5" strokeLinecap="round" />
+          <ellipse cx="57" cy="65" rx="5.5" ry="4.5" fill="#ffe55c" stroke="#221b18" strokeWidth="2" />
+          <ellipse cx="83" cy="65" rx="5.5" ry="4.5" fill="#ffe55c" stroke="#221b18" strokeWidth="2" />
+          <circle cx="57" cy="65" r="2.2" fill="#221b18" />
+          <circle cx="83" cy="65" r="2.2" fill="#221b18" />
+          <path d="M54 83 Q70 75 86 83" fill="none" stroke="#221b18" strokeWidth="3.5" strokeLinecap="round" />
         </g>
       )}
 
-      {/* PROFESSOR PINHÃO: Steampunk owl inventor */}
+      {/* PROFESSOR PINHÃO */}
       {character === 'pinhao' && (
         <g>
-          {/* Owl body & vest */}
-          <ellipse cx="70" cy="108" rx="34" ry="26" fill="#8d5b4c" stroke="#231942" strokeWidth="3" />
-          <ellipse cx="70" cy="112" rx="20" ry="18" fill="#e9c46a" stroke="#231942" strokeWidth="2.5" />
-          {/* Owl head */}
-          <circle cx="70" cy="68" r="29" fill="#a47148" stroke="#231942" strokeWidth="3" />
-          {/* Eye rings & brass glasses */}
-          <circle cx="56" cy="67" r="13" fill="#fff8eb" stroke="#d4a373" strokeWidth="3.5" />
-          <circle cx="84" cy="67" r="13" fill="#fff8eb" stroke="#d4a373" strokeWidth="3.5" />
-          <line x1="69" y1="67" x2="71" y2="67" stroke="#231942" strokeWidth="3" />
-          <circle cx="56" cy="67" r="5" fill="#231942" />
-          <circle cx="84" cy="67" r="5" fill="#231942" />
+          <ellipse cx="70" cy="108" rx="34" ry="26" fill="#a46a47" stroke="#221b18" strokeWidth="3" />
+          <ellipse cx="70" cy="112" rx="20" ry="18" fill="#ffe599" stroke="#221b18" strokeWidth="2.5" />
+          <circle cx="70" cy="68" r="29" fill="#c07e52" stroke="#221b18" strokeWidth="3" />
+          <circle cx="56" cy="67" r="13" fill="#fff9eb" stroke="#d99316" strokeWidth="3.5" />
+          <circle cx="84" cy="67" r="13" fill="#fff9eb" stroke="#d99316" strokeWidth="3.5" />
+          <line x1="69" y1="67" x2="71" y2="67" stroke="#221b18" strokeWidth="3" />
+          <circle cx="56" cy="67" r="5" fill="#221b18" />
+          <circle cx="84" cy="67" r="5" fill="#221b18" />
           <circle cx="58" cy="65" r="2" fill="#fff" />
           <circle cx="86" cy="65" r="2" fill="#fff" />
-          {/* Beak */}
-          <polygon points="70,74 63,83 77,83" fill="#ff9f1c" stroke="#231942" strokeWidth="2.4" />
-          {/* Crooked Steampunk Top Hat */}
-          <path d="M40 46 Q70 38 100 46 L94 49 Q70 43 46 49 Z" fill="#2b2d42" stroke="#111" strokeWidth="2.5" />
-          <path d="M50 43 L56 14 L88 18 L86 43 Z" fill="#2b2d42" stroke="#111" strokeWidth="2.8" />
-          <rect x="52" y="34" width="35" height="6" fill="#e63946" />
+          <polygon points="70,74 63,83 77,83" fill="#ff9f1c" stroke="#221b18" strokeWidth="2.4" />
+          {/* Striped Seuss Top Hat! */}
+          <path d="M40 46 Q70 38 100 46 L94 49 Q70 43 46 49 Z" fill="#d92626" stroke="#221b18" strokeWidth="2.5" />
+          <path d="M50 43 L56 14 L88 18 L86 43 Z" fill="#ffffff" stroke="#221b18" strokeWidth="2.8" />
+          <rect x="52" y="24" width="35" height="6" fill="#d92626" />
+          <rect x="52" y="35" width="35" height="6" fill="#d92626" />
         </g>
       )}
     </svg>

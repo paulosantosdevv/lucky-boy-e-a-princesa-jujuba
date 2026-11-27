@@ -82,7 +82,6 @@ export function App() {
     };
   }, []);
 
-  // Update background music by screen / level
   useEffect(() => {
     if (screen === 'menu' || screen === 'map') {
       audioSystem.playMusic('menu');
@@ -98,28 +97,33 @@ export function App() {
     persistSave(next);
   }, []);
 
-  const startLevel = useCallback((levelId: LevelId, skipIntro = false) => {
-    setActiveLevelId(levelId);
-    setHud({ ...EMPTY_HUD, lives: save.lives });
-    setResultModal(null);
-    setSpecialYLabel(undefined);
-    setRunKey((k) => k + 1);
-    setScreen('playing');
+  const startLevel = useCallback(
+    (levelId: LevelId, skipIntro = false) => {
+      inputManager.clearAll();
+      setActiveLevelId(levelId);
+      setHud({ ...EMPTY_HUD, lives: save.lives });
+      setResultModal(null);
+      setSpecialYLabel(undefined);
+      setRunKey((k) => k + 1);
+      setScreen('playing');
 
-    const intro = LEVEL_INTROS[levelId];
-    if (!skipIntro && intro && intro.length > 0) {
-      setPaused(true);
-      setDialogue({
-        lines: intro,
-        after: () => {
-          setDialogue(null);
-          setPaused(false);
-        },
-      });
-    } else {
-      setPaused(false);
-    }
-  }, [save.lives]);
+      const intro = LEVEL_INTROS[levelId];
+      if (!skipIntro && intro && intro.length > 0) {
+        setPaused(true);
+        setDialogue({
+          lines: intro,
+          after: () => {
+            inputManager.clearAll();
+            setDialogue(null);
+            setPaused(false);
+          },
+        });
+      } else {
+        setPaused(false);
+      }
+    },
+    [save.lives]
+  );
 
   const handleContinue = () => {
     audioSystem.unlock();
@@ -189,21 +193,19 @@ export function App() {
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative', overflow: 'hidden' }}>
-      {/* ================================================================= */}
-      {/* MAIN MENU SCREEN                                                  */}
-      {/* ================================================================= */}
+      {/* MAIN MENU SCREEN - Bright Dr. Seuss / Big Golden Book */}
       {screen === 'menu' && (
         <div
           className="scrollable-panel"
           style={{
             width: '100%',
             height: '100%',
-            background: 'radial-gradient(circle at 50% 12%, #311b70 0%, #120c2c 76%)',
+            background: 'linear-gradient(180deg, #6fd3f7 0%, #c6f1ff 64%, #78c44d 100%)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            padding: '18px 14px 28px',
-            gap: 16,
+            padding: '16px 14px 28px',
+            gap: 14,
           }}
         >
           <CoverArt costume={save.equippedCostume} />
@@ -211,7 +213,7 @@ export function App() {
           <div
             className="seuss-card"
             style={{
-              width: 'min(760px, 100%)',
+              width: 'min(780px, 100%)',
               padding: '18px 20px',
               display: 'flex',
               flexDirection: 'column',
@@ -219,7 +221,6 @@ export function App() {
               gap: 12,
             }}
           >
-            {/* Primary Continue / Start CTA */}
             {hasProgress ? (
               <button
                 type="button"
@@ -230,7 +231,7 @@ export function App() {
                 <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Play size={20} /> CONTINUAR AVENTURA
                 </span>
-                <span style={{ fontSize: '0.78rem', fontWeight: 700, opacity: 0.92 }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 700, opacity: 0.94 }}>
                   Fase {save.selectedLevel.toString().padStart(2, '0')} · {progressPct}% concluído
                 </span>
               </button>
@@ -238,14 +239,13 @@ export function App() {
               <button
                 type="button"
                 className="seuss-btn seuss-btn-primary animate-glow"
-                style={{ width: 'min(390px, 100%)', padding: '15px 22px', fontSize: '1.2rem' }}
+                style={{ width: 'min(390px, 100%)', padding: '14px 22px', fontSize: '1.18rem' }}
                 onClick={handleNewGame}
               >
                 <Sparkles size={21} /> COMEÇAR AVENTURA DE NATAL
               </button>
             )}
 
-            {/* Secondary Menu Buttons */}
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10, width: '100%' }}>
               <button
                 type="button"
@@ -302,16 +302,14 @@ export function App() {
               </button>
             </div>
 
-            <div style={{ fontSize: 12.5, color: '#7bf1a8', fontWeight: 800, marginTop: 2 }}>
+            <div style={{ fontSize: 12.5, color: '#2f7a24', fontWeight: 900, marginTop: 2 }}>
               💾 Progresso salvo automaticamente no navegador · PC, Celular e Gamepad
             </div>
           </div>
         </div>
       )}
 
-      {/* ================================================================= */}
-      {/* INTERACTIVE JUBALÂNDIA WORLD MAP                                  */}
-      {/* ================================================================= */}
+      {/* WORLD MAP */}
       {screen === 'map' && (
         <WorldMap
           save={save}
@@ -323,9 +321,7 @@ export function App() {
         />
       )}
 
-      {/* ================================================================= */}
-      {/* ACTIVE LEVEL GAMEPLAY (2D / 2.5D / WATER / 3D KART / 3D PLANE / BOSS) */}
-      {/* ================================================================= */}
+      {/* GAMEPLAY SCREEN */}
       {screen === 'playing' && (
         <div style={{ width: '100%', height: '100%', position: 'relative' }}>
           {activeLevelMeta.mode === 'kart' ? (
@@ -389,8 +385,8 @@ export function App() {
                 position: 'fixed',
                 inset: 0,
                 zIndex: 45,
-                background: 'rgba(10, 6, 26, 0.78)',
-                backdropFilter: 'blur(5px)',
+                background: 'rgba(20, 42, 62, 0.62)',
+                backdropFilter: 'blur(4px)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -398,7 +394,7 @@ export function App() {
               }}
             >
               <div className="seuss-card" style={{ width: 'min(380px, 92vw)', padding: 22, textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <h2 className="seuss-title" style={{ margin: '0 0 6px', color: '#ffd166' }}>
+                <h2 className="seuss-title" style={{ margin: '0 0 6px', color: '#c91d1d' }}>
                   ⏸ Jogo Pausado
                 </h2>
                 <button type="button" className="seuss-btn seuss-btn-primary" onClick={() => setPaused(false)}>
@@ -424,15 +420,15 @@ export function App() {
             </div>
           )}
 
-          {/* Level Result Modal */}
+          {/* Result Modal */}
           {resultModal && (
             <div
               style={{
                 position: 'fixed',
                 inset: 0,
                 zIndex: 55,
-                background: 'rgba(10, 6, 26, 0.84)',
-                backdropFilter: 'blur(6px)',
+                background: 'rgba(20, 42, 62, 0.66)',
+                backdropFilter: 'blur(4px)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -440,12 +436,12 @@ export function App() {
               }}
             >
               <div className="seuss-card" style={{ width: 'min(480px, 95vw)', padding: '22px 24px', textAlign: 'center' }}>
-                <h2 className="seuss-title" style={{ margin: '0 0 8px', fontSize: '1.6rem', color: resultModal.result.won ? '#ffd166' : '#ff5d6c' }}>
+                <h2 className="seuss-title" style={{ margin: '0 0 8px', fontSize: '1.6rem', color: resultModal.result.won ? '#2f7a24' : '#c91d1d' }}>
                   {resultModal.result.won ? '⭐ FASE CONCLUÍDA! ⭐' : '🐾 Quase lá, Lucky Boy!'}
                 </h2>
 
                 {resultModal.result.extraNote && (
-                  <p style={{ margin: '0 0 10px', fontWeight: 800, color: '#90e0ef' }}>{resultModal.result.extraNote}</p>
+                  <p style={{ margin: '0 0 10px', fontWeight: 800, color: '#2272a3' }}>{resultModal.result.extraNote}</p>
                 )}
 
                 {resultModal.result.won && (
@@ -460,20 +456,21 @@ export function App() {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(3, 1fr)',
                     gap: 8,
-                    background: 'rgba(255,255,255,0.08)',
+                    background: '#f2e4c4',
+                    border: '2.5px solid #221b18',
                     borderRadius: 14,
                     padding: 12,
                     marginBottom: 14,
-                    fontWeight: 800,
+                    fontWeight: 900,
                     fontSize: 13.5,
                   }}
                 >
                   <div>
-                    <div style={{ opacity: 0.7, fontSize: 11 }}>Petiscos</div>
-                    <div style={{ color: '#ffd166' }}>🦴 +{resultModal.result.treatsCollected}</div>
+                    <div style={{ color: '#5b4c3f', fontSize: 11 }}>Petiscos</div>
+                    <div style={{ color: '#c91d1d' }}>🦴 +{resultModal.result.treatsCollected}</div>
                   </div>
                   <div>
-                    <div style={{ opacity: 0.7, fontSize: 11 }}>Patinhas</div>
+                    <div style={{ color: '#5b4c3f', fontSize: 11 }}>Patinhas</div>
                     <div>
                       {resultModal.result.goldenPaws.map((g, i) => (
                         <span key={i} style={{ opacity: g ? 1 : 0.25 }}>🐾</span>
@@ -481,13 +478,13 @@ export function App() {
                     </div>
                   </div>
                   <div>
-                    <div style={{ opacity: 0.7, fontSize: 11 }}>Tempo</div>
+                    <div style={{ color: '#5b4c3f', fontSize: 11 }}>Tempo</div>
                     <div>⏱ {Math.round(resultModal.result.timeSec)}s</div>
                   </div>
                 </div>
 
                 {resultModal.extraLives > 0 && (
-                  <div style={{ color: '#7bf1a8', fontWeight: 900, marginBottom: 8 }}>
+                  <div style={{ color: '#2f7a24', fontWeight: 900, marginBottom: 8 }}>
                     🎉 +{resultModal.extraLives} Vida Extra por juntar 100 petiscos!
                   </div>
                 )}
@@ -495,14 +492,14 @@ export function App() {
                 {resultModal.newlyUnlocked.length > 0 && (
                   <div
                     style={{
-                      background: 'rgba(255,209,102,0.16)',
-                      border: '2px solid #ffd166',
+                      background: '#fff3bf',
+                      border: '2.5px solid #221b18',
                       borderRadius: 12,
                       padding: 10,
                       marginBottom: 14,
                       fontSize: 13,
-                      fontWeight: 800,
-                      color: '#ffd166',
+                      fontWeight: 900,
+                      color: '#221b18',
                     }}
                   >
                     🎁 Desbloqueado:<br />
@@ -545,36 +542,19 @@ export function App() {
         </div>
       )}
 
-      {/* ================================================================= */}
-      {/* ENDING CINEMATIC                                                  */}
-      {/* ================================================================= */}
+      {/* ENDING CINEMATIC */}
       {screen === 'ending' && (
-        <EndingCinematic
-          save={save}
-          onContinueExploring={() => setScreen('map')}
-        />
+        <EndingCinematic save={save} onContinueExploring={() => setScreen('map')} />
       )}
 
-      {/* ================================================================= */}
-      {/* DIALOGUE OVERLAY                                                  */}
-      {/* ================================================================= */}
+      {/* DIALOGUE OVERLAY */}
       {dialogue && (
-        <DialogueBox
-          lines={dialogue.lines}
-          costume={save.equippedCostume}
-          onComplete={dialogue.after}
-        />
+        <DialogueBox lines={dialogue.lines} costume={save.equippedCostume} onComplete={dialogue.after} />
       )}
 
-      {/* ================================================================= */}
-      {/* MODALS: SETTINGS, COSTUMES, CAST/CREDITS                          */}
-      {/* ================================================================= */}
+      {/* MODALS */}
       {showSettings && (
-        <SettingsModal
-          save={save}
-          onUpdateSave={updateSave}
-          onClose={() => setShowSettings(false)}
-        />
+        <SettingsModal save={save} onUpdateSave={updateSave} onClose={() => setShowSettings(false)} />
       )}
 
       {showCostumes && (
@@ -591,8 +571,8 @@ export function App() {
             position: 'fixed',
             inset: 0,
             zIndex: 60,
-            background: 'rgba(10, 6, 26, 0.84)',
-            backdropFilter: 'blur(5px)',
+            background: 'rgba(20, 42, 62, 0.62)',
+            backdropFilter: 'blur(4px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -605,7 +585,7 @@ export function App() {
             style={{ width: 'min(680px, 96vw)', maxHeight: '88vh', padding: '20px 22px' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="seuss-title" style={{ margin: '0 0 12px', color: '#ffd166' }}>
+            <h2 className="seuss-title" style={{ margin: '0 0 12px', color: '#c91d1d' }}>
               📖 Elenco de Jubalândia & Controles
             </h2>
 
@@ -623,7 +603,8 @@ export function App() {
                 <div
                   key={id}
                   style={{
-                    background: 'rgba(255,255,255,0.07)',
+                    background: '#ffffff',
+                    border: '2.5px solid #221b18',
                     borderRadius: 16,
                     padding: 10,
                     display: 'flex',
@@ -634,14 +615,14 @@ export function App() {
                   }}
                 >
                   <CharacterPortrait character={id} size={68} costume={id === 'lucky' ? save.equippedCostume : 'classic'} />
-                  <div className="seuss-title" style={{ color: '#ffd166', fontSize: '0.96rem' }}>{name}</div>
-                  <div style={{ fontSize: 12, opacity: 0.88, lineHeight: 1.35 }}>{desc}</div>
+                  <div className="seuss-title" style={{ color: '#c91d1d', fontSize: '0.96rem' }}>{name}</div>
+                  <div style={{ fontSize: 12, color: '#3b312a', fontWeight: 700, lineHeight: 1.35 }}>{desc}</div>
                 </div>
               ))}
             </div>
 
-            <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 14, padding: 12, fontSize: 13, lineHeight: 1.6, marginBottom: 14 }}>
-              <strong style={{ color: '#ffd166' }}>🎮 Controles (Teclado / Tela / Gamepad):</strong>
+            <div style={{ background: '#f2e4c4', border: '2.5px solid #221b18', borderRadius: 14, padding: 12, fontSize: 13, lineHeight: 1.6, marginBottom: 14, fontWeight: 700 }}>
+              <strong style={{ color: '#c91d1d' }}>🎮 Controles (Teclado / Tela / Gamepad):</strong>
               <br />• <strong>Direcional:</strong> WASD ou Setas (ou D-Pad na tela)
               <br />• <strong>Botão A (Espaço):</strong> Pular / Pulo Duplo / Acelerar (Kart) / Impulso (Avião) / Nadar
               <br />• <strong>Botão B (J):</strong> Latir / Atacar / Frear (Kart) / Atirar (Avião) · <em>Baixo + B no ar = Barrigada Aérea!</em>

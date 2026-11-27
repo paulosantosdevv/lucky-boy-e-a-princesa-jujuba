@@ -12,171 +12,250 @@ export const CoverArt: React.FC<Props> = ({ costume }) => {
       style={{
         position: 'relative',
         width: '100%',
-        maxWidth: 760,
+        maxWidth: 780,
         aspectRatio: '16 / 9',
-        borderRadius: 28,
+        borderRadius: 24,
         overflow: 'hidden',
-        border: '4px solid #ffd166',
-        boxShadow: '0 20px 55px rgba(0,0,0,0.6), 0 0 30px rgba(255,209,102,0.28)',
+        border: '4px solid #221b18',
+        boxShadow: '0 10px 0 rgba(34,27,24,0.28), 0 18px 38px rgba(20,55,75,0.28)',
+        display: 'flex',
       }}
     >
-      <svg viewBox="0 0 960 540" style={{ width: '100%', height: '100%', display: 'block' }}>
-        <defs>
-          <linearGradient id="coverSky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0f0a2e" />
-            <stop offset="48%" stopColor="#2b1963" />
-            <stop offset="100%" stopColor="#5d2a7e" />
-          </linearGradient>
-          <radialGradient id="starHalo" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fff8b8" stopOpacity="1" />
-            <stop offset="45%" stopColor="#ffd166" stopOpacity="0.65" />
-            <stop offset="100%" stopColor="#ffd166" stopOpacity="0" />
-          </radialGradient>
-          <linearGradient id="snowHill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="100%" stopColor="#cde8ff" />
-          </linearGradient>
-        </defs>
-
-        {/* Night Sky */}
-        <rect width="960" height="540" fill="url(#coverSky)" />
-
-        {/* Enchanted Star Glow */}
-        <circle cx="480" cy="115" r="115" fill="url(#starHalo)" />
-        <polygon
-          points="480,52 494,95 540,95 503,121 516,164 480,138 444,164 457,121 420,95 466,95"
-          fill="#fff5b8"
-          stroke="#f4a261"
-          strokeWidth="4"
-        />
-
-        {/* Whimsical Dr. Seuss Spiral Mountain on Right (Lula's Fortress) */}
-        <path
-          d="M660 420 C700 280, 740 160, 815 95 C855 60, 895 105, 848 138 C822 155, 815 125, 835 112 C860 155, 910 290, 960 420 Z"
-          fill="#3c1361"
-          stroke="#19082b"
-          strokeWidth="5"
-        />
-        {/* Crooked Fortress Tower */}
-        <path d="M775 162 L795 108 L835 115 L842 170 Z" fill="#5a189a" stroke="#19082b" strokeWidth="4" />
-        <polygon points="785,112 818,70 848,118" fill="#e63946" stroke="#19082b" strokeWidth="4" />
-
-        {/* Candy Castle on Left Background (Princesa Jujuba) */}
-        <path d="M80 390 L110 205 L180 198 L215 390 Z" fill="#ff758f" stroke="#231942" strokeWidth="4" />
-        <path d="M100 208 L145 130 L190 202 Z" fill="#ffd166" stroke="#231942" strokeWidth="4" />
-        <rect x="132" y="230" width="28" height="44" rx="14" fill="#fff3b0" stroke="#231942" strokeWidth="3.5" />
-
-        {/* Whimsical Curved Dr. Seuss Pine Trees */}
-        <path
-          d="M270 400 Q245 310 290 250 Q315 295 295 320 Q330 330 305 365 Q335 380 315 410 Z"
-          fill="#2a9d8f"
-          stroke="#14213d"
-          strokeWidth="4"
-        />
-        <path
-          d="M625 405 Q660 310 605 245 Q585 288 605 318 Q572 330 595 368 Q568 380 590 412 Z"
-          fill="#2ec4b6"
-          stroke="#14213d"
-          strokeWidth="4"
-        />
-        {/* Christmas ornaments on trees */}
-        <circle cx="288" cy="292" r="7" fill="#e63946" />
-        <circle cx="298" cy="340" r="7" fill="#ffd166" />
-        <circle cx="607" cy="295" r="7" fill="#ffd166" />
-        <circle cx="598" cy="345" r="7" fill="#e63946" />
-
-        {/* Crooked Jubalandia Houses */}
-        <path d="M345 395 L358 315 L430 308 L442 395 Z" fill="#f4a261" stroke="#231942" strokeWidth="4" />
-        <path d="M335 320 Q395 270 450 312 Z" fill="#e63946" stroke="#231942" strokeWidth="4" />
-        <rect x="378" y="336" width="24" height="24" rx="5" fill="#fff3b0" stroke="#231942" strokeWidth="3" />
-
-        <path d="M510 398 L522 325 L588 320 L595 398 Z" fill="#90e0ef" stroke="#231942" strokeWidth="4" />
-        <path d="M500 328 Q552 282 604 324 Z" fill="#e76f51" stroke="#231942" strokeWidth="4" />
-        <rect x="542" y="342" width="22" height="22" rx="5" fill="#fff3b0" stroke="#231942" strokeWidth="3" />
-
-        {/* Foreground Rolling Snowy Hills */}
-        <path d="M0 405 Q240 345 480 395 Q720 445 960 375 L960 540 L0 540 Z" fill="url(#snowHill)" stroke="#231942" strokeWidth="4" />
-        <path d="M0 458 Q300 412 580 465 Q800 500 960 448 L960 540 L0 540 Z" fill="#e8f5ff" />
-
-        {/* Twinkling stars & Snowflakes */}
-        {[
-          [90, 75], [220, 62], [330, 118], [620, 75], [710, 145], [890, 58],
-          [160, 150], [380, 60], [565, 130], [740, 60], [45, 220], [920, 210],
-        ].map(([cx, cy], i) => (
-          <circle key={i} cx={cx} cy={cy} r={i % 2 === 0 ? 4.5 : 3} fill="#ffffff" opacity={0.85} />
-        ))}
-      </svg>
-
-      {/* Cast Badges positioned artistically across the cover */}
-      {/* Princesa Jujuba in Castle */}
-      <div style={{ position: 'absolute', left: '9%', top: '18%' }} className="animate-float">
-        <CharacterPortrait character="jujuba" size={82} />
-      </div>
-
-      {/* Boss Lula on Spiral Mountain */}
-      <div style={{ position: 'absolute', right: '6%', top: '12%' }}>
-        <CharacterPortrait character="lula" size={88} />
-      </div>
-
-      {/* Hero Trio in Foreground: Lully + LUCKY BOY + Paulo (SPFC) */}
+      {/* Classic Big Golden Book Decorative Spine on Left */}
       <div
+        className="golden-spine"
         style={{
-          position: 'absolute',
-          left: '50%',
-          bottom: '7%',
-          transform: 'translateX(-50%)',
+          width: 'clamp(22px, 4.2vw, 38px)',
+          height: '100%',
+          flexShrink: 0,
           display: 'flex',
-          alignItems: 'flex-end',
-          gap: 'clamp(8px, 2vw, 20px)',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          padding: '10px 0',
+          fontSize: 13,
+          color: '#3a2b18',
+          zIndex: 4,
         }}
       >
-        <div style={{ transform: 'rotate(-5deg)' }}>
-          <CharacterPortrait character="lully" size={84} />
-        </div>
-        <div className="animate-float" style={{ transform: 'translateY(-8px)' }}>
-          <CharacterPortrait character="lucky" size={118} costume={costume} />
-        </div>
-        <div style={{ transform: 'rotate(5deg)' }}>
-          <CharacterPortrait character="paulo" size={84} />
-        </div>
+        <span>🐾</span>
+        <span>🎄</span>
+        <span>🦴</span>
+        <span>⭐</span>
+        <span>🔔</span>
+        <span>🐾</span>
       </div>
 
-      {/* Title Banner */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '4%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          textAlign: 'center',
-          pointerEvents: 'none',
-          width: '90%',
-        }}
-      >
+      {/* Main Dr. Seuss / Lorax / Cat in the Hat Christmas Storybook Scene */}
+      <div style={{ position: 'relative', flex: 1, height: '100%' }}>
+        <svg viewBox="0 0 920 540" style={{ width: '100%', height: '100%', display: 'block' }}>
+          <defs>
+            <linearGradient id="seussSky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#66cef5" />
+              <stop offset="65%" stopColor="#a7e7ff" />
+              <stop offset="100%" stopColor="#dcf7ff" />
+            </linearGradient>
+            <linearGradient id="seussHill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#80cb4b" />
+              <stop offset="100%" stopColor="#4f9932" />
+            </linearGradient>
+            <radialGradient id="bellGold" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#fff7a8" />
+              <stop offset="60%" stopColor="#ffd23f" />
+              <stop offset="100%" stopColor="#d48c11" />
+            </radialGradient>
+          </defs>
+
+          {/* Bright Lorax Sky */}
+          <rect width="920" height="540" fill="url(#seussSky)" />
+
+          {/* Sunburst sketchy white lines (like The Lorax cover!) */}
+          <g stroke="#ffffff" strokeWidth="4" strokeLinecap="round" opacity="0.62">
+            <line x1="460" y1="220" x2="210" y2="95" />
+            <line x1="460" y1="220" x2="155" y2="195" />
+            <line x1="460" y1="220" x2="710" y2="105" />
+            <line x1="460" y1="220" x2="780" y2="210" />
+            <line x1="460" y1="220" x2="310" y2="55" />
+            <line x1="460" y1="220" x2="625" y2="55" />
+          </g>
+
+          {/* Lorax Truffula Tree Left (Yellow Fluffy Tuft) */}
+          <path d="M112 435 Q82 285 118 145" fill="none" stroke="#f7da59" strokeWidth="14" strokeLinecap="round" />
+          <path d="M112 435 Q82 285 118 145" fill="none" stroke="#221b18" strokeWidth="2.8" strokeDasharray="3 10" />
+          <path
+            d="M52 145 C42 95, 90 62, 125 70 C168 62, 198 102, 182 148 C166 176, 86 184, 52 145 Z"
+            fill="#ffe566"
+            stroke="#221b18"
+            strokeWidth="3.2"
+          />
+
+          {/* Lorax Truffula Tree Right (Coral Pink Fluffy Tuft) */}
+          <path d="M810 445 Q842 290 795 148" fill="none" stroke="#f7da59" strokeWidth="15" strokeLinecap="round" />
+          <path d="M810 445 Q842 290 795 148" fill="none" stroke="#221b18" strokeWidth="2.8" strokeDasharray="3 10" />
+          <path
+            d="M726 146 C714 96, 766 56, 812 66 C862 60, 892 108, 868 152 C846 184, 756 186, 726 146 Z"
+            fill="#f46d75"
+            stroke="#221b18"
+            strokeWidth="3.2"
+          />
+
+          {/* Giant Lush Dr. Seuss Christmas Tree in Center (like Cat in the Hat Christmas!) */}
+          <rect x="430" y="325" width="60" height="100" fill="#8b623f" stroke="#221b18" strokeWidth="3.5" />
+          <path
+            d="M460 22 C375 55, 250 105, 192 162 C240 165, 278 168, 290 175 C215 210, 156 268, 130 315 C208 320, 260 314, 292 308 C222 355, 185 385, 175 402 L745 402 C735 385, 698 355, 628 308 C660 314, 712 320, 790 315 C764 268, 705 210, 630 175 C642 168, 680 165, 728 162 C670 105, 545 55, 460 22 Z"
+            fill="#5ea93f"
+            stroke="#221b18"
+            strokeWidth="3.8"
+            strokeLinejoin="round"
+          />
+
+          {/* Pink Fluffy Christmas Garland draped across tree */}
+          <path
+            d="M245 145 Q385 182 545 130 Q625 110 688 158"
+            fill="none"
+            stroke="#e47bb8"
+            strokeWidth="15"
+            strokeLinecap="round"
+          />
+          <path
+            d="M245 145 Q385 182 545 130 Q625 110 688 158"
+            fill="none"
+            stroke="#f7b5dc"
+            strokeWidth="6"
+            strokeLinecap="round"
+            strokeDasharray="6 10"
+          />
+          <path
+            d="M196 276 Q375 316 565 268 Q660 250 732 288"
+            fill="none"
+            stroke="#e47bb8"
+            strokeWidth="14"
+            strokeLinecap="round"
+          />
+
+          {/* 3 Giant Golden Bells in center of tree (iconic from reference #1!) */}
+          {[
+            { x: 412, y: 238, r: -14, s: 0.9 },
+            { x: 508, y: 238, r: 14, s: 0.9 },
+            { x: 460, y: 244, r: 0, s: 1.08 },
+          ].map((b, i) => (
+            <g key={i} transform={`translate(${b.x}, ${b.y}) rotate(${b.r}) scale(${b.s})`}>
+              <path
+                d="M-24 22 C-22 -8, -16 -24, 0 -24 C16 -24, 22 -8, 24 22 C28 28, -28 28, -24 22 Z"
+                fill="url(#bellGold)"
+                stroke="#8c5807"
+                strokeWidth="3"
+              />
+              <circle cx="0" cy="26" r="6" fill="#d99316" stroke="#221b18" strokeWidth="2.2" />
+            </g>
+          ))}
+
+          {/* Bright Ornaments & Candy Canes */}
+          {[
+            [310, 198, '#e63946'],
+            [355, 260, '#ffd447'],
+            [565, 255, '#4cc9f0'],
+            [622, 200, '#ff9f1c'],
+            [275, 290, '#4cc9f0'],
+            [650, 295, '#e63946'],
+            [458, 120, '#ffd447'],
+          ].map(([cx, cy, fill], idx) => (
+            <circle key={idx} cx={cx as number} cy={cy as number} r="10" fill={fill as string} stroke="#221b18" strokeWidth="2.5" />
+          ))}
+
+          {/* Rolling Storybook Green Meadow Hill */}
+          <path d="M0 398 Q230 342 460 375 Q690 408 920 356 L920 540 L0 540 Z" fill="url(#seussHill)" stroke="#221b18" strokeWidth="3.8" />
+          <path d="M0 456 Q280 412 560 460 Q760 490 920 448 L920 540 L0 540 Z" fill="#89d455" opacity="0.7" />
+        </svg>
+
+        {/* Big Golden Book Badge */}
         <div
-          className="seuss-title"
           style={{
-            fontSize: 'clamp(1.35rem, 3.6vw, 2.5rem)',
-            fontWeight: 700,
-            color: '#fff8eb',
-            textShadow: '0 4px 0 #8b1222, 0 8px 18px rgba(0,0,0,0.75)',
-            lineHeight: 1.05,
+            position: 'absolute',
+            top: 10,
+            left: 16,
+            background: '#fff8dc',
+            border: '2.5px solid #221b18',
+            borderRadius: 99,
+            padding: '3px 11px',
+            fontSize: 11,
+            fontWeight: 900,
+            color: '#7a4d09',
+            boxShadow: '0 3px 0 rgba(34,27,24,0.22)',
           }}
         >
-          Lucky Boy e a Princesa Jujuba
+          📖 Edição Especial de Natal · Jubalândia
         </div>
+
+        {/* Storybook Title (Curved / Festive like Cat in the Hat Christmas!) */}
         <div
           style={{
-            marginTop: 4,
-            fontSize: 'clamp(0.72rem, 1.5vw, 0.98rem)',
-            fontWeight: 800,
-            color: '#ffd166',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            textShadow: '0 2px 6px rgba(0,0,0,0.85)',
+            position: 'absolute',
+            top: '9%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            textAlign: 'center',
+            width: '92%',
+            pointerEvents: 'none',
           }}
         >
-          ★ Uma Aventura Extraordinária de Natal ★
+          <div
+            className="seuss-title"
+            style={{
+              fontSize: 'clamp(1.3rem, 3.6vw, 2.45rem)',
+              fontWeight: 700,
+              color: '#fffdf2',
+              WebkitTextStroke: '2px #221b18',
+              textShadow: '0 4px 0 #221b18',
+              lineHeight: 1.04,
+            }}
+          >
+            Lucky Boy e a Princesa Jujuba
+          </div>
+          <div
+            className="seuss-title"
+            style={{
+              marginTop: 2,
+              fontSize: 'clamp(0.92rem, 2.2vw, 1.4rem)',
+              fontWeight: 700,
+              color: '#d92626',
+              WebkitTextStroke: '1px #fffdf2',
+              textShadow: '0 2px 0 #221b18',
+            }}
+          >
+            Uma Aventura Extraordinária de Natal!
+          </div>
+        </div>
+
+        {/* Princesa Jujuba & Villain Lula positioned playfully */}
+        <div style={{ position: 'absolute', left: '6%', bottom: '28%' }} className="animate-float">
+          <CharacterPortrait character="jujuba" size={74} />
+        </div>
+        <div style={{ position: 'absolute', right: '6%', bottom: '28%' }}>
+          <CharacterPortrait character="lula" size={76} />
+        </div>
+
+        {/* Foreground Cast Trio on Green Meadow: Lully + LUCKY BOY + Paulo (SPFC) */}
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: '5%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            alignItems: 'flex-end',
+            gap: 'clamp(8px, 2vw, 20px)',
+          }}
+        >
+          <div style={{ transform: 'rotate(-5deg)' }}>
+            <CharacterPortrait character="lully" size={82} />
+          </div>
+          <div className="animate-float" style={{ transform: 'translateY(-6px)' }}>
+            <CharacterPortrait character="lucky" size={114} costume={costume} />
+          </div>
+          <div style={{ transform: 'rotate(5deg)' }}>
+            <CharacterPortrait character="paulo" size={82} />
+          </div>
         </div>
       </div>
     </div>

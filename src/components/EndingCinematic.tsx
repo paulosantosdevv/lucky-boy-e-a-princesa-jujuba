@@ -34,7 +34,7 @@ export const EndingCinematic: React.FC<Props> = ({ save, onContinueExploring }) 
       style={{
         width: '100%',
         height: '100%',
-        background: 'radial-gradient(circle at 50% 25%, #3c1e78 0%, #140b33 78%)',
+        background: 'linear-gradient(180deg, #6fd3f7 0%, #c6f1ff 62%, #69b543 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -44,12 +44,10 @@ export const EndingCinematic: React.FC<Props> = ({ save, onContinueExploring }) 
       }}
       className="scrollable-panel"
     >
-      {/* Radiant Enchanted Star */}
       <div style={{ fontSize: 58, marginBottom: 8 }} className="animate-float">
         ⭐
       </div>
 
-      {/* Happy Reunion Cast */}
       <div
         style={{
           display: 'flex',
@@ -73,10 +71,10 @@ export const EndingCinematic: React.FC<Props> = ({ save, onContinueExploring }) 
           onClick={nextLine}
           style={{ width: 'min(680px, 95vw)', padding: '18px 22px', cursor: 'pointer', textAlign: 'center' }}
         >
-          <div className="seuss-title" style={{ color: '#ffd166', fontSize: '1.25rem', marginBottom: 6 }}>
+          <div className="seuss-title" style={{ color: '#c91d1d', fontSize: '1.25rem', marginBottom: 6 }}>
             {ENDING_SCENE_LINES[lineIdx].speakerName}
           </div>
-          <p style={{ fontSize: '1.08rem', lineHeight: 1.5, margin: '0 0 14px', fontWeight: 700 }}>
+          <p style={{ fontSize: '1.08rem', lineHeight: 1.5, margin: '0 0 14px', fontWeight: 800, color: '#221b18' }}>
             "{ENDING_SCENE_LINES[lineIdx].text}"
           </p>
           <button type="button" className="seuss-btn seuss-btn-gold">
@@ -89,9 +87,8 @@ export const EndingCinematic: React.FC<Props> = ({ save, onContinueExploring }) 
             className="seuss-title"
             style={{
               margin: '0 0 12px',
-              color: '#ffd166',
+              color: '#c91d1d',
               fontSize: 'clamp(1.6rem, 4.5vw, 2.5rem)',
-              textShadow: '0 4px 0 #8b1222',
             }}
           >
             🎄 FELIZ NATAL! 🎄
@@ -99,49 +96,49 @@ export const EndingCinematic: React.FC<Props> = ({ save, onContinueExploring }) 
 
           <p
             style={{
-              fontSize: 'clamp(1rem, 2.4vw, 1.18rem)',
+              fontSize: 'clamp(1rem, 2.4vw, 1.16rem)',
               lineHeight: 1.65,
-              fontWeight: 700,
-              color: '#fff8eb',
+              fontWeight: 800,
+              color: '#221b18',
               margin: '0 0 18px',
             }}
           >
             Naquela noite, todos descobriram que o maior herói de Jubalândia não precisava de uma espada, de uma
             armadura ou de uma coroa.
             <br />
-            <span style={{ color: '#ffd166' }}>
+            <span style={{ color: '#c91d1d' }}>
               Bastavam quatro patinhas, uma barriguinha e um coração cheio de amor.
             </span>
           </p>
 
-          {/* Adventure Stats */}
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
               gap: 10,
-              background: 'rgba(255,255,255,0.08)',
+              background: '#f2e4c4',
+              border: '2.5px solid #221b18',
               borderRadius: 16,
               padding: 14,
               marginBottom: 18,
-              fontWeight: 800,
+              fontWeight: 900,
             }}
           >
             <div>
-              <div style={{ fontSize: 12, opacity: 0.75 }}>Estrelas</div>
-              <div style={{ fontSize: 20, color: '#ffd166' }}>★ {totalStars}/30</div>
+              <div style={{ fontSize: 12, color: '#5b4c3f' }}>Estrelas</div>
+              <div style={{ fontSize: 20, color: '#c98a00' }}>★ {totalStars}/30</div>
             </div>
             <div>
-              <div style={{ fontSize: 12, opacity: 0.75 }}>Patinhas Douradas</div>
-              <div style={{ fontSize: 20, color: '#ffd166' }}>🐾 {totalPaws}/30</div>
+              <div style={{ fontSize: 12, color: '#5b4c3f' }}>Patinhas Douradas</div>
+              <div style={{ fontSize: 20, color: '#c91d1d' }}>🐾 {totalPaws}/30</div>
             </div>
             <div>
-              <div style={{ fontSize: 12, opacity: 0.75 }}>Petiscos</div>
-              <div style={{ fontSize: 20, color: '#7bf1a8' }}>🦴 {save.totalTreats}</div>
+              <div style={{ fontSize: 12, color: '#5b4c3f' }}>Petiscos</div>
+              <div style={{ fontSize: 20, color: '#2f7a24' }}>🦴 {save.totalTreats}</div>
             </div>
             <div>
-              <div style={{ fontSize: 12, opacity: 0.75 }}>Trajes</div>
-              <div style={{ fontSize: 20, color: '#90e0ef' }}>👕 {save.unlockedCostumes.length}/6</div>
+              <div style={{ fontSize: 12, color: '#5b4c3f' }}>Trajes</div>
+              <div style={{ fontSize: 20, color: '#2272a3' }}>👕 {save.unlockedCostumes.length}/6</div>
             </div>
           </div>
 

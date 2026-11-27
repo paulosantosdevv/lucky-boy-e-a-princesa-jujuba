@@ -19,8 +19,8 @@ export const CostumeModal: React.FC<Props> = ({ save, onEquip, onClose }) => {
         position: 'fixed',
         inset: 0,
         zIndex: 60,
-        background: 'rgba(10, 6, 26, 0.82)',
-        backdropFilter: 'blur(5px)',
+        background: 'rgba(20, 42, 62, 0.62)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -32,7 +32,7 @@ export const CostumeModal: React.FC<Props> = ({ save, onEquip, onClose }) => {
         style={{ width: 'min(640px, 96vw)', maxHeight: '88vh', padding: '20px 22px' }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-          <h2 className="seuss-title" style={{ margin: 0, color: '#ffd166' }}>
+          <h2 className="seuss-title" style={{ margin: 0, color: '#c91d1d' }}>
             👕 Guarda-Roupa do Lucky Boy
           </h2>
           <button type="button" className="seuss-btn seuss-btn-ghost" style={{ padding: '6px 10px' }} onClick={onClose}>
@@ -63,36 +63,35 @@ export const CostumeModal: React.FC<Props> = ({ save, onEquip, onClose }) => {
                   onEquip(cid);
                 }}
                 style={{
-                  background: equipped
-                    ? 'linear-gradient(155deg, rgba(255,209,102,0.28), rgba(230,57,70,0.28))'
-                    : 'rgba(255,255,255,0.07)',
-                  border: equipped ? '3px solid #ffd166' : '2px solid rgba(255,255,255,0.18)',
+                  background: equipped ? '#fff3bf' : '#ffffff',
+                  border: equipped ? '3.5px solid #d92626' : '2.5px solid #221b18',
                   borderRadius: 18,
                   padding: 12,
-                  color: '#fff8eb',
+                  color: '#221b18',
                   cursor: unlocked ? 'pointer' : 'not-allowed',
-                  opacity: unlocked ? 1 : 0.55,
+                  opacity: unlocked ? 1 : 0.6,
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
                   gap: 6,
+                  boxShadow: '0 4px 0 rgba(34,27,24,0.18)',
                 }}
               >
                 <CharacterPortrait character="lucky" size={74} costume={cid} />
-                <div className="seuss-title" style={{ fontSize: '0.96rem', color: '#ffd166' }}>
+                <div className="seuss-title" style={{ fontSize: '0.96rem', color: '#c91d1d' }}>
                   {info.badge} {info.name}
                 </div>
-                <div style={{ fontSize: 11.5, opacity: 0.85, lineHeight: 1.3 }}>
+                <div style={{ fontSize: 11.5, color: '#4a3d33', fontWeight: 700, lineHeight: 1.3 }}>
                   {unlocked ? info.desc : info.unlockHint}
                 </div>
                 <div style={{ marginTop: 4, fontSize: 12, fontWeight: 900 }}>
                   {equipped ? (
-                    <span style={{ color: '#7bf1a8' }}>
+                    <span style={{ color: '#2f7a24' }}>
                       <Check size={14} style={{ verticalAlign: 'middle' }} /> Equipado
                     </span>
                   ) : unlocked ? (
-                    <span style={{ color: '#ffd166' }}>Clique para vestir</span>
+                    <span style={{ color: '#c91d1d' }}>Clique para vestir</span>
                   ) : (
                     <span>
                       <Lock size={13} style={{ verticalAlign: 'middle' }} /> Bloqueado

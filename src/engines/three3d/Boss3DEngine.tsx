@@ -35,9 +35,10 @@ export const Boss3DEngine: React.FC<Props> = ({
     const container = mountRef.current;
     if (!container) return;
 
+    // Storybook Christmas Sky (bright festive twilight blue, high contrast!)
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#14082e');
-    scene.fog = new THREE.Fog('#240046', 32, 120);
+    scene.background = new THREE.Color('#4a8fd4');
+    scene.fog = new THREE.Fog('#7cb9f0', 36, 130);
 
     const camera = new THREE.PerspectiveCamera(
       58,
@@ -51,60 +52,68 @@ export const Boss3DEngine: React.FC<Props> = ({
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
 
-    scene.add(new THREE.HemisphereLight('#ffd6ff', '#1b0a33', 1.1));
-    const keyLight = new THREE.DirectionalLight('#ffd166', 1.35);
-    keyLight.position.set(16, 30, 18);
+    scene.add(new THREE.HemisphereLight('#ffffff', '#69b543', 1.25));
+    const keyLight = new THREE.DirectionalLight('#fff5cc', 1.3);
+    keyLight.position.set(16, 34, 18);
     scene.add(keyLight);
 
-    // Grand Circular Fortress Arena
+    // Storybook Round Christmas Rug Arena (inspired by Thing 1 & Thing 2 floor rug!)
     const ARENA_R = 17.5;
     const arenaFloor = new THREE.Mesh(
       new THREE.CylinderGeometry(ARENA_R, ARENA_R + 1.5, 1.4, 36),
-      new THREE.MeshStandardMaterial({ color: '#3c1361', roughness: 0.75 })
+      new THREE.MeshStandardMaterial({ color: '#b38cd9', roughness: 0.78 })
     );
     arenaFloor.position.y = -0.7;
     scene.add(arenaFloor);
 
+    const greenRing = new THREE.Mesh(
+      new THREE.RingGeometry(ARENA_R - 2.6, ARENA_R - 0.5, 42),
+      new THREE.MeshStandardMaterial({ color: '#69b543', side: THREE.DoubleSide })
+    );
+    greenRing.rotation.x = -Math.PI / 2;
+    greenRing.position.y = 0.03;
+    scene.add(greenRing);
+
     const goldRing = new THREE.Mesh(
       new THREE.TorusGeometry(ARENA_R - 0.3, 0.35, 10, 48),
-      new THREE.MeshStandardMaterial({ color: '#ffd166', emissive: '#ff9f1c', emissiveIntensity: 0.35 })
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.35 })
     );
     goldRing.rotation.x = Math.PI / 2;
     goldRing.position.y = 0.08;
     scene.add(goldRing);
 
-    // Crooked Fortress Pillars & Princesa Jujuba's glowing tower cage in background
+    // Whimsical Candy Cane Pillars around Arena
     for (let i = 0; i < 8; i++) {
       const ang = (i / 8) * Math.PI * 2;
       const pil = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.9, 1.3, 14, 10),
-        new THREE.MeshStandardMaterial({ color: '#240046' })
+        new THREE.CylinderGeometry(0.9, 1.2, 13, 10),
+        new THREE.MeshStandardMaterial({ color: i % 2 === 0 ? '#d92626' : '#fff9eb' })
       );
       pil.position.set(Math.cos(ang) * (ARENA_R + 3), 6, Math.sin(ang) * (ARENA_R + 3));
       pil.rotation.z = Math.sin(i) * 0.14;
       scene.add(pil);
     }
 
-    // Princesa Jujuba glowing crystal platform at North side (-Z)
+    // Princesa Jujuba glowing platform at North side (-Z)
     const jujubaGroup = new THREE.Group();
     jujubaGroup.position.set(0, 4.5, -ARENA_R - 3.5);
     const dress = new THREE.Mesh(
       new THREE.ConeGeometry(1.4, 3.2, 12),
-      new THREE.MeshStandardMaterial({ color: '#e63946' })
+      new THREE.MeshStandardMaterial({ color: '#e24b78' })
     );
     const jHead = new THREE.Mesh(
       new THREE.SphereGeometry(0.85, 14, 14),
-      new THREE.MeshStandardMaterial({ color: '#ffe5c4' })
+      new THREE.MeshStandardMaterial({ color: '#ffe7c8' })
     );
     jHead.position.y = 2.1;
     const jHair = new THREE.Mesh(
       new THREE.SphereGeometry(0.95, 14, 14),
-      new THREE.MeshStandardMaterial({ color: '#ffe066', emissive: '#ffd166', emissiveIntensity: 0.25 })
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ffd447', emissiveIntensity: 0.25 })
     );
     jHair.position.set(0, 2.25, -0.2);
     const cage = new THREE.Mesh(
       new THREE.CylinderGeometry(2.4, 2.4, 5.2, 12, 1, true),
-      new THREE.MeshStandardMaterial({ color: '#90e0ef', transparent: true, opacity: 0.28, wireframe: true })
+      new THREE.MeshStandardMaterial({ color: '#ffe055', transparent: true, opacity: 0.32, wireframe: true })
     );
     cage.position.y = 1.2;
     jujubaGroup.add(dress, jHead, jHair, cage);
@@ -120,7 +129,7 @@ export const Boss3DEngine: React.FC<Props> = ({
     head.position.set(0, 1.55, 0.72);
     const scarf = new THREE.Mesh(
       new THREE.TorusGeometry(0.62, 0.16, 8, 16),
-      new THREE.MeshStandardMaterial({ color: costume === 'spfc' ? '#e63946' : '#e63946' })
+      new THREE.MeshStandardMaterial({ color: costume === 'spfc' ? '#d92626' : '#d92626' })
     );
     scarf.rotation.x = Math.PI / 2;
     scarf.position.set(0, 1.15, 0.55);
@@ -129,109 +138,105 @@ export const Boss3DEngine: React.FC<Props> = ({
     luckyGroup.add(body, head, scarf, tail);
     scene.add(luckyGroup);
 
-    // ========================================================
-    // STAGE 1: ÁRVORE DA DESTRUIÇÃO (Robotic Christmas Tree + 3 Cores)
-    // ========================================================
+    // STAGE 1: ÁRVORE DA DESTRUIÇÃO (Cat-in-the-Hat style giant tree with pink garland & 3 cores)
     const treeBossGroup = new THREE.Group();
     const treeCone1 = new THREE.Mesh(
       new THREE.ConeGeometry(4.4, 5.5, 12),
-      new THREE.MeshStandardMaterial({ color: '#1b4332' })
+      new THREE.MeshStandardMaterial({ color: '#5ea93f' })
     );
     treeCone1.position.y = 3.2;
     const treeCone2 = new THREE.Mesh(
       new THREE.ConeGeometry(3.2, 4.5, 12),
-      new THREE.MeshStandardMaterial({ color: '#2d6a4f' })
+      new THREE.MeshStandardMaterial({ color: '#69b543' })
     );
     treeCone2.position.y = 6.5;
-    treeBossGroup.add(treeCone1, treeCone2);
+    const treeGarland = new THREE.Mesh(
+      new THREE.TorusGeometry(3.1, 0.35, 8, 20),
+      new THREE.MeshStandardMaterial({ color: '#e47bb8' })
+    );
+    treeGarland.rotation.x = Math.PI / 2;
+    treeGarland.position.y = 4.2;
+    treeBossGroup.add(treeCone1, treeCone2, treeGarland);
 
     const treeCores = [0, 1, 2].map((i) => {
       const ang = (i / 3) * Math.PI * 2;
       const core = new THREE.Mesh(
-        new THREE.OctahedronGeometry(0.95),
-        new THREE.MeshStandardMaterial({ color: '#ffbe0b', emissive: '#ff5d8f', emissiveIntensity: 0.7 })
+        new THREE.OctahedronGeometry(1.0),
+        new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f46d75', emissiveIntensity: 0.7 })
       );
-      core.position.set(Math.cos(ang) * 4.2, 2.0, Math.sin(ang) * 4.2);
+      core.position.set(Math.cos(ang) * 4.3, 2.0, Math.sin(ang) * 4.3);
       treeBossGroup.add(core);
       return { mesh: core, hp: 3, alive: true };
     });
     scene.add(treeBossGroup);
 
-    // ========================================================
-    // STAGE 2: RELÓGIO DA MEIA-NOITE (3 Elevated Gears + Crystals)
-    // ========================================================
+    // STAGE 2: RELÓGIO DA MEIA-NOITE (3 Accessible Golden Gear Platforms + Crystals)
     const clockGroup = new THREE.Group();
     clockGroup.visible = false;
     const clockFace = new THREE.Mesh(
       new THREE.CylinderGeometry(3.6, 3.6, 0.5, 24),
-      new THREE.MeshStandardMaterial({ color: '#ffd166', emissive: '#ff9f1c', emissiveIntensity: 0.25 })
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ff9f1c', emissiveIntensity: 0.25 })
     );
     clockFace.rotation.x = Math.PI / 2;
     clockFace.position.set(0, 6.2, 0);
     const clockHand = new THREE.Mesh(
       new THREE.BoxGeometry(0.35, 3.0, 0.35),
-      new THREE.MeshStandardMaterial({ color: '#e63946' })
+      new THREE.MeshStandardMaterial({ color: '#d92626' })
     );
     clockHand.position.set(0, 6.2, 0.4);
     clockGroup.add(clockFace, clockHand);
 
     const clockCrystals = [0, 1, 2].map((i) => {
       const ang = (i / 3) * Math.PI * 2 + 0.5;
-      const dist = 9.5;
+      const dist = 9.2;
       const plat = new THREE.Mesh(
-        new THREE.CylinderGeometry(2.6, 2.6, 0.6, 12),
-        new THREE.MeshStandardMaterial({ color: '#ff9f1c' })
+        new THREE.CylinderGeometry(3.0, 3.2, 0.7, 14),
+        new THREE.MeshStandardMaterial({ color: '#ff9f43' })
       );
-      plat.position.set(Math.cos(ang) * dist, 1.8, Math.sin(ang) * dist);
+      plat.position.set(Math.cos(ang) * dist, 1.45, Math.sin(ang) * dist);
       const crystal = new THREE.Mesh(
-        new THREE.OctahedronGeometry(1.0),
-        new THREE.MeshStandardMaterial({ color: '#00f5d4', emissive: '#00bbf9', emissiveIntensity: 0.8 })
+        new THREE.OctahedronGeometry(1.1),
+        new THREE.MeshStandardMaterial({ color: '#6fd3f7', emissive: '#22a6e0', emissiveIntensity: 0.75 })
       );
-      crystal.position.set(Math.cos(ang) * dist, 3.6, Math.sin(ang) * dist);
+      crystal.position.set(Math.cos(ang) * dist, 3.2, Math.sin(ang) * dist);
       clockGroup.add(plat, crystal);
       return { plat, crystal, x: Math.cos(ang) * dist, z: Math.sin(ang) * dist, active: true };
     });
     scene.add(clockGroup);
 
-    // ========================================================
-    // STAGE 3 & 4: LULA SUPREMO -> LULA EMOCIONADO (O Último Petisco)
-    // ========================================================
+    // STAGE 3 & 4: LULA SUPREMO -> O ÚLTIMO PETISCO
     const lulaGroup = new THREE.Group();
     lulaGroup.visible = false;
-    const lulaCoat = new THREE.Mesh(
-      new THREE.ConeGeometry(2.4, 5.0, 12),
-      new THREE.MeshStandardMaterial({ color: '#5a189a', emissive: '#3c096c', emissiveIntensity: 0.3 })
-    );
+    const lulaCoatMat = new THREE.MeshStandardMaterial({ color: '#6b2fa0', roughness: 0.4 });
+    const lulaCoat = new THREE.Mesh(new THREE.ConeGeometry(2.4, 5.0, 12), lulaCoatMat);
     lulaCoat.position.y = 2.6;
     const lulaHead = new THREE.Mesh(
       new THREE.SphereGeometry(1.55, 14, 14),
-      new THREE.MeshStandardMaterial({ color: '#c77dff' })
+      new THREE.MeshStandardMaterial({ color: '#c38ef5' })
     );
     lulaHead.position.y = 5.6;
     const lulaGoggles = new THREE.Mesh(
       new THREE.BoxGeometry(2.2, 0.55, 0.6),
-      new THREE.MeshStandardMaterial({ color: '#ffd166', emissive: '#ffb703', emissiveIntensity: 0.4 })
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.4 })
     );
     lulaGoggles.position.set(0, 6.2, 1.3);
     lulaGroup.add(lulaCoat, lulaHead, lulaGoggles);
     scene.add(lulaGroup);
 
-    // 3 Golden Paws in Arena corners
     const goldenPawMeshes = [
       { x: -12, z: -7, collected: false },
       { x: 12, z: -7, collected: false },
       { x: 0, z: 12, collected: false },
     ].map((gp) => {
       const m = new THREE.Mesh(
-        new THREE.OctahedronGeometry(0.9),
-        new THREE.MeshStandardMaterial({ color: '#ffd166', emissive: '#ffb703', emissiveIntensity: 0.7 })
+        new THREE.OctahedronGeometry(0.95),
+        new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.7 })
       );
       m.position.set(gp.x, 1.6, gp.z);
       scene.add(m);
       return { ...gp, mesh: m };
     });
 
-    // Projectiles & Shockwaves
     interface BossProj {
       mesh: THREE.Mesh;
       vx: number;
@@ -248,7 +253,6 @@ export const Boss3DEngine: React.FC<Props> = ({
     }
     const rings: ShockRing[] = [];
 
-    // State
     let stage: 1 | 2 | 3 | 4 = 1;
     let px = 0;
     let py = 0;
@@ -262,11 +266,12 @@ export const Boss3DEngine: React.FC<Props> = ({
     let hearts = 5;
     const maxHearts = 5;
     let invuln = 0;
-    let lulaHp = 14;
-    const lulaMaxHp = 14;
+    let lulaHp = 12;
+    const lulaMaxHp = 12;
+    let lulaHurtFlash = 0;
     let attackTimer = 1.6;
     let timeSec = 0;
-    let bannerText = '⚔️ ETAPA 1/4: Destrua os 3 núcleos da Árvore da Destruição!';
+    let bannerText = '⚔️ ETAPA 1/4: Atire com B/Y para destruir os 3 núcleos da Árvore!';
     let bannerTimer = 3.5;
     let finished = false;
     let hudTick = 0;
@@ -292,21 +297,24 @@ export const Boss3DEngine: React.FC<Props> = ({
 
     const shootStarBark = () => {
       if (fireCooldown > 0) return;
-      fireCooldown = 0.28;
+      fireCooldown = 0.25;
       audioSystem.playSfx('bark');
       const m = new THREE.Mesh(
-        new THREE.SphereGeometry(0.45, 10, 10),
-        new THREE.MeshStandardMaterial({ color: '#ffd166', emissive: '#ff9f1c', emissiveIntensity: 0.8 })
+        new THREE.SphereGeometry(0.48, 10, 10),
+        new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ff9f1c', emissiveIntensity: 0.85 })
       );
       m.position.set(px, py + 1.3, pz);
       scene.add(m);
-      // Slight auto-aim toward center boss for super fun mobile + desktop feel
-      const toCenter = new THREE.Vector3(-px, 2.2 - (py + 1.3), -pz);
+      const targetPos =
+        stage === 3
+          ? lulaGroup.position.clone().add(new THREE.Vector3(0, 3.0, 0))
+          : new THREE.Vector3(0, 2.0, 0);
+      const toTarget = targetPos.sub(new THREE.Vector3(px, py + 1.3, pz));
       const dirVec =
-        toCenter.length() > 1
-          ? toCenter.normalize()
+        toTarget.length() > 1
+          ? toTarget.normalize()
           : new THREE.Vector3(Math.sin(facingAngle), 0, Math.cos(facingAngle));
-      projs.push({ mesh: m, vx: dirVec.x * 32, vy: dirVec.y * 10, vz: dirVec.z * 32, fromPlayer: true, life: 1.5 });
+      projs.push({ mesh: m, vx: dirVec.x * 34, vy: dirVec.y * 12, vz: dirVec.z * 34, fromPlayer: true, life: 1.5 });
     };
 
     const resize = () => {
@@ -337,11 +345,15 @@ export const Boss3DEngine: React.FC<Props> = ({
         if (dashTimer > 0) dashTimer -= dt;
         if (dashCooldown > 0) dashCooldown -= dt;
         if (fireCooldown > 0) fireCooldown -= dt;
+        if (lulaHurtFlash > 0) {
+          lulaHurtFlash -= dt;
+          lulaCoatMat.emissive.set(lulaHurtFlash > 0 ? '#ffffff' : '#000000');
+          lulaCoatMat.emissiveIntensity = lulaHurtFlash > 0 ? 0.6 : 0;
+        }
 
-        // Player 3D Movement
         const mx = (inp.right ? 1 : 0) - (inp.left ? 1 : 0);
         const mz = (inp.down ? 1 : 0) - (inp.up ? 1 : 0);
-        const spd = dashTimer > 0 ? 19 : 11.5;
+        const spd = dashTimer > 0 ? 19.5 : 12.0;
 
         if (mx !== 0 || mz !== 0) {
           const len = Math.hypot(mx, mz);
@@ -350,34 +362,32 @@ export const Boss3DEngine: React.FC<Props> = ({
           facingAngle = Math.atan2(mx, mz);
         }
 
-        // Clamp inside circular arena
         const distFromCenter = Math.hypot(px, pz);
         if (distFromCenter > ARENA_R - 1.2) {
           px = (px / distFromCenter) * (ARENA_R - 1.2);
           pz = (pz / distFromCenter) * (ARENA_R - 1.2);
         }
 
-        // Jump & Double Jump (A)
         if (inp.aJustPressed && jumpsUsed < 2) {
-          vy = jumpsUsed === 0 ? 14.5 : 13.0;
+          vy = jumpsUsed === 0 ? 15.5 : 13.8;
           jumpsUsed++;
           audioSystem.playSfx(jumpsUsed === 1 ? 'jump' : 'double_jump');
         }
-        // Roll/Dash (X)
         if (inp.xJustPressed && dashCooldown <= 0) {
           dashTimer = 0.28;
-          dashCooldown = 0.8;
+          dashCooldown = 0.75;
           audioSystem.playSfx('boost');
         }
 
-        // Gravity & Floor + Clock Gear Platforms in Stage 2
         vy -= 36 * dt;
+        const prevPy = py;
         py += vy * dt;
         let floorY = 0;
+        // FIXED BUG: Forgiving landing on Stage 2 elevated gear platforms!
         if (stage === 2) {
           for (const c of clockCrystals) {
-            if (Math.hypot(px - c.x, pz - c.z) < 2.9 && py >= 1.7) {
-              floorY = 2.1;
+            if (Math.hypot(px - c.x, pz - c.z) < 3.4 && (prevPy >= 1.5 || py >= 1.5)) {
+              floorY = 1.8;
             }
           }
         }
@@ -391,14 +401,13 @@ export const Boss3DEngine: React.FC<Props> = ({
         luckyGroup.rotation.y = facingAngle;
         luckyGroup.visible = invuln <= 0 || Math.floor(timeSec * 16) % 2 === 0;
 
-        // Collect Golden Paws
         goldenPawMeshes.forEach((gp, idx) => {
           gp.mesh.rotation.y += dt * 3;
           if (gp.collected) {
             gp.mesh.visible = false;
             return;
           }
-          if (Math.hypot(px - gp.x, pz - gp.z) < 2.2) {
+          if (Math.hypot(px - gp.x, pz - gp.z) < 2.4) {
             gp.collected = true;
             audioSystem.playSfx('paw');
             bannerText = `🐾 Patinha Dourada #${idx + 1} da Fortaleza!`;
@@ -406,26 +415,22 @@ export const Boss3DEngine: React.FC<Props> = ({
           }
         });
 
-        // =====================================================
-        // STAGE 1: ÁRVORE DA DESTRUIÇÃO
-        // =====================================================
         if (stage === 1) {
-          treeBossGroup.rotation.y += dt * 0.75;
+          treeBossGroup.rotation.y += dt * 0.7;
           if (inp.bJustPressed || inp.yJustPressed) shootStarBark();
 
           attackTimer -= dt;
           if (attackTimer <= 0) {
-            attackTimer = 1.65;
-            // Throw explosive Christmas ornaments around arena
+            attackTimer = 1.75;
             for (let k = 0; k < 4; k++) {
               const a = timeSec + (k * Math.PI) / 2;
               const orb = new THREE.Mesh(
-                new THREE.SphereGeometry(0.65, 10, 10),
-                new THREE.MeshStandardMaterial({ color: k % 2 === 0 ? '#e63946' : '#ffd166' })
+                new THREE.SphereGeometry(0.62, 10, 10),
+                new THREE.MeshStandardMaterial({ color: k % 2 === 0 ? '#d92626' : '#ffe055' })
               );
-              orb.position.set(0, 2.2, 0);
+              orb.position.set(0, 2.0, 0);
               scene.add(orb);
-              projs.push({ mesh: orb, vx: Math.cos(a) * 11, vy: 0, vz: Math.sin(a) * 11, fromPlayer: false, life: 2.5 });
+              projs.push({ mesh: orb, vx: Math.cos(a) * 10.5, vy: 0, vz: Math.sin(a) * 10.5, fromPlayer: false, life: 2.5 });
             }
           }
 
@@ -434,20 +439,16 @@ export const Boss3DEngine: React.FC<Props> = ({
             treeBossGroup.visible = false;
             clockGroup.visible = true;
             audioSystem.playSfx('star');
-            bannerText = '⏰ ETAPA 2/4: Suba nas engrenagens e desative os 3 cristais do Relógio!';
-            bannerTimer = 4.0;
+            bannerText = '⏰ ETAPA 2/4: Pule nas 3 engrenagens laranjas para desativar os cristais!';
+            bannerTimer = 4.2;
           }
-        }
-        // =====================================================
-        // STAGE 2: O RELÓGIO DA MEIA-NOITE
-        // =====================================================
-        else if (stage === 2) {
+        } else if (stage === 2) {
           clockHand.rotation.z -= dt * 1.4;
           if (inp.bJustPressed || inp.yJustPressed) shootStarBark();
 
           for (const c of clockCrystals) {
             c.crystal.rotation.y += dt * 3;
-            if (c.active && Math.hypot(px - c.x, pz - c.z) < 2.6 && py >= 1.5) {
+            if (c.active && Math.hypot(px - c.x, pz - c.z) < 3.2 && py >= 1.2) {
               c.active = false;
               c.crystal.visible = false;
               audioSystem.playSfx('checkpoint');
@@ -458,10 +459,10 @@ export const Boss3DEngine: React.FC<Props> = ({
 
           attackTimer -= dt;
           if (attackTimer <= 0) {
-            attackTimer = 2.2;
+            attackTimer = 2.3;
             const ringMesh = new THREE.Mesh(
               new THREE.TorusGeometry(1.0, 0.25, 8, 32),
-              new THREE.MeshStandardMaterial({ color: '#ff5d8f', emissive: '#ff006e', emissiveIntensity: 0.6 })
+              new THREE.MeshStandardMaterial({ color: '#d92626', emissive: '#ff5d6c', emissiveIntensity: 0.6 })
             );
             ringMesh.rotation.x = Math.PI / 2;
             ringMesh.position.y = 0.5;
@@ -475,27 +476,22 @@ export const Boss3DEngine: React.FC<Props> = ({
             lulaGroup.visible = true;
             lulaGroup.scale.setScalar(1.45);
             audioSystem.playSfx('super_bark');
-            bannerText = '⚡ ETAPA 3/4: LULA SUPREMO! Pule as ondas e ataque com B ou Y!';
+            bannerText = '⚡ ETAPA 3/4: LULA SUPREMO! Pule as ondas e atire com B ou Y!';
             bannerTimer = 4.0;
           }
-        }
-        // =====================================================
-        // STAGE 3: LULA SUPREMO
-        // =====================================================
-        else if (stage === 3) {
-          lulaGroup.position.x = Math.sin(timeSec * 1.1) * 4.5;
-          lulaGroup.position.z = Math.cos(timeSec * 0.9) * 3.5 - 2;
+        } else if (stage === 3) {
+          lulaGroup.position.x = Math.sin(timeSec * 1.05) * 4.5;
+          lulaGroup.position.z = Math.cos(timeSec * 0.85) * 3.5 - 2;
           lulaGroup.lookAt(px, 2, pz);
 
           if (inp.bJustPressed || inp.yJustPressed) shootStarBark();
 
           attackTimer -= dt;
           if (attackTimer <= 0) {
-            attackTimer = 1.9;
-            // Shockwave ring to jump over!
+            attackTimer = 2.0;
             const ringMesh = new THREE.Mesh(
               new THREE.TorusGeometry(1.0, 0.28, 8, 36),
-              new THREE.MeshStandardMaterial({ color: '#c77dff', emissive: '#9d4edd', emissiveIntensity: 0.8 })
+              new THREE.MeshStandardMaterial({ color: '#9f7aea', emissive: '#6b2fa0', emissiveIntensity: 0.7 })
             );
             ringMesh.rotation.x = Math.PI / 2;
             ringMesh.position.set(lulaGroup.position.x, 0.55, lulaGroup.position.z);
@@ -505,9 +501,8 @@ export const Boss3DEngine: React.FC<Props> = ({
 
           if (lulaHp <= 0) {
             stage = 4;
-            lulaGroup.scale.setScalar(0.85);
+            lulaGroup.scale.setScalar(0.88);
             lulaGroup.position.set(0, 0, 0);
-            // Clear hostile rings & projectiles
             rings.forEach((r) => scene.remove(r.mesh));
             rings.length = 0;
             projs.forEach((p) => scene.remove(p.mesh));
@@ -517,14 +512,10 @@ export const Boss3DEngine: React.FC<Props> = ({
             bannerText = '💛 ETAPA 4/4: Lula nunca ganhou um presente de Natal...';
             bannerTimer = 5.0;
           }
-        }
-        // =====================================================
-        // STAGE 4: O VERDADEIRO PODER DO NATAL (Oferecer o Último Petisco!)
-        // =====================================================
-        else if (stage === 4) {
+        } else if (stage === 4) {
           lulaGroup.lookAt(px, 1.5, pz);
           const distToLula = Math.hypot(px - lulaGroup.position.x, pz - lulaGroup.position.z);
-          if ((inp.yJustPressed || inp.bJustPressed) && distToLula < 7.5) {
+          if ((inp.yJustPressed || inp.bJustPressed) && distToLula < 8.0) {
             finished = true;
             onSpecialYLabelChange?.(undefined);
             audioSystem.playSfx('win');
@@ -543,7 +534,6 @@ export const Boss3DEngine: React.FC<Props> = ({
           }
         }
 
-        // Update Projectiles
         for (let i = projs.length - 1; i >= 0; i--) {
           const pr = projs[i];
           pr.life -= dt;
@@ -558,7 +548,7 @@ export const Boss3DEngine: React.FC<Props> = ({
                 if (!core.alive) continue;
                 const worldCore = new THREE.Vector3();
                 core.mesh.getWorldPosition(worldCore);
-                if (pr.mesh.position.distanceTo(worldCore) < 2.2) {
+                if (pr.mesh.position.distanceTo(worldCore) < 2.6) {
                   core.hp--;
                   remove = true;
                   audioSystem.playSfx('enemy_defeat');
@@ -571,14 +561,15 @@ export const Boss3DEngine: React.FC<Props> = ({
               }
             } else if (stage === 3) {
               const targetPos = lulaGroup.position.clone().add(new THREE.Vector3(0, 3.2, 0));
-              if (pr.mesh.position.distanceTo(targetPos) < 3.5) {
+              if (pr.mesh.position.distanceTo(targetPos) < 3.8) {
                 lulaHp--;
+                lulaHurtFlash = 0.16;
                 remove = true;
                 audioSystem.playSfx('enemy_defeat');
               }
             }
           } else if (!remove && !pr.fromPlayer) {
-            if (Math.hypot(pr.mesh.position.x - px, pr.mesh.position.z - pz) < 1.5 && py < 2.1) {
+            if (Math.hypot(pr.mesh.position.x - px, pr.mesh.position.z - pz) < 1.45 && py < 2.0) {
               damagePlayer();
               remove = true;
             }
@@ -590,13 +581,12 @@ export const Boss3DEngine: React.FC<Props> = ({
           }
         }
 
-        // Update Shockwave Rings
         for (let i = rings.length - 1; i >= 0; i--) {
           const rg = rings[i];
-          rg.radius += 9.5 * dt;
+          rg.radius += 9.2 * dt;
           rg.mesh.scale.setScalar(rg.radius);
           const distP = Math.hypot(px - rg.mesh.position.x, pz - rg.mesh.position.z);
-          if (Math.abs(distP - rg.radius) < 0.75 && py < 1.15) {
+          if (Math.abs(distP - rg.radius) < 0.72 && py < 1.1) {
             damagePlayer();
           }
           if (rg.radius > ARENA_R + 2) {
@@ -605,7 +595,6 @@ export const Boss3DEngine: React.FC<Props> = ({
           }
         }
 
-        // Camera framing arena heroically
         camera.position.lerp(new THREE.Vector3(px * 0.48, 12.5, pz * 0.45 + 19), Math.min(1, dt * 4.5));
         camera.lookAt(px * 0.2, 2.2, pz * 0.15 - 1);
 

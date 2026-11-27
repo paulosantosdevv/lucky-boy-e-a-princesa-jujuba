@@ -40,19 +40,19 @@ export const WorldMap: React.FC<Props> = ({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        background: 'radial-gradient(circle at 50% 20%, #2b1a63 0%, #120c2c 80%)',
+        background: 'linear-gradient(180deg, #6fd3f7 0%, #c6f1ff 60%, #78c44d 100%)',
         overflow: 'hidden',
       }}
     >
-      {/* Header */}
+      {/* Storybook Header */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '10px 14px',
-          background: 'rgba(15, 9, 38, 0.85)',
-          borderBottom: '2px solid rgba(255, 209, 102, 0.35)',
+          padding: '9px 14px',
+          background: '#fff9eb',
+          borderBottom: '3.5px solid #221b18',
           gap: 8,
           flexWrap: 'wrap',
         }}
@@ -69,8 +69,8 @@ export const WorldMap: React.FC<Props> = ({
           <ArrowLeft size={16} /> Menu
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', fontSize: 13.5, fontWeight: 800 }}>
-          <span style={{ color: '#ffd166' }}>⭐ Fragmentos: {fragments}/9</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', fontSize: 13.5, fontWeight: 900, color: '#221b18' }}>
+          <span style={{ color: '#c91d1d' }}>⭐ Fragmentos: {fragments}/9</span>
           <span>🐾 Patinhas: {totalPaws}/30</span>
           <span>🦴 Petiscos: {save.totalTreats}</span>
           <span>🐶 Vidas: {save.lives}</span>
@@ -90,7 +90,7 @@ export const WorldMap: React.FC<Props> = ({
           </button>
           <button
             type="button"
-            className="seuss-btn seuss-btn-ghost"
+            className="seuss-btn seuss-btn-gold"
             style={{ padding: '7px 12px', fontSize: '0.85rem' }}
             onClick={() => {
               audioSystem.playSfx('click');
@@ -102,7 +102,7 @@ export const WorldMap: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Interactive Jubalandia World Map */}
+      {/* Bright Dr. Seuss / Lorax Illustrated World Map */}
       <div
         style={{
           position: 'relative',
@@ -110,48 +110,72 @@ export const WorldMap: React.FC<Props> = ({
           minHeight: 0,
           margin: '10px 12px 6px',
           borderRadius: 24,
-          border: '3px solid #ffd166',
+          border: '4px solid #221b18',
           overflow: 'hidden',
-          background: 'linear-gradient(180deg, #1b1245 0%, #2f4858 38%, #2a9d8f 75%, #0077b6 100%)',
-          boxShadow: 'inset 0 0 40px rgba(0,0,0,0.45)',
+          background: 'linear-gradient(180deg, #6fd3f7 0%, #b8eeff 46%, #7ac74f 48%, #5da93a 100%)',
+          boxShadow: '0 8px 0 rgba(34,27,24,0.22)',
         }}
       >
-        {/* Background SVG Map Path & Landmarks */}
         <svg
           viewBox="0 0 1000 560"
           preserveAspectRatio="none"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
         >
-          {/* Snowy Peak top-right for Lula's Fortress */}
-          <path d="M720 260 Q850 60 990 140 L1000 320 L700 320 Z" fill="#3c1361" opacity="0.82" />
-          {/* Ocean Bay bottom-center */}
-          <ellipse cx="560" cy="450" rx="180" ry="95" fill="#0096c7" opacity="0.65" />
-          {/* Candy Plains left */}
-          <ellipse cx="220" cy="410" rx="220" ry="125" fill="#52b788" opacity="0.45" />
-          {/* Dashed Super Mario World path connecting all 10 levels */}
+          {/* Bright Rolling Meadow & Hills */}
+          <path d="M0 280 Q240 200 500 265 Q760 325 1000 220 L1000 560 L0 560 Z" fill="#7ac74f" stroke="#221b18" strokeWidth="3.5" />
+          {/* Candy Lake for Level 5 */}
+          <ellipse cx="560" cy="435" rx="165" ry="88" fill="#52c4f2" stroke="#221b18" strokeWidth="3.5" />
+          {/* Snowy Mountain Peak Top-Right for Level 8 & 10 */}
+          <path d="M710 290 Q835 35 975 110 L1000 320 L700 320 Z" fill="#e6f5ff" stroke="#221b18" strokeWidth="3.5" />
+          <path d="M865 112 L910 38 L955 112 Z" fill="#9f7aea" stroke="#221b18" strokeWidth="3.5" />
+
+          {/* Decorative Lorax Truffula Trees */}
+          {[
+            { x: 140, y: 340, c: '#ffe055' },
+            { x: 265, y: 280, c: '#f46d75' },
+            { x: 390, y: 350, c: '#ff9f43' },
+            { x: 650, y: 245, c: '#f46d75' },
+            { x: 465, y: 245, c: '#ffe055' },
+          ].map((t, i) => (
+            <g key={i}>
+              <path d={`M${t.x} ${t.y + 62} Q${t.x - 14} ${t.y + 25} ${t.x} ${t.y}`} stroke="#f7da59" strokeWidth="8" fill="none" />
+              <circle cx={t.x} cy={t.y} r="28" fill={t.c} stroke="#221b18" strokeWidth="3" />
+            </g>
+          ))}
+
+          {/* Storybook Dashed Golden Road connecting all 10 levels */}
           <polyline
             fill="none"
-            stroke="#ffd166"
+            stroke="#221b18"
+            strokeWidth="12"
+            strokeDasharray="15 11"
+            strokeLinecap="round"
+            points={LEVELS.map((l) => `${l.mapPos.x * 10},${l.mapPos.y * 5.6}`).join(' ')}
+          />
+          <polyline
+            fill="none"
+            stroke="#ffe055"
             strokeWidth="7"
-            strokeDasharray="14 10"
+            strokeDasharray="15 11"
             strokeLinecap="round"
             points={LEVELS.map((l) => `${l.mapPos.x * 10},${l.mapPos.y * 5.6}`).join(' ')}
           />
         </svg>
 
-        {/* Map Title Badge */}
+        {/* Map Banner */}
         <div
           className="seuss-title"
           style={{
             position: 'absolute',
             top: 10,
             left: 14,
-            background: 'rgba(18, 12, 44, 0.8)',
-            border: '2px solid #ffd166',
-            borderRadius: 14,
-            padding: '4px 12px',
-            fontSize: 'clamp(0.85rem, 2.2vw, 1.1rem)',
-            color: '#ffd166',
+            background: '#fff9eb',
+            border: '3px solid #221b18',
+            borderRadius: 16,
+            padding: '4px 14px',
+            fontSize: 'clamp(0.85rem, 2.2vw, 1.12rem)',
+            color: '#c91d1d',
+            boxShadow: '0 4px 0 #221b18',
           }}
         >
           🗺️ Mapa de Jubalândia
@@ -176,17 +200,17 @@ export const WorldMap: React.FC<Props> = ({
                 position: 'absolute',
                 left: `${lvl.mapPos.x}%`,
                 top: `${lvl.mapPos.y}%`,
-                transform: `translate(-50%, -50%) scale(${isSel ? 1.18 : 1})`,
+                transform: `translate(-50%, -50%) scale(${isSel ? 1.2 : 1})`,
                 width: 'clamp(36px, 6.2vw, 52px)',
                 height: 'clamp(36px, 6.2vw, 52px)',
                 borderRadius: '50%',
-                border: isSel ? '4px solid #ffffff' : '3px solid #231942',
+                border: isSel ? '4px solid #d92626' : '3px solid #221b18',
                 background: !isUnl
-                  ? '#4a4e69'
+                  ? '#b8b2a6'
                   : isDone
-                  ? 'linear-gradient(180deg, #ffe066, #f4a216)'
-                  : `linear-gradient(180deg, ${lvl.themeColor}, #231942)`,
-                color: isDone ? '#231942' : '#ffffff',
+                  ? 'linear-gradient(180deg, #ffe770, #f5b922)'
+                  : '#fff9eb',
+                color: '#221b18',
                 fontWeight: 900,
                 fontSize: 'clamp(12px, 2.2vw, 16px)',
                 cursor: 'pointer',
@@ -195,8 +219,8 @@ export const WorldMap: React.FC<Props> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: isSel
-                  ? '0 0 22px rgba(255, 209, 102, 0.95)'
-                  : '0 4px 10px rgba(0,0,0,0.5)',
+                  ? '0 0 0 4px #ffe055, 0 5px 0 #221b18'
+                  : '0 4px 0 #221b18',
                 transition: 'transform 0.2s ease',
                 zIndex: isSel ? 12 : 6,
               }}
@@ -206,7 +230,7 @@ export const WorldMap: React.FC<Props> = ({
                 <>
                   <span>{lvl.id}</span>
                   {st && st.stars > 0 && (
-                    <span style={{ fontSize: 8, lineHeight: 1 }}>
+                    <span style={{ fontSize: 8, lineHeight: 1, color: '#c91d1d' }}>
                       {'★'.repeat(st.stars)}
                     </span>
                   )}
@@ -218,7 +242,7 @@ export const WorldMap: React.FC<Props> = ({
           );
         })}
 
-        {/* Lucky Boy Avatar Walking on Selected Node */}
+        {/* Lucky Boy Avatar */}
         <div
           style={{
             position: 'absolute',
@@ -235,7 +259,7 @@ export const WorldMap: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Selected Level Info Card */}
+      {/* Selected Level Storybook Info Card */}
       <div
         className="seuss-card"
         style={{
@@ -252,8 +276,9 @@ export const WorldMap: React.FC<Props> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
             <span
               style={{
-                background: selected.themeColor,
+                background: '#d92626',
                 color: '#fff',
+                border: '2px solid #221b18',
                 padding: '2px 9px',
                 borderRadius: 99,
                 fontSize: 11,
@@ -262,25 +287,31 @@ export const WorldMap: React.FC<Props> = ({
             >
               {selected.tag}
             </span>
-            <h3 className="seuss-title" style={{ margin: 0, fontSize: 'clamp(1rem, 2.6vw, 1.3rem)', color: '#ffd166' }}>
+            <h3 className="seuss-title" style={{ margin: 0, fontSize: 'clamp(1rem, 2.6vw, 1.3rem)', color: '#221b18' }}>
               {selected.id.toString().padStart(2, '0')} · {selected.title}
             </h3>
           </div>
-          <p style={{ margin: '4px 0 6px', fontSize: 'clamp(0.8rem, 2vw, 0.92rem)', color: 'rgba(255,248,235,0.9)' }}>
+          <p style={{ margin: '4px 0 6px', fontSize: 'clamp(0.82rem, 2vw, 0.94rem)', color: '#3b312a', fontWeight: 700 }}>
             {selected.description}
           </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 12.5, fontWeight: 800, flexWrap: 'wrap' }}>
             <span>
-              Estrelas: <span style={{ color: '#ffd166' }}>{'★'.repeat(selStat?.stars || 0)}{'☆'.repeat(3 - (selStat?.stars || 0))}</span>
+              Estrelas:{' '}
+              <span style={{ color: '#d98a00' }}>
+                {'★'.repeat(selStat?.stars || 0)}
+                {'☆'.repeat(3 - (selStat?.stars || 0))}
+              </span>
             </span>
             <span>
               Patinhas:{' '}
               {(selStat?.goldenPaws || [false, false, false]).map((got, idx) => (
-                <span key={idx} style={{ opacity: got ? 1 : 0.3 }}>🐾</span>
+                <span key={idx} style={{ opacity: got ? 1 : 0.3 }}>
+                  🐾
+                </span>
               ))}
             </span>
             {selected.allyAppearance && (
-              <span style={{ color: '#90e0ef' }}>
+              <span style={{ color: '#2f7a24' }}>
                 <Sparkles size={13} style={{ verticalAlign: 'middle' }} /> Aliados:{' '}
                 {selected.allyAppearance
                   .map((a) => (a === 'paulo' ? 'Paulo (SPFC)' : a === 'lully' ? 'Lully' : a === 'pinhao' ? 'Prof. Pinhão' : 'Princesa Jujuba'))
