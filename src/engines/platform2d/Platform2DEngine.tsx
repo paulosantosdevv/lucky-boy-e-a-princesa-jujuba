@@ -240,8 +240,8 @@ export const Platform2DEngine: React.FC<Props> = ({
 
       player.hearts--;
       player.invulnTimer = 1.8;
+      haptics.hurt();
       audioSystem.playSfx('hurt');
-      haptics.impact();
       spawnParticles(player.x + 22, player.y + 20, '#d92626', 14);
 
       if (fromPit) {
@@ -618,6 +618,7 @@ export const Platform2DEngine: React.FC<Props> = ({
             player.grounded = false;
             player.jumpsUsed = 1;
             player.bellyFlopping = false;
+            haptics.bounce();
             audioSystem.playSfx('double_jump');
             spawnParticles(p.x + p.w / 2, p.y, '#f46d75', 14, 180);
             continue;
@@ -712,8 +713,8 @@ export const Platform2DEngine: React.FC<Props> = ({
       goldenPaws.forEach((gp, idx) => {
         if (!gp.collected && Math.hypot(gp.x - (player.x + 22), gp.y - (player.y + 20)) < 44) {
           gp.collected = true;
+          haptics.collect();
           audioSystem.playSfx('paw');
-          haptics.reward();
           spawnParticles(gp.x, gp.y, '#ffe055', 22, 220);
           showBanner(`🐾 Patinha Dourada #${idx + 1} encontrada!`, 2.2);
         }
@@ -934,11 +935,11 @@ export const Platform2DEngine: React.FC<Props> = ({
         }
       }
 
-      // Responsive Proportional Camera (wide view even in portrait phones!)
-      const scale = Math.min(
-        canvas.clientHeight / bp.worldHeight,
-        Math.max(0.54, canvas.clientWidth / 640)
-      );
+      // Smart Portrait & Landscape Framing (mobile portrait shows wider world + leaves room for bottom touch controls!)
+      const isPortrait = canvas.clientHeight > canvas.clientWidth;
+      const scale = isPortrait
+        ? Math.min(canvas.clientHeight / bp.worldHeight, canvas.clientWidth / 640)
+        : canvas.clientHeight / bp.worldHeight;
       const viewW = canvas.clientWidth / Math.max(0.25, scale);
       const targetCam = Math.max(0, Math.min(Math.max(0, bp.worldWidth - viewW), player.x - viewW * 0.34));
       cameraX += (targetCam - cameraX) * Math.min(1, dt * 8.5);
@@ -1232,57 +1233,159 @@ export const Platform2DEngine: React.FC<Props> = ({
 
       const bob = Math.sin(timeSec * 4) * 3;
       if (charId === 'paulo') {
+        // Paulo (SPFC) with detailed face, warm smile & tricolor jersey!
         ctx.fillStyle = '#1d3557';
-        ctx.fillRect(-10, -18, 8, 18);
-        ctx.fillRect(2, -18, 8, 18);
-        ctx.fillStyle = '#ffffff';
         ctx.strokeStyle = '#221b18';
-        ctx.lineWidth = 2.6;
+        ctx.lineWidth = 2.4;
+        ctx.fillRect(-10, -18, 8, 18);
+        ctx.strokeRect(-10, -18, 8, 18);
+        ctx.fillRect(2, -18, 8, 18);
+        ctx.strokeRect(2, -18, 8, 18);
+        ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.roundRect(-14, -46 + bob, 28, 30, 6);
+        ctx.roundRect(-15, -48 + bob, 30, 32, 7);
         ctx.fill();
         ctx.stroke();
         ctx.fillStyle = '#d92626';
-        ctx.fillRect(-13, -37 + bob, 26, 4.5);
+        ctx.fillRect(-14, -39 + bob, 28, 5);
         ctx.fillStyle = '#111111';
-        ctx.fillRect(-13, -30 + bob, 26, 4.5);
+        ctx.fillRect(-14, -31 + bob, 28, 5);
+        // Tricolor shield crest
+        ctx.fillStyle = '#111111';
+        ctx.beginPath();
+        ctx.moveTo(-5, -41 + bob);
+        ctx.lineTo(5, -41 + bob);
+        ctx.lineTo(5, -35 + bob);
+        ctx.lineTo(0, -29 + bob);
+        ctx.lineTo(-5, -35 + bob);
+        ctx.closePath();
+        ctx.fill();
         ctx.fillStyle = '#d92626';
-        ctx.fillRect(-4, -38 + bob, 8, 9);
+        ctx.fillRect(-3.5, -36 + bob, 3.5, 4);
+        // Head, eyes & warm grin
         ctx.fillStyle = '#fbd8b6';
         ctx.beginPath();
-        ctx.arc(0, -57 + bob, 12, 0, Math.PI * 2);
+        ctx.arc(0, -60 + bob, 13, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
         ctx.fillStyle = '#4a3222';
         ctx.beginPath();
-        ctx.arc(0, -61 + bob, 11, Math.PI, 0);
+        ctx.arc(0, -63 + bob, 12.5, Math.PI, 0);
         ctx.fill();
+        ctx.fillStyle = '#221b18';
+        ctx.beginPath();
+        ctx.arc(-4.5, -60 + bob, 1.8, 0, Math.PI * 2);
+        ctx.arc(4.5, -60 + bob, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#221b18';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, -56 + bob, 4.5, 0.15 * Math.PI, 0.85 * Math.PI);
+        ctx.stroke();
       } else if (charId === 'lully') {
-        ctx.fillStyle = '#ffffff';
+        // LULLY — Adorable detailed black-and-white Shih Tzu with fluffy tail, eyelashes, rosy cheeks, green collar with bell & lush red bow!
         ctx.strokeStyle = '#221b18';
         ctx.lineWidth = 2.6;
+        // Fluffy wagging tail
+        ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.ellipse(0, -13 + bob, 16, 12, 0, 0, Math.PI * 2);
+        ctx.arc(-18, -16 + bob + Math.sin(timeSec * 12) * 3, 6.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
-        ctx.fillStyle = '#221b18';
+        // Little paws
         ctx.beginPath();
-        ctx.arc(-10, -22 + bob, 6, 0, Math.PI * 2);
-        ctx.arc(10, -22 + bob, 6, 0, Math.PI * 2);
+        ctx.ellipse(-9, -3, 5.5, 3.8, 0, 0, Math.PI * 2);
+        ctx.ellipse(9, -3, 5.5, 3.8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        // Round fluffy white torso + cute black saddle patch
+        ctx.beginPath();
+        ctx.ellipse(0, -14 + bob, 18, 13, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#231f26';
+        ctx.beginPath();
+        ctx.ellipse(-7, -15 + bob, 7.5, 6.5, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+        // Green Christmas collar + golden jingle bell
+        ctx.strokeStyle = '#4ea83b';
+        ctx.lineWidth = 4.2;
+        ctx.beginPath();
+        ctx.moveTo(-10, -21 + bob);
+        ctx.quadraticCurveTo(0, -16 + bob, 10, -21 + bob);
+        ctx.stroke();
+        ctx.fillStyle = '#ffe055';
+        ctx.strokeStyle = '#221b18';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(2, -17 + bob, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        // Silky droopy black Shih Tzu ears
+        ctx.fillStyle = '#231f26';
+        ctx.beginPath();
+        ctx.ellipse(-14, -27 + bob, 6.5, 11.5, 0.25, 0, Math.PI * 2);
+        ctx.ellipse(14, -27 + bob, 6.5, 11.5, -0.25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        // Fluffy round white face
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(0, -30 + bob, 13.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        // Charming black patch around left eye
+        ctx.fillStyle = '#231f26';
+        ctx.beginPath();
+        ctx.ellipse(-5.5, -31 + bob, 6, 5.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Big sparkling eyes + eyelashes
+        ctx.fillStyle = '#111111';
+        ctx.beginPath();
+        ctx.arc(-5.5, -31 + bob, 2.7, 0, Math.PI * 2);
+        ctx.arc(5.8, -31 + bob, 2.9, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.arc(0, -24 + bob, 11, 0, Math.PI * 2);
+        ctx.arc(-4.7, -32 + bob, 1.1, 0, Math.PI * 2);
+        ctx.arc(6.6, -32 + bob, 1.1, 0, Math.PI * 2);
         ctx.fill();
-        ctx.stroke();
+        // Rosy cheeks
+        ctx.fillStyle = '#ff8fab';
+        ctx.beginPath();
+        ctx.ellipse(-9, -26 + bob, 2.8, 1.8, 0, 0, Math.PI * 2);
+        ctx.ellipse(9, -26 + bob, 2.8, 1.8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Tiny nose & sweet smile
         ctx.fillStyle = '#221b18';
         ctx.beginPath();
-        ctx.arc(-4, -25 + bob, 4.5, 0, Math.PI * 2);
+        ctx.ellipse(0, -27.5 + bob, 2.5, 1.8, 0, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = '#d92626';
+        ctx.strokeStyle = '#221b18';
+        ctx.lineWidth = 1.8;
         ctx.beginPath();
-        ctx.arc(0, -35 + bob, 4.5, 0, Math.PI * 2);
+        ctx.arc(0, -25.5 + bob, 3.2, 0.1 * Math.PI, 0.9 * Math.PI);
+        ctx.stroke();
+        // Lush red Christmas bow on top of head!
+        ctx.fillStyle = '#e63946';
+        ctx.strokeStyle = '#221b18';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, -43 + bob);
+        ctx.lineTo(-9, -49 + bob);
+        ctx.lineTo(-7, -40 + bob);
+        ctx.closePath();
+        ctx.moveTo(0, -43 + bob);
+        ctx.lineTo(9, -49 + bob);
+        ctx.lineTo(7, -40 + bob);
+        ctx.closePath();
         ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#ff6b81';
+        ctx.beginPath();
+        ctx.arc(0, -43 + bob, 3.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
       } else {
         ctx.fillStyle = '#a46a47';
         ctx.strokeStyle = '#221b18';
@@ -1320,11 +1423,12 @@ export const Platform2DEngine: React.FC<Props> = ({
     const render = () => {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      const scale = Math.min(h / bp.worldHeight, Math.max(0.54, w / 640));
+      const isPortrait = h > w;
+      const scale = isPortrait
+        ? Math.min(h / bp.worldHeight, w / 640)
+        : h / bp.worldHeight;
       const viewW = w / Math.max(0.25, scale);
-      // On tall portrait mobile screens, sit world slightly above bottom virtual controls!
-      const extraY = Math.max(0, h - bp.worldHeight * scale);
-      const offsetY = extraY > 60 ? extraY * 0.42 : extraY;
+      const offsetY = isPortrait ? (h - bp.worldHeight * scale) * 0.42 : 0;
 
       ctx.save();
       const grad = ctx.createLinearGradient(0, 0, 0, h);
@@ -1334,10 +1438,10 @@ export const Platform2DEngine: React.FC<Props> = ({
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
 
-      // Fill ground extension below world on tall portrait phones so it looks seamless
-      if (extraY > 2) {
-        ctx.fillStyle = bp.isWater ? bp.skyBottom : bp.platformFill;
-        ctx.fillRect(0, offsetY + bp.worldHeight * scale - 2, w, h);
+      // Fill bottom meadow strip cleanly on tall portrait phones (behind touch controls!)
+      if (isPortrait) {
+        ctx.fillStyle = bp.isWater ? '#1f7fb8' : bp.platformFill;
+        ctx.fillRect(0, offsetY + bp.worldHeight * scale - 6, w, h);
       }
 
       ctx.translate(0, offsetY);

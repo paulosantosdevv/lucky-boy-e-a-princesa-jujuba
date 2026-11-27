@@ -148,31 +148,55 @@ export const CharacterPortrait: React.FC<Props> = ({
         </g>
       )}
 
-      {/* LULLY: Black-and-white Shih Tzu */}
+      {/* LULLY: Adorable, fluffy black-and-white Shih Tzu with eyelashes, rosy cheeks & lush bow */}
       {character === 'lully' && (
         <g>
-          <ellipse cx="70" cy="112" rx="30" ry="22" fill="#ffffff" stroke="#221b18" strokeWidth="3.2" />
-          <ellipse cx="84" cy="112" rx="12" ry="10" fill="#221b18" />
-          <ellipse cx="35" cy="72" rx="15" ry="25" transform="rotate(14 35 72)" fill="#221b18" stroke="#111" strokeWidth="3" />
-          <ellipse cx="105" cy="72" rx="15" ry="25" transform="rotate(-14 105 72)" fill="#221b18" stroke="#111" strokeWidth="3" />
+          {/* Fluffy white body with soft black saddle patch */}
+          <ellipse cx="70" cy="113" rx="31" ry="22" fill="#ffffff" stroke="#221b18" strokeWidth="3.2" />
+          <ellipse cx="86" cy="113" rx="12" ry="10" fill="#231f26" />
+          {/* Cute fluffy front paws */}
+          <ellipse cx="54" cy="126" rx="8" ry="5.5" fill="#ffffff" stroke="#221b18" strokeWidth="2.4" />
+          <ellipse cx="86" cy="126" rx="8" ry="5.5" fill="#ffffff" stroke="#221b18" strokeWidth="2.4" />
+          {/* Long silky black fluffy Shih Tzu ears with soft sheen */}
+          <path d="M22 68 C19 46, 36 40, 46 58 C48 80, 42 98, 28 96 C20 94, 21 80, 22 68 Z" fill="#231f26" stroke="#111" strokeWidth="3" />
+          <path d="M118 68 C121 46, 104 40, 94 58 C92 80, 98 98, 112 96 C120 94, 119 80, 118 68 Z" fill="#231f26" stroke="#111" strokeWidth="3" />
+          <path d="M28 64 Q30 78 27 88" stroke="rgba(255,255,255,0.22)" strokeWidth="3" strokeLinecap="round" fill="none" />
+          <path d="M112 64 Q110 78 113 88" stroke="rgba(255,255,255,0.22)" strokeWidth="3" strokeLinecap="round" fill="none" />
+          {/* Fluffy round Shih Tzu face with cheek tufts */}
           <path
-            d="M38 66 C36 42, 54 32, 70 33 C86 32, 104 42, 102 66 C104 86, 88 97, 70 97 C52 97, 36 86, 38 66 Z"
+            d="M36 66 C34 40, 54 30, 70 31 C86 30, 106 40, 104 66 C108 82, 94 98, 70 98 C46 98, 32 82, 36 66 Z"
             fill="#ffffff"
             stroke="#221b18"
             strokeWidth="3.2"
           />
-          <ellipse cx="54" cy="62" rx="15" ry="14" fill="#221b18" />
-          <circle cx="54" cy="63" r="6.5" fill="#111" stroke="#fff" strokeWidth="1.5" />
-          <circle cx="86" cy="63" r="7" fill="#221b18" />
-          <circle cx="56" cy="60.5" r="2.5" fill="#ffffff" />
-          <circle cx="88" cy="60.5" r="2.5" fill="#ffffff" />
-          <ellipse cx="70" cy="74" rx="5.5" ry="4" fill="#221b18" />
-          <path d="M63 81 Q70 87 77 81" fill="none" stroke="#221b18" strokeWidth="2.6" strokeLinecap="round" />
-          <path d="M70 33 L54 22 L56 38 Z" fill="#d92626" stroke="#221b18" strokeWidth="2.4" />
-          <path d="M70 33 L86 22 L84 38 Z" fill="#d92626" stroke="#221b18" strokeWidth="2.4" />
-          <circle cx="70" cy="31" r="5.5" fill="#f46d75" stroke="#221b18" strokeWidth="2.2" />
-          <path d="M44 93 Q70 103 96 93" fill="none" stroke="#5ea93f" strokeWidth="6" strokeLinecap="round" />
-          <circle cx="70" cy="102" r="6" fill="#ffd447" stroke="#221b18" strokeWidth="2" />
+          {/* Charming soft black eye-patch */}
+          <ellipse cx="53" cy="62" rx="15" ry="13.5" fill="#231f26" />
+          {/* Big sparkling eyes with eyelashes */}
+          <circle cx="53" cy="63" r="7" fill="#141118" stroke="#ffffff" strokeWidth="1.6" />
+          <circle cx="87" cy="63" r="7.5" fill="#221b18" />
+          <circle cx="55.2" cy="60" r="2.7" fill="#ffffff" />
+          <circle cx="51.5" cy="65.5" r="1.3" fill="#ffffff" />
+          <circle cx="89.2" cy="60" r="2.8" fill="#ffffff" />
+          <circle cx="85.5" cy="65.5" r="1.3" fill="#ffffff" />
+          {/* Delicate cute eyelashes */}
+          <path d="M44 57 L40 53 M95 57 L100 53 M97 61 L102 59" stroke="#221b18" strokeWidth="2.4" strokeLinecap="round" />
+          {/* Sweet rosy cheeks */}
+          <ellipse cx="44" cy="76" rx="6" ry="3.6" fill="#ff8fab" opacity="0.78" />
+          <ellipse cx="96" cy="76" rx="6" ry="3.6" fill="#ff8fab" opacity="0.78" />
+          {/* Tiny shiny heart nose & happy smile */}
+          <ellipse cx="70" cy="73" rx="5.5" ry="4" fill="#221b18" />
+          <circle cx="71.5" cy="71.8" r="1.2" fill="#ffffff" />
+          <path d="M62 80 Q70 87 78 80" fill="none" stroke="#221b18" strokeWidth="2.6" strokeLinecap="round" />
+          <path d="M66.5 82 Q70 90 73.5 82" fill="#ff758f" stroke="#221b18" strokeWidth="1.8" />
+          {/* Lush layered Christmas bow on top of head */}
+          <path d="M70 32 C54 14, 42 22, 52 38 Z" fill="#e63946" stroke="#221b18" strokeWidth="2.5" />
+          <path d="M70 32 C86 14, 98 22, 88 38 Z" fill="#e63946" stroke="#221b18" strokeWidth="2.5" />
+          <path d="M64 34 L57 44 M76 34 L83 44" stroke="#d92626" strokeWidth="4" strokeLinecap="round" />
+          <circle cx="70" cy="31" r="6" fill="#ff6b81" stroke="#221b18" strokeWidth="2.3" />
+          {/* Festive green velvet collar with golden jingle bell */}
+          <path d="M44 93 Q70 104 96 93" fill="none" stroke="#4ea83b" strokeWidth="6.5" strokeLinecap="round" />
+          <circle cx="70" cy="103" r="6.5" fill="#ffe055" stroke="#221b18" strokeWidth="2.2" />
+          <line x1="66.5" y1="104" x2="73.5" y2="104" stroke="#8c5807" strokeWidth="1.8" />
         </g>
       )}
 

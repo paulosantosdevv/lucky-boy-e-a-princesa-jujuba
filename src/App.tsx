@@ -18,7 +18,6 @@ import {
   resetSave,
 } from './systems/saveSystem';
 import { audioSystem } from './systems/audioSystem';
-import { haptics } from './systems/haptics';
 import { inputManager } from './systems/inputSystem';
 import { CoverArt } from './components/CoverArt';
 import { CharacterPortrait } from './components/CharacterArt';
@@ -73,7 +72,6 @@ export function App() {
     inputManager.bind();
     setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
     audioSystem.setVolumes(save.settings.musicVolume, save.settings.sfxVolume);
-    haptics.setEnabled(save.settings.vibrationEnabled ?? true);
 
     const unlockAudio = () => audioSystem.unlock();
     window.addEventListener('pointerdown', unlockAudio, { once: true });
@@ -551,12 +549,7 @@ export function App() {
 
       {/* DIALOGUE OVERLAY */}
       {dialogue && (
-        <DialogueBox
-          key={dialogue.lines[0]?.text || 'dlg'}
-          lines={dialogue.lines}
-          costume={save.equippedCostume}
-          onComplete={dialogue.after}
-        />
+        <DialogueBox lines={dialogue.lines} costume={save.equippedCostume} onComplete={dialogue.after} />
       )}
 
       {/* MODALS */}

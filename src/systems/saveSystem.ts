@@ -39,7 +39,6 @@ export function createDefaultSave(): SaveData {
       sfxVolume: 0.7,
       showTouchControls: 'always',
       unlockAllMode: false,
-      vibrationEnabled: true,
     },
   };
 }

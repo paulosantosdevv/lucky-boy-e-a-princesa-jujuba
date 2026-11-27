@@ -29,8 +29,13 @@ export const TouchControls: React.FC<Props> = ({
 
   if (!visible) return null;
 
-  const isDpad = (btn: VirtualButton) =>
-    btn === 'left' || btn === 'right' || btn === 'up' || btn === 'down';
+  const vibrateForButton = (btn: VirtualButton) => {
+    if (btn === 'a') haptics.buttonA();
+    else if (btn === 'b') haptics.buttonB();
+    else if (btn === 'x') haptics.buttonX();
+    else if (btn === 'y') haptics.buttonY();
+    else haptics.dpad();
+  };
 
   const bindBtn = (btn: VirtualButton) => ({
     onPointerDown: (e: React.PointerEvent) => {
@@ -41,8 +46,7 @@ export const TouchControls: React.FC<Props> = ({
       } catch {
         // ignore
       }
-      if (isDpad(btn)) haptics.tapDpad();
-      else haptics.tapAction();
+      vibrateForButton(btn);
       inputManager.setVirtual(btn, true);
       setActive((prev) => ({ ...prev, [btn]: true }));
     },
@@ -62,8 +66,8 @@ export const TouchControls: React.FC<Props> = ({
     onContextMenu: (e: React.MouseEvent) => e.preventDefault(),
   });
 
-  const dpadSize = 'clamp(42px, 11.5vw, 56px)';
-  const actionSize = 'clamp(46px, 12.2vw, 62px)';
+  const dpadSize = 'clamp(46px, 12.2vw, 58px)';
+  const actionSize = 'clamp(50px, 13.2vw, 66px)';
 
   return (
     <div
@@ -76,15 +80,15 @@ export const TouchControls: React.FC<Props> = ({
         flexDirection: 'column',
         justifyContent: 'space-between',
         padding:
-          'max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left))',
+          'max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left))',
       }}
     >
-      {/* Top-right pause button positioned cleanly below HUD bar */}
+      {/* Top-right pause button */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', pointerEvents: 'none' }}>
         <button
           type="button"
           onClick={() => {
-            haptics.tapUi();
+            haptics.dpad();
             onPauseClick();
           }}
           className="touch-pad-btn"
@@ -95,7 +99,7 @@ export const TouchControls: React.FC<Props> = ({
             borderRadius: 15,
             background: '#fff9eb',
             color: '#221b18',
-            marginTop: 58,
+            marginTop: 56,
           }}
           aria-label="Pausar jogo"
         >
@@ -232,8 +236,8 @@ export const TouchControls: React.FC<Props> = ({
             {...bindBtn('y')}
             aria-label={`Botão Y - ${specialYLabel || labels.y}`}
           >
-            <span style={{ fontWeight: 900, fontSize: 15, lineHeight: 1 }}>Y</span>
-            <span style={{ fontSize: 9, fontWeight: 900, lineHeight: 1.05, textAlign: 'center', padding: '0 2px' }}>
+            <span style={{ fontWeight: 900, fontSize: 16, lineHeight: 1 }}>Y</span>
+            <span style={{ fontSize: 9.5, fontWeight: 900, lineHeight: 1.05, textAlign: 'center', padding: '0 2px' }}>
               {specialYLabel || labels.y}
             </span>
           </button>
@@ -252,8 +256,8 @@ export const TouchControls: React.FC<Props> = ({
             {...bindBtn('x')}
             aria-label={`Botão X - ${labels.x}`}
           >
-            <span style={{ fontWeight: 900, fontSize: 15, lineHeight: 1 }}>X</span>
-            <span style={{ fontSize: 9.5, fontWeight: 900, lineHeight: 1.1 }}>{labels.x}</span>
+            <span style={{ fontWeight: 900, fontSize: 16, lineHeight: 1 }}>X</span>
+            <span style={{ fontSize: 10, fontWeight: 900, lineHeight: 1.1 }}>{labels.x}</span>
           </button>
           <div />
           <button
@@ -269,8 +273,8 @@ export const TouchControls: React.FC<Props> = ({
             {...bindBtn('b')}
             aria-label={`Botão B - ${labels.b}`}
           >
-            <span style={{ fontWeight: 900, fontSize: 15, lineHeight: 1 }}>B</span>
-            <span style={{ fontSize: 9.5, fontWeight: 900, lineHeight: 1.1 }}>{labels.b}</span>
+            <span style={{ fontWeight: 900, fontSize: 16, lineHeight: 1 }}>B</span>
+            <span style={{ fontSize: 10, fontWeight: 900, lineHeight: 1.1 }}>{labels.b}</span>
           </button>
 
           <div />
@@ -287,8 +291,8 @@ export const TouchControls: React.FC<Props> = ({
             {...bindBtn('a')}
             aria-label={`Botão A - ${labels.a}`}
           >
-            <span style={{ fontWeight: 900, fontSize: 15, lineHeight: 1 }}>A</span>
-            <span style={{ fontSize: 9.5, fontWeight: 900, lineHeight: 1.1 }}>{labels.a}</span>
+            <span style={{ fontWeight: 900, fontSize: 16, lineHeight: 1 }}>A</span>
+            <span style={{ fontSize: 10, fontWeight: 900, lineHeight: 1.1 }}>{labels.a}</span>
           </button>
           <div />
         </div>

@@ -1,43 +1,51 @@
+// Haptic feedback helper using the browser Vibration API (Android Chrome / supported mobile devices)
+
 class HapticsManager {
-  private enabled = true;
+  public enabled = true;
 
-  public setEnabled(val: boolean) {
-    this.enabled = val;
-  }
-
-  public isEnabled() {
-    return this.enabled;
-  }
-
-  public vibrate(pattern: number | number[]) {
-    if (!this.enabled) return;
+  public trigger(pattern: number | number[]) {
+    if (!this.enabled || typeof navigator === 'undefined' || !navigator.vibrate) return;
     try {
-      if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
-        navigator.vibrate(pattern);
-      }
+      navigator.vibrate(pattern);
     } catch {
-      // Ignore on browsers/devices without Vibration API
+      // Ignore on unsupported browsers (e.g. desktop or iOS Safari)
     }
   }
 
-  public tapDpad() {
-    this.vibrate(14);
+  public dpad() {
+    this.trigger(12);
   }
 
-  public tapAction() {
-    this.vibrate(24);
+  public buttonA() {
+    this.trigger(18);
   }
 
-  public tapUi() {
-    this.vibrate(12);
+  public buttonB() {
+    this.trigger(22);
+  }
+
+  public buttonX() {
+    this.trigger(16);
+  }
+
+  public buttonY() {
+    this.trigger([18, 22, 24]);
+  }
+
+  public bounce() {
+    this.trigger(24);
   }
 
   public impact() {
-    this.vibrate([28, 25, 40]);
+    this.trigger(32);
   }
 
-  public reward() {
-    this.vibrate([16, 28, 24]);
+  public hurt() {
+    this.trigger([40, 28, 40]);
+  }
+
+  public collect() {
+    this.trigger([14, 18, 26]);
   }
 }
 

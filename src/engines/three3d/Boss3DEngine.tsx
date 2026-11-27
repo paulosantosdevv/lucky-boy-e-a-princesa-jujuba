@@ -7,6 +7,14 @@ import {
 } from '../../types/game';
 import { inputManager } from '../../systems/inputSystem';
 import { audioSystem } from '../../systems/audioSystem';
+import { haptics } from '../../systems/haptics';
+import {
+  createChristmasTree3D,
+  createClockFaceTexture,
+  createFestiveRugTexture,
+  createLucky3D,
+  createSnowPoints,
+} from './models3d';
 
 interface Props {
   costume: CostumeId;
@@ -35,192 +43,222 @@ export const Boss3DEngine: React.FC<Props> = ({
     const container = mountRef.current;
     if (!container) return;
 
-    // Storybook Christmas Sky (bright festive twilight blue, high contrast!)
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#4a8fd4');
-    scene.fog = new THREE.Fog('#7cb9f0', 36, 130);
+    scene.background = new THREE.Color('#3e85cc');
+    scene.fog = new THREE.Fog('#75b4eb', 38, 135);
 
     const camera = new THREE.PerspectiveCamera(
       58,
       container.clientWidth / Math.max(1, container.clientHeight),
       0.1,
-      200
+      210
     );
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
     scene.add(new THREE.HemisphereLight('#ffffff', '#69b543', 1.25));
-    const keyLight = new THREE.DirectionalLight('#fff5cc', 1.3);
-    keyLight.position.set(16, 34, 18);
+    const keyLight = new THREE.DirectionalLight('#fff5cc', 1.4);
+    keyLight.position.set(18, 36, 22);
+    keyLight.castShadow = true;
     scene.add(keyLight);
 
-    // Storybook Round Christmas Rug Arena (inspired by Thing 1 & Thing 2 floor rug!)
+    // Falling 3D Christmas Snow!
+    const snow = createSnowPoints(320, 65, 32);
+    scene.add(snow);
+
+    // Grand Storybook Festive Rug Arena (with CanvasTexture!)
     const ARENA_R = 17.5;
+    const rugTex = createFestiveRugTexture();
     const arenaFloor = new THREE.Mesh(
-      new THREE.CylinderGeometry(ARENA_R, ARENA_R + 1.5, 1.4, 36),
-      new THREE.MeshStandardMaterial({ color: '#b38cd9', roughness: 0.78 })
+      new THREE.CylinderGeometry(ARENA_R, ARENA_R + 1.5, 1.4, 42),
+      [
+        new THREE.MeshStandardMaterial({ color: '#8b623f', roughness: 0.8 }),
+        new THREE.MeshStandardMaterial({ map: rugTex, roughness: 0.72 }),
+        new THREE.MeshStandardMaterial({ color: '#8b623f' }),
+      ]
     );
     arenaFloor.position.y = -0.7;
+    arenaFloor.receiveShadow = true;
     scene.add(arenaFloor);
 
-    const greenRing = new THREE.Mesh(
-      new THREE.RingGeometry(ARENA_R - 2.6, ARENA_R - 0.5, 42),
-      new THREE.MeshStandardMaterial({ color: '#69b543', side: THREE.DoubleSide })
-    );
-    greenRing.rotation.x = -Math.PI / 2;
-    greenRing.position.y = 0.03;
-    scene.add(greenRing);
-
     const goldRing = new THREE.Mesh(
-      new THREE.TorusGeometry(ARENA_R - 0.3, 0.35, 10, 48),
-      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.35 })
+      new THREE.TorusGeometry(ARENA_R - 0.25, 0.38, 12, 48),
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.4 })
     );
     goldRing.rotation.x = Math.PI / 2;
     goldRing.position.y = 0.08;
     scene.add(goldRing);
 
-    // Whimsical Candy Cane Pillars around Arena
+    // Giant Enchanted Christmas Star Floating Above Fortress!
+    const bigStar = new THREE.Mesh(
+      new THREE.OctahedronGeometry(2.6),
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ff9f1c', emissiveIntensity: 0.8 })
+    );
+    bigStar.position.set(0, 17, -ARENA_R - 8);
+    scene.add(bigStar);
+
+    // Whimsical Candy Cane Pillars & Glowing Lanterns around Arena
     for (let i = 0; i < 8; i++) {
       const ang = (i / 8) * Math.PI * 2;
+      const pilGroup = new THREE.Group();
       const pil = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.9, 1.2, 13, 10),
+        new THREE.CylinderGeometry(0.85, 1.15, 12, 12),
         new THREE.MeshStandardMaterial({ color: i % 2 === 0 ? '#d92626' : '#fff9eb' })
       );
-      pil.position.set(Math.cos(ang) * (ARENA_R + 3), 6, Math.sin(ang) * (ARENA_R + 3));
-      pil.rotation.z = Math.sin(i) * 0.14;
-      scene.add(pil);
+      pil.position.y = 6;
+      const lantern = new THREE.Mesh(
+        new THREE.SphereGeometry(1.1, 12, 12),
+        new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ffb703', emissiveIntensity: 0.75 })
+      );
+      lantern.position.y = 12.6;
+      pilGroup.add(pil, lantern);
+      pilGroup.position.set(Math.cos(ang) * (ARENA_R + 3), 0, Math.sin(ang) * (ARENA_R + 3));
+      pilGroup.rotation.z = Math.sin(i) * 0.1;
+      scene.add(pilGroup);
     }
 
-    // Princesa Jujuba glowing platform at North side (-Z)
+    // Princesa Jujuba (Detailed Blonde Princess on Glowing Royal Balcony!)
     const jujubaGroup = new THREE.Group();
     jujubaGroup.position.set(0, 4.5, -ARENA_R - 3.5);
+    const pedestal = new THREE.Mesh(
+      new THREE.CylinderGeometry(2.5, 2.8, 1.0, 18),
+      new THREE.MeshStandardMaterial({ color: '#fff9eb' })
+    );
+    pedestal.position.y = -1.8;
     const dress = new THREE.Mesh(
-      new THREE.ConeGeometry(1.4, 3.2, 12),
+      new THREE.ConeGeometry(1.45, 3.2, 16),
       new THREE.MeshStandardMaterial({ color: '#e24b78' })
     );
+    const furTrim = new THREE.Mesh(
+      new THREE.TorusGeometry(1.4, 0.22, 8, 18),
+      new THREE.MeshStandardMaterial({ color: '#ffffff' })
+    );
+    furTrim.rotation.x = Math.PI / 2;
+    furTrim.position.y = -1.45;
     const jHead = new THREE.Mesh(
-      new THREE.SphereGeometry(0.85, 14, 14),
+      new THREE.SphereGeometry(0.85, 16, 16),
       new THREE.MeshStandardMaterial({ color: '#ffe7c8' })
     );
     jHead.position.y = 2.1;
     const jHair = new THREE.Mesh(
-      new THREE.SphereGeometry(0.95, 14, 14),
-      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ffd447', emissiveIntensity: 0.25 })
+      new THREE.SphereGeometry(1.0, 16, 16),
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ffd447', emissiveIntensity: 0.3 })
     );
-    jHair.position.set(0, 2.25, -0.2);
+    jHair.scale.set(1.05, 1.25, 0.95);
+    jHair.position.set(0, 2.15, -0.25);
+    const tiara = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.35),
+      new THREE.MeshStandardMaterial({ color: '#fff7a8', emissive: '#ffe055', emissiveIntensity: 0.85 })
+    );
+    tiara.position.set(0, 3.1, 0.25);
     const cage = new THREE.Mesh(
-      new THREE.CylinderGeometry(2.4, 2.4, 5.2, 12, 1, true),
-      new THREE.MeshStandardMaterial({ color: '#ffe055', transparent: true, opacity: 0.32, wireframe: true })
+      new THREE.CylinderGeometry(2.5, 2.5, 5.4, 14, 1, true),
+      new THREE.MeshStandardMaterial({ color: '#ffe055', transparent: true, opacity: 0.34, wireframe: true })
     );
     cage.position.y = 1.2;
-    jujubaGroup.add(dress, jHead, jHair, cage);
+    jujubaGroup.add(pedestal, dress, furTrim, jHead, jHair, tiara, cage);
     scene.add(jujubaGroup);
 
-    // Lucky Boy 3D Hero
-    const luckyGroup = new THREE.Group();
-    const whiteMat = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.5 });
-    const body = new THREE.Mesh(new THREE.SphereGeometry(0.95, 14, 14), whiteMat);
-    body.scale.set(1.0, 0.85, 1.25);
-    body.position.y = 0.9;
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.75, 14, 14), whiteMat);
-    head.position.set(0, 1.55, 0.72);
-    const scarf = new THREE.Mesh(
-      new THREE.TorusGeometry(0.62, 0.16, 8, 16),
-      new THREE.MeshStandardMaterial({ color: costume === 'spfc' ? '#d92626' : '#d92626' })
-    );
-    scarf.rotation.x = Math.PI / 2;
-    scarf.position.set(0, 1.15, 0.55);
-    const tail = new THREE.Mesh(new THREE.SphereGeometry(0.32, 10, 10), whiteMat);
-    tail.position.set(0, 1.15, -1.05);
-    luckyGroup.add(body, head, scarf, tail);
+    // Detailed 3D Lucky Boy Hero!
+    const luckyGroup = createLucky3D(costume, 1.05);
     scene.add(luckyGroup);
 
-    // STAGE 1: ÁRVORE DA DESTRUIÇÃO (Cat-in-the-Hat style giant tree with pink garland & 3 cores)
-    const treeBossGroup = new THREE.Group();
-    const treeCone1 = new THREE.Mesh(
-      new THREE.ConeGeometry(4.4, 5.5, 12),
-      new THREE.MeshStandardMaterial({ color: '#5ea93f' })
-    );
-    treeCone1.position.y = 3.2;
-    const treeCone2 = new THREE.Mesh(
-      new THREE.ConeGeometry(3.2, 4.5, 12),
-      new THREE.MeshStandardMaterial({ color: '#69b543' })
-    );
-    treeCone2.position.y = 6.5;
-    const treeGarland = new THREE.Mesh(
-      new THREE.TorusGeometry(3.1, 0.35, 8, 20),
-      new THREE.MeshStandardMaterial({ color: '#e47bb8' })
-    );
-    treeGarland.rotation.x = Math.PI / 2;
-    treeGarland.position.y = 4.2;
-    treeBossGroup.add(treeCone1, treeCone2, treeGarland);
-
+    // STAGE 1: ÁRVORE DA DESTRUIÇÃO (Lush 3D Christmas Tree + 3 Glowing Energy Cores)
+    const treeBossGroup = createChristmasTree3D(1.08);
     const treeCores = [0, 1, 2].map((i) => {
       const ang = (i / 3) * Math.PI * 2;
       const core = new THREE.Mesh(
-        new THREE.OctahedronGeometry(1.0),
-        new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f46d75', emissiveIntensity: 0.7 })
+        new THREE.OctahedronGeometry(1.05),
+        new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f46d75', emissiveIntensity: 0.78 })
       );
-      core.position.set(Math.cos(ang) * 4.3, 2.0, Math.sin(ang) * 4.3);
+      core.position.set(Math.cos(ang) * 4.4, 2.2, Math.sin(ang) * 4.4);
       treeBossGroup.add(core);
       return { mesh: core, hp: 3, alive: true };
     });
     scene.add(treeBossGroup);
 
-    // STAGE 2: RELÓGIO DA MEIA-NOITE (3 Accessible Golden Gear Platforms + Crystals)
+    // STAGE 2: RELÓGIO DA MEIA-NOITE (Numbered Clock Face + Spinning Gears + 3 Platforms!)
     const clockGroup = new THREE.Group();
     clockGroup.visible = false;
+    const clockTex = createClockFaceTexture();
     const clockFace = new THREE.Mesh(
-      new THREE.CylinderGeometry(3.6, 3.6, 0.5, 24),
-      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ff9f1c', emissiveIntensity: 0.25 })
+      new THREE.CylinderGeometry(3.8, 3.8, 0.6, 32),
+      [
+        new THREE.MeshStandardMaterial({ color: '#d99316', metalness: 0.4 }),
+        new THREE.MeshStandardMaterial({ map: clockTex }),
+        new THREE.MeshStandardMaterial({ map: clockTex }),
+      ]
     );
     clockFace.rotation.x = Math.PI / 2;
     clockFace.position.set(0, 6.2, 0);
     const clockHand = new THREE.Mesh(
-      new THREE.BoxGeometry(0.35, 3.0, 0.35),
+      new THREE.BoxGeometry(0.32, 3.1, 0.35),
       new THREE.MeshStandardMaterial({ color: '#d92626' })
     );
-    clockHand.position.set(0, 6.2, 0.4);
+    clockHand.position.set(0, 6.2, 0.45);
     clockGroup.add(clockFace, clockHand);
 
     const clockCrystals = [0, 1, 2].map((i) => {
       const ang = (i / 3) * Math.PI * 2 + 0.5;
       const dist = 9.2;
       const plat = new THREE.Mesh(
-        new THREE.CylinderGeometry(3.0, 3.2, 0.7, 14),
-        new THREE.MeshStandardMaterial({ color: '#ff9f43' })
+        new THREE.CylinderGeometry(3.1, 3.3, 0.75, 16),
+        new THREE.MeshStandardMaterial({ color: '#ff9f43', metalness: 0.25, roughness: 0.4 })
       );
       plat.position.set(Math.cos(ang) * dist, 1.45, Math.sin(ang) * dist);
       const crystal = new THREE.Mesh(
-        new THREE.OctahedronGeometry(1.1),
-        new THREE.MeshStandardMaterial({ color: '#6fd3f7', emissive: '#22a6e0', emissiveIntensity: 0.75 })
+        new THREE.OctahedronGeometry(1.15),
+        new THREE.MeshStandardMaterial({ color: '#6fd3f7', emissive: '#22a6e0', emissiveIntensity: 0.8 })
       );
-      crystal.position.set(Math.cos(ang) * dist, 3.2, Math.sin(ang) * dist);
+      crystal.position.set(Math.cos(ang) * dist, 3.25, Math.sin(ang) * dist);
       clockGroup.add(plat, crystal);
       return { plat, crystal, x: Math.cos(ang) * dist, z: Math.sin(ang) * dist, active: true };
     });
     scene.add(clockGroup);
 
-    // STAGE 3 & 4: LULA SUPREMO -> O ÚLTIMO PETISCO
+    // STAGE 3 & 4: Detailed 3D LULA SUPREMO (Purple Coat, Collar, Spiky Hair, Grumpy Brows & Brass Goggles!)
     const lulaGroup = new THREE.Group();
     lulaGroup.visible = false;
-    const lulaCoatMat = new THREE.MeshStandardMaterial({ color: '#6b2fa0', roughness: 0.4 });
-    const lulaCoat = new THREE.Mesh(new THREE.ConeGeometry(2.4, 5.0, 12), lulaCoatMat);
+    const lulaCoatMat = new THREE.MeshStandardMaterial({ color: '#6b2fa0', roughness: 0.42 });
+    const lulaCoat = new THREE.Mesh(new THREE.ConeGeometry(2.4, 5.0, 14), lulaCoatMat);
     lulaCoat.position.y = 2.6;
+    const collar = new THREE.Mesh(
+      new THREE.TorusGeometry(1.35, 0.34, 8, 18),
+      new THREE.MeshStandardMaterial({ color: '#b38cd9' })
+    );
+    collar.rotation.x = Math.PI / 2;
+    collar.position.y = 4.65;
     const lulaHead = new THREE.Mesh(
-      new THREE.SphereGeometry(1.55, 14, 14),
+      new THREE.SphereGeometry(1.55, 16, 16),
       new THREE.MeshStandardMaterial({ color: '#c38ef5' })
     );
-    lulaHead.position.y = 5.6;
-    const lulaGoggles = new THREE.Mesh(
-      new THREE.BoxGeometry(2.2, 0.55, 0.6),
-      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.4 })
-    );
-    lulaGoggles.position.set(0, 6.2, 1.3);
-    lulaGroup.add(lulaCoat, lulaHead, lulaGoggles);
+    lulaHead.position.y = 5.7;
+    // Wild Seuss spiky hair tufts
+    const hairMat = new THREE.MeshStandardMaterial({ color: '#4c1d95' });
+    [-0.65, 0, 0.65].forEach((hx, idx) => {
+      const tuft = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.35, 8), hairMat);
+      tuft.position.set(hx, 7.35, 0);
+      tuft.rotation.z = (idx - 1) * -0.28;
+      lulaGroup.add(tuft);
+    });
+    // Brass Steampunk Goggles + Glowing Eyes
+    const gogMat = new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.5 });
+    const gogL = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.3, 14), gogMat);
+    gogL.rotation.x = Math.PI / 2;
+    gogL.position.set(-0.55, 6.25, 1.32);
+    const gogR = gogL.clone();
+    gogR.position.x = 0.55;
+    const eyeMat = new THREE.MeshStandardMaterial({ color: '#ffea00', emissive: '#ffd447', emissiveIntensity: 0.7 });
+    const lEyeL = new THREE.Mesh(new THREE.SphereGeometry(0.24, 10, 10), eyeMat);
+    lEyeL.position.set(-0.52, 5.6, 1.4);
+    const lEyeR = lEyeL.clone();
+    lEyeR.position.x = 0.52;
+    lulaGroup.add(lulaCoat, collar, lulaHead, gogL, gogR, lEyeL, lEyeR);
     scene.add(lulaGroup);
 
     const goldenPawMeshes = [
@@ -230,7 +268,7 @@ export const Boss3DEngine: React.FC<Props> = ({
     ].map((gp) => {
       const m = new THREE.Mesh(
         new THREE.OctahedronGeometry(0.95),
-        new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.7 })
+        new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.75 })
       );
       m.position.set(gp.x, 1.6, gp.z);
       scene.add(m);
@@ -280,6 +318,7 @@ export const Boss3DEngine: React.FC<Props> = ({
       if (invuln > 0 || dashTimer > 0 || stage === 4) return;
       hearts--;
       invuln = 1.4;
+      haptics.hurt();
       audioSystem.playSfx('hurt');
       if (hearts <= 0) {
         finished = true;
@@ -337,6 +376,16 @@ export const Boss3DEngine: React.FC<Props> = ({
 
       if (!pausedRef.current && !finished) {
         timeSec += dt;
+        bigStar.rotation.y += dt * 1.4;
+        // Animate falling 3D snow
+        const snowPos = snow.geometry.attributes.position as THREE.BufferAttribute;
+        for (let i = 0; i < snowPos.count; i++) {
+          let ny = snowPos.getY(i) - 4.2 * dt;
+          if (ny < 0) ny = 32;
+          snowPos.setY(i, ny);
+        }
+        snowPos.needsUpdate = true;
+
         if (bannerTimer > 0) {
           bannerTimer -= dt;
           if (bannerTimer <= 0) bannerText = '';
@@ -376,6 +425,7 @@ export const Boss3DEngine: React.FC<Props> = ({
         if (inp.xJustPressed && dashCooldown <= 0) {
           dashTimer = 0.28;
           dashCooldown = 0.75;
+          haptics.bounce();
           audioSystem.playSfx('boost');
         }
 
@@ -383,7 +433,6 @@ export const Boss3DEngine: React.FC<Props> = ({
         const prevPy = py;
         py += vy * dt;
         let floorY = 0;
-        // FIXED BUG: Forgiving landing on Stage 2 elevated gear platforms!
         if (stage === 2) {
           for (const c of clockCrystals) {
             if (Math.hypot(px - c.x, pz - c.z) < 3.4 && (prevPy >= 1.5 || py >= 1.5)) {
@@ -409,6 +458,7 @@ export const Boss3DEngine: React.FC<Props> = ({
           }
           if (Math.hypot(px - gp.x, pz - gp.z) < 2.4) {
             gp.collected = true;
+            haptics.collect();
             audioSystem.playSfx('paw');
             bannerText = `🐾 Patinha Dourada #${idx + 1} da Fortaleza!`;
             bannerTimer = 2.0;
@@ -438,6 +488,7 @@ export const Boss3DEngine: React.FC<Props> = ({
             stage = 2;
             treeBossGroup.visible = false;
             clockGroup.visible = true;
+            haptics.collect();
             audioSystem.playSfx('star');
             bannerText = '⏰ ETAPA 2/4: Pule nas 3 engrenagens laranjas para desativar os cristais!';
             bannerTimer = 4.2;
@@ -447,10 +498,12 @@ export const Boss3DEngine: React.FC<Props> = ({
           if (inp.bJustPressed || inp.yJustPressed) shootStarBark();
 
           for (const c of clockCrystals) {
+            c.plat.rotation.y += dt * 1.2;
             c.crystal.rotation.y += dt * 3;
             if (c.active && Math.hypot(px - c.x, pz - c.z) < 3.2 && py >= 1.2) {
               c.active = false;
               c.crystal.visible = false;
+              haptics.collect();
               audioSystem.playSfx('checkpoint');
               bannerText = '✨ Cristal do Relógio desativado!';
               bannerTimer = 1.8;
@@ -474,7 +527,8 @@ export const Boss3DEngine: React.FC<Props> = ({
             stage = 3;
             clockGroup.visible = false;
             lulaGroup.visible = true;
-            lulaGroup.scale.setScalar(1.45);
+            lulaGroup.scale.setScalar(1.42);
+            haptics.impact();
             audioSystem.playSfx('super_bark');
             bannerText = '⚡ ETAPA 3/4: LULA SUPREMO! Pule as ondas e atire com B ou Y!';
             bannerTimer = 4.0;
@@ -508,6 +562,7 @@ export const Boss3DEngine: React.FC<Props> = ({
             projs.forEach((p) => scene.remove(p.mesh));
             projs.length = 0;
             onSpecialYLabelChange?.('Petisco 🦴');
+            haptics.collect();
             audioSystem.playSfx('gift');
             bannerText = '💛 ETAPA 4/4: Lula nunca ganhou um presente de Natal...';
             bannerTimer = 5.0;
@@ -518,6 +573,7 @@ export const Boss3DEngine: React.FC<Props> = ({
           if ((inp.yJustPressed || inp.bJustPressed) && distToLula < 8.0) {
             finished = true;
             onSpecialYLabelChange?.(undefined);
+            haptics.collect();
             audioSystem.playSfx('win');
             const pawsCount = goldenPawMeshes.filter((g) => g.collected).length;
             const starsEarned = Math.min(3, 1 + (pawsCount >= 2 ? 1 : 0) + (hearts >= 3 ? 1 : 0));
@@ -551,6 +607,7 @@ export const Boss3DEngine: React.FC<Props> = ({
                 if (pr.mesh.position.distanceTo(worldCore) < 2.6) {
                   core.hp--;
                   remove = true;
+                  haptics.impact();
                   audioSystem.playSfx('enemy_defeat');
                   if (core.hp <= 0) {
                     core.alive = false;
@@ -565,6 +622,7 @@ export const Boss3DEngine: React.FC<Props> = ({
                 lulaHp--;
                 lulaHurtFlash = 0.16;
                 remove = true;
+                haptics.impact();
                 audioSystem.playSfx('enemy_defeat');
               }
             }

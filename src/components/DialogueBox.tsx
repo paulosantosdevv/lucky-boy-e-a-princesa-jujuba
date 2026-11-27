@@ -13,14 +13,15 @@ interface Props {
 export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => {
   const [index, setIndex] = useState(0);
 
-  // CRITICAL FIX: Always reset index to 0 when a new dialogue sequence arrives!
+  // CRITICAL FIX: Always reset dialogue index when a new sequence of lines is passed
+  // (prevents mobile freeze after Prologue -> Level 1 transition!)
   useEffect(() => {
     setIndex(0);
   }, [lines]);
 
-  const current = lines[index] || lines[0];
+  const safeIndex = index < lines.length ? index : 0;
+  const current = lines[safeIndex];
 
-  // Safety guard: never stay stuck returning null if lines is empty
   useEffect(() => {
     if (!lines || lines.length === 0) {
       onComplete();
@@ -28,10 +29,10 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
   }, [lines, onComplete]);
 
   const advance = () => {
-    haptics.tapUi();
+    haptics.dpad();
     audioSystem.playSfx('click');
-    if (index + 1 < lines.length) {
-      setIndex((i) => i + 1);
+    if (safeIndex + 1 < lines.length) {
+      setIndex(safeIndex + 1);
     } else {
       onComplete();
     }
@@ -62,7 +63,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
         display: 'flex',
         alignItems: 'flex-end',
         justifyContent: 'center',
-        padding: '18px 14px max(24px, env(safe-area-inset-bottom)) 14px',
+        padding: '18px 14px max(22px, env(safe-area-inset-bottom)) 14px',
       }}
     >
       <div
@@ -73,7 +74,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
         }}
         style={{
           width: 'min(760px, 96vw)',
-          padding: '14px 16px',
+          padding: '14px 18px',
           display: 'flex',
           alignItems: 'center',
           gap: 14,
@@ -82,7 +83,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
       >
         <CharacterPortrait
           character={current.speaker}
-          size={78}
+          size={82}
           costume={current.speaker === 'lucky' ? costume : 'classic'}
         />
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -90,7 +91,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
             <span
               className="seuss-title"
               style={{
-                fontSize: 'clamp(0.98rem, 2.5vw, 1.25rem)',
+                fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
                 color: '#c91d1d',
                 fontWeight: 700,
               }}
@@ -98,14 +99,14 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
               {current.speakerName}
             </span>
             <span style={{ fontSize: 12, color: '#6b5c4d', fontWeight: 800 }}>
-              {Math.min(index + 1, lines.length)} / {lines.length}
+              {safeIndex + 1} / {lines.length}
             </span>
           </div>
           <p
             style={{
               margin: '6px 0 10px',
               fontSize: 'clamp(0.9rem, 2.2vw, 1.05rem)',
-              lineHeight: 1.42,
+              lineHeight: 1.45,
               color: '#221b18',
               fontWeight: 800,
             }}
@@ -117,7 +118,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                haptics.tapUi();
+                haptics.dpad();
                 audioSystem.playSfx('click');
                 onComplete();
               }}
@@ -133,7 +134,7 @@ export const DialogueBox: React.FC<Props> = ({ lines, costume, onComplete }) => 
               Pular diálogo »
             </button>
             <span className="seuss-btn seuss-btn-gold" style={{ padding: '6px 14px', fontSize: '0.88rem' }}>
-              {index + 1 < lines.length ? 'Continuar ▶' : 'Vamos lá! 🐾'}
+              {safeIndex + 1 < lines.length ? 'Continuar ▶' : 'Vamos lá! 🐾'}
             </span>
           </div>
         </div>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { SaveData } from '../types/game';
 import { exportSaveJson, importSaveJson, resetSave } from '../systems/saveSystem';
 import { audioSystem } from '../systems/audioSystem';
-import { haptics } from '../systems/haptics';
 import { Download, RotateCcw, Upload, X } from 'lucide-react';
 
 interface Props {
@@ -25,7 +24,6 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
       settings: { ...save.settings, [key]: val },
     };
     audioSystem.setVolumes(next.settings.musicVolume, next.settings.sfxVolume);
-    haptics.setEnabled(next.settings.vibrationEnabled ?? true);
     onUpdateSave(next);
   };
 
@@ -144,38 +142,6 @@ export const SettingsModal: React.FC<Props> = ({ save, onUpdateSave, onClose }) 
               ))}
             </div>
           </div>
-
-          <label
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 10,
-              background: '#fff3bf',
-              border: '2.5px solid #221b18',
-              padding: '10px 14px',
-              borderRadius: 16,
-              cursor: 'pointer',
-            }}
-          >
-            <div>
-              <div style={{ fontWeight: 900, fontSize: 14, color: '#221b18' }}>
-                📳 Vibração Tátil nos Botões (Celular)
-              </div>
-              <div style={{ fontSize: 12, color: '#4a3d33', fontWeight: 700 }}>
-                Emite pequenas vibrações ao apertar o direcional, botões e ações!
-              </div>
-            </div>
-            <input
-              type="checkbox"
-              checked={save.settings.vibrationEnabled ?? true}
-              onChange={(e) => {
-                updateSetting('vibrationEnabled', e.target.checked);
-                if (e.target.checked) haptics.tapAction();
-              }}
-              style={{ width: 22, height: 22, accentColor: '#53a634' }}
-            />
-          </label>
 
           <label
             style={{

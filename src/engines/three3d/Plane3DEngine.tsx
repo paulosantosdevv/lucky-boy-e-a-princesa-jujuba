@@ -7,6 +7,8 @@ import {
 } from '../../types/game';
 import { inputManager } from '../../systems/inputSystem';
 import { audioSystem } from '../../systems/audioSystem';
+import { haptics } from '../../systems/haptics';
+import { createLucky3D } from './models3d';
 
 interface Props {
   costume: CostumeId;
@@ -18,6 +20,7 @@ interface Props {
 }
 
 export const Plane3DEngine: React.FC<Props> = ({
+  costume,
   lives,
   paused,
   onHudUpdate,
@@ -32,16 +35,15 @@ export const Plane3DEngine: React.FC<Props> = ({
     const container = mountRef.current;
     if (!container) return;
 
-    // Bright Lorax Sky + Fluffy Cotton-Candy Clouds
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#74d4f7');
-    scene.fog = new THREE.Fog('#d8f4ff', 38, 170);
+    scene.background = new THREE.Color('#6fd3f7');
+    scene.fog = new THREE.Fog('#d8f4ff', 42, 185);
 
     const camera = new THREE.PerspectiveCamera(
       60,
       container.clientWidth / Math.max(1, container.clientHeight),
       0.1,
-      250
+      260
     );
     camera.position.set(0, 3.2, 13);
 
@@ -51,54 +53,99 @@ export const Plane3DEngine: React.FC<Props> = ({
     container.appendChild(renderer.domElement);
 
     scene.add(new THREE.HemisphereLight('#ffffff', '#f46d75', 1.25));
-    const sun = new THREE.DirectionalLight('#fff6cc', 1.25);
-    sun.position.set(25, 45, 20);
+    const sun = new THREE.DirectionalLight('#fff6cc', 1.35);
+    sun.position.set(25, 45, 25);
     scene.add(sun);
 
-    // Lucky Boy's Festive Biplane 3D
-    const plane = new THREE.Group();
-    const redMat = new THREE.MeshStandardMaterial({ color: '#d92626', roughness: 0.35 });
-    const goldMat = new THREE.MeshStandardMaterial({ color: '#ffe055', roughness: 0.3 });
-    const fuselage = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.72, 3.2, 12), redMat);
-    fuselage.rotation.x = Math.PI / 2;
-    plane.add(fuselage);
+    // Rainbow Arch in the Distant Cotton-Candy Sky!
+    const rainbowCols = ['#f46d75', '#ff9f43', '#ffe055', '#69b543', '#6fd3f7', '#b38cd9'];
+    rainbowCols.forEach((col, i) => {
+      const arc = new THREE.Mesh(
+        new THREE.TorusGeometry(62 - i * 2.2, 1.1, 8, 48, Math.PI),
+        new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.45 })
+      );
+      arc.position.set(0, -18, -145);
+      scene.add(arc);
+    });
 
-    const wingTop = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.16, 1.1), redMat);
-    wingTop.position.set(0, 0.65, -0.2);
-    const wingBot = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.16, 1.0), goldMat);
+    // Detailed 3D Festive Biplane with Struts, Tail Fin, Wheels, Spinning Blur Disc & Detailed Lucky 3D!
+    const plane = new THREE.Group();
+    const redMat = new THREE.MeshStandardMaterial({ color: '#d92626', roughness: 0.3, metalness: 0.15 });
+    const goldMat = new THREE.MeshStandardMaterial({ color: '#ffe055', roughness: 0.28, metalness: 0.25 });
+    const creamMat = new THREE.MeshStandardMaterial({ color: '#fff9eb', roughness: 0.4 });
+    const darkMat = new THREE.MeshStandardMaterial({ color: '#221b18', roughness: 0.6 });
+
+    const fuselage = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.78, 3.5, 14), redMat);
+    fuselage.rotation.x = Math.PI / 2;
+    const noseCone = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.65, 14), goldMat);
+    noseCone.rotation.x = -Math.PI / 2;
+    noseCone.position.z = -2.0;
+
+    const wingTop = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.16, 1.15), redMat);
+    wingTop.position.set(0, 0.78, -0.2);
+    const wingBot = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.16, 1.05), creamMat);
     wingBot.position.set(0, -0.35, -0.2);
-    const tail = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.14, 0.7), goldMat);
-    tail.position.set(0, 0.25, 1.4);
-    const propeller = new THREE.Mesh(
-      new THREE.BoxGeometry(1.9, 0.2, 0.08),
-      new THREE.MeshStandardMaterial({ color: '#fff9eb' })
+    const wingStripe = new THREE.Mesh(new THREE.BoxGeometry(5.55, 0.18, 0.24), goldMat);
+    wingStripe.position.set(0, 0.78, -0.2);
+
+    // Wing Struts
+    const strutGeo = new THREE.CylinderGeometry(0.05, 0.05, 1.15, 8);
+    [-1.65, 1.65].forEach((sx) => {
+      const s = new THREE.Mesh(strutGeo, goldMat);
+      s.position.set(sx, 0.22, -0.2);
+      plane.add(s);
+    });
+
+    // Tail Wing + Vertical Rudder
+    const tailH = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.14, 0.7), goldMat);
+    tailH.position.set(0, 0.22, 1.55);
+    const tailV = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.15, 0.85), redMat);
+    tailV.position.set(0, 0.68, 1.55);
+
+    // Landing Gear Wheels
+    const wheelGeo = new THREE.CylinderGeometry(0.26, 0.26, 0.18, 12);
+    wheelGeo.rotateZ(Math.PI / 2);
+    [-0.75, 0.75].forEach((wx) => {
+      const w = new THREE.Mesh(wheelGeo, darkMat);
+      w.position.set(wx, -0.78, -0.5);
+      plane.add(w);
+    });
+
+    // Propeller + Blur Disc
+    const propeller = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.22, 0.08), creamMat);
+    propeller.position.set(0, 0, -2.3);
+    const propBlur = new THREE.Mesh(
+      new THREE.RingGeometry(0.25, 1.05, 20),
+      new THREE.MeshBasicMaterial({ color: '#ffffff', side: THREE.DoubleSide, transparent: true, opacity: 0.25 })
     );
-    propeller.position.set(0, 0, -1.7);
-    const luckyHead = new THREE.Mesh(
-      new THREE.SphereGeometry(0.55, 12, 12),
-      new THREE.MeshStandardMaterial({ color: '#ffffff' })
-    );
-    luckyHead.position.set(0, 0.65, 0.2);
-    // Aiming crosshair ring ahead of plane!
+    propBlur.position.set(0, 0, -2.28);
+
+    // Detailed Lucky Boy in Cockpit!
+    const luckyPilot = createLucky3D(costume === 'classic' ? 'pilot' : costume, 0.56);
+    luckyPilot.position.set(0, 0.2, 0.22);
+    luckyPilot.rotation.y = Math.PI;
+
+    // Aiming crosshair ring ahead of plane
     const reticle = new THREE.Mesh(
-      new THREE.RingGeometry(0.6, 0.78, 20),
-      new THREE.MeshBasicMaterial({ color: '#d92626', side: THREE.DoubleSide, transparent: true, opacity: 0.75 })
+      new THREE.RingGeometry(0.65, 0.85, 22),
+      new THREE.MeshBasicMaterial({ color: '#d92626', side: THREE.DoubleSide, transparent: true, opacity: 0.78 })
     );
-    reticle.position.set(0, 0, -14);
-    plane.add(wingTop, wingBot, tail, propeller, luckyHead, reticle);
+    reticle.position.set(0, 0, -15);
+
+    plane.add(fuselage, noseCone, wingTop, wingBot, wingStripe, tailH, tailV, propeller, propBlur, luckyPilot, reticle);
     scene.add(plane);
 
-    // Cotton-Candy Clouds (White & Pastel Pink)
+    // Fluffy Cotton-Candy Clouds
     const clouds: THREE.Group[] = [];
-    for (let i = 0; i < 28; i++) {
+    for (let i = 0; i < 30; i++) {
       const cg = new THREE.Group();
-      const mat = new THREE.MeshStandardMaterial({ color: i % 2 === 0 ? '#ffffff' : '#ffd6e6', roughness: 0.9 });
-      for (let j = 0; j < 3; j++) {
-        const puff = new THREE.Mesh(new THREE.SphereGeometry(2.5 + Math.random() * 2, 10, 10), mat);
-        puff.position.set((j - 1) * 2.4, Math.random() * 1.2, 0);
+      const mat = new THREE.MeshStandardMaterial({ color: i % 3 === 0 ? '#ffd6e6' : '#ffffff', roughness: 0.92 });
+      for (let j = 0; j < 4; j++) {
+        const puff = new THREE.Mesh(new THREE.SphereGeometry(2.4 + Math.random() * 2.2, 10, 10), mat);
+        puff.position.set((j - 1.5) * 2.1, Math.random() * 1.4, (Math.random() - 0.5) * 1.5);
         cg.add(puff);
       }
-      cg.position.set((Math.random() - 0.5) * 65, (Math.random() - 0.5) * 24 - 4, -Math.random() * 150);
+      cg.position.set((Math.random() - 0.5) * 70, (Math.random() - 0.5) * 24 - 4, -Math.random() * 155);
       scene.add(cg);
       clouds.push(cg);
     }
@@ -121,22 +168,62 @@ export const Plane3DEngine: React.FC<Props> = ({
     }
     const bullets: Bullet[] = [];
 
-    // Boss: Lula's Robotic Airship
+    interface Puff3D {
+      mesh: THREE.Mesh;
+      vx: number;
+      vy: number;
+      vz: number;
+      life: number;
+    }
+    const puffs: Puff3D[] = [];
+    const puffGeo = new THREE.SphereGeometry(0.32, 8, 8);
+
+    const spawnBurst = (pos: THREE.Vector3, color: string, count = 10) => {
+      for (let i = 0; i < count; i++) {
+        const m = new THREE.Mesh(puffGeo, new THREE.MeshBasicMaterial({ color }));
+        m.position.copy(pos);
+        scene.add(m);
+        puffs.push({
+          mesh: m,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 0.5) * 16,
+          vz: (Math.random() - 0.5) * 12,
+          life: 0.55,
+        });
+      }
+    };
+
+    // Detailed Boss: Lula's Robotic Airship (Striped Hull + Side Propellers + Glowing Cabin!)
     const airship = new THREE.Group();
-    const balloonMat = new THREE.MeshStandardMaterial({ color: '#8b4bc9', roughness: 0.4 });
-    const balloon = new THREE.Mesh(new THREE.SphereGeometry(4.2, 18, 14), balloonMat);
-    balloon.scale.set(1.5, 0.9, 1.1);
-    const stripe = new THREE.Mesh(
-      new THREE.TorusGeometry(3.8, 0.42, 10, 20),
-      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ff9f1c', emissiveIntensity: 0.35 })
+    const balloonMat = new THREE.MeshStandardMaterial({ color: '#7c3aed', roughness: 0.35 });
+    const balloon = new THREE.Mesh(new THREE.SphereGeometry(4.3, 20, 16), balloonMat);
+    balloon.scale.set(1.55, 0.9, 1.1);
+    const stripe1 = new THREE.Mesh(
+      new THREE.TorusGeometry(3.85, 0.42, 10, 24),
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ff9f1c', emissiveIntensity: 0.4 })
     );
-    stripe.rotation.y = Math.PI / 2;
+    stripe1.rotation.y = Math.PI / 2;
+    const stripe2 = stripe1.clone();
+    stripe2.position.x = -2.2;
+    stripe2.scale.setScalar(0.84);
+    const stripe3 = stripe1.clone();
+    stripe3.position.x = 2.2;
+    stripe3.scale.setScalar(0.84);
     const gondola = new THREE.Mesh(
-      new THREE.BoxGeometry(3.8, 1.6, 2.2),
-      new THREE.MeshStandardMaterial({ color: '#221b18' })
+      new THREE.BoxGeometry(4.2, 1.8, 2.4),
+      new THREE.MeshStandardMaterial({ color: '#221b18', roughness: 0.5 })
     );
     gondola.position.y = -4.2;
-    airship.add(balloon, stripe, gondola);
+    const cabinWindow = new THREE.Mesh(
+      new THREE.BoxGeometry(2.6, 0.75, 2.5),
+      new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#ffe055', emissiveIntensity: 0.75 })
+    );
+    cabinWindow.position.y = -4.1;
+    const sideRotorL = new THREE.Mesh(new THREE.BoxGeometry(0.25, 2.6, 0.35), goldMat);
+    sideRotorL.position.set(-4.6, -1.8, 1.6);
+    const sideRotorR = sideRotorL.clone();
+    sideRotorR.position.x = 4.6;
+    airship.add(balloon, stripe1, stripe2, stripe3, gondola, cabinWindow, sideRotorL, sideRotorR);
     airship.position.set(0, 1, -85);
     airship.visible = false;
     scene.add(airship);
@@ -171,8 +258,8 @@ export const Plane3DEngine: React.FC<Props> = ({
       const offsets = triple ? [-1.3, 0, 1.3] : [0];
       for (const ox of offsets) {
         const b = new THREE.Mesh(
-          new THREE.SphereGeometry(triple ? 0.45 : 0.34, 8, 8),
-          new THREE.MeshStandardMaterial({ color: triple ? '#ffe055' : '#ff5d6c', emissive: '#ff9f1c', emissiveIntensity: 0.7 })
+          new THREE.SphereGeometry(triple ? 0.45 : 0.35, 8, 8),
+          new THREE.MeshStandardMaterial({ color: triple ? '#ffe055' : '#ff5d6c', emissive: '#ff9f1c', emissiveIntensity: 0.75 })
         );
         b.position.set(px + ox, py, -1.8);
         scene.add(b);
@@ -187,8 +274,8 @@ export const Plane3DEngine: React.FC<Props> = ({
 
       if (pawsSpawned < 3 && flightProgress > (pawsSpawned + 1) * 26) {
         const pawMesh = new THREE.Mesh(
-          new THREE.OctahedronGeometry(1.15),
-          new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.8 })
+          new THREE.OctahedronGeometry(1.2),
+          new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.85 })
         );
         pawMesh.position.set(sx * 0.65, sy * 0.65, -95);
         scene.add(pawMesh);
@@ -199,24 +286,30 @@ export const Plane3DEngine: React.FC<Props> = ({
 
       if (r < 0.38) {
         const ring = new THREE.Mesh(
-          new THREE.TorusGeometry(2.4, 0.3, 10, 22),
-          new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.5 })
+          new THREE.TorusGeometry(2.5, 0.34, 12, 24),
+          new THREE.MeshStandardMaterial({ color: '#ffe055', emissive: '#f5b922', emissiveIntensity: 0.55 })
         );
         ring.position.set(sx * 0.75, sy * 0.75, -100);
         scene.add(ring);
         entities.push({ mesh: ring, kind: 'ring', hp: 1, alive: true });
       } else if (r < 0.75) {
-        const drone = new THREE.Mesh(
-          new THREE.OctahedronGeometry(1.4),
-          new THREE.MeshStandardMaterial({ color: '#d92626', emissive: '#8f1111', emissiveIntensity: 0.35 })
+        const drone = new THREE.Group();
+        const body = new THREE.Mesh(
+          new THREE.OctahedronGeometry(1.35),
+          new THREE.MeshStandardMaterial({ color: '#d92626', metalness: 0.35, roughness: 0.3 })
         );
+        const halo = new THREE.Mesh(
+          new THREE.TorusGeometry(1.5, 0.16, 8, 16),
+          new THREE.MeshStandardMaterial({ color: '#ffe055' })
+        );
+        drone.add(body, halo);
         drone.position.set(sx, sy, -100);
         scene.add(drone);
         entities.push({ mesh: drone, kind: 'drone', hp: 2, alive: true });
       } else {
         const storm = new THREE.Mesh(
           new THREE.DodecahedronGeometry(2.0),
-          new THREE.MeshStandardMaterial({ color: '#6b2fa0', emissive: '#9f7aea', emissiveIntensity: 0.4 })
+          new THREE.MeshStandardMaterial({ color: '#6b2fa0', emissive: '#9f7aea', emissiveIntensity: 0.45 })
         );
         storm.position.set(sx, sy, -100);
         scene.add(storm);
@@ -228,7 +321,9 @@ export const Plane3DEngine: React.FC<Props> = ({
       if (invuln > 0 || rollTimer > 0) return;
       hearts--;
       invuln = 1.4;
+      haptics.hurt();
       audioSystem.playSfx('hurt');
+      spawnBurst(plane.position, '#d92626', 8);
       if (hearts <= 0) {
         finished = true;
         onFinish({
@@ -287,6 +382,7 @@ export const Plane3DEngine: React.FC<Props> = ({
         if (inp.xJustPressed && rollCooldown <= 0) {
           rollTimer = 0.45;
           rollCooldown = 1.1;
+          haptics.bounce();
           audioSystem.playSfx('boost');
         }
 
@@ -303,13 +399,36 @@ export const Plane3DEngine: React.FC<Props> = ({
         plane.rotation.z = rollTimer > 0 ? rollTimer * Math.PI * 4.5 : -dx * 0.42;
         plane.rotation.x = dy * 0.25;
         plane.visible = invuln <= 0 || Math.floor(timeSec * 15) % 2 === 0;
-        propeller.rotation.z += dt * 34;
+        propeller.rotation.z += dt * 36;
+        sideRotorL.rotation.z += dt * 16;
+        sideRotorR.rotation.z -= dt * 16;
+
+        // Plane smoke trail
+        if (Math.random() < 0.45) {
+          const trail = new THREE.Mesh(puffGeo, new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.65 }));
+          trail.position.set(px, py, 1.9);
+          scene.add(trail);
+          puffs.push({ mesh: trail, vx: 0, vy: 0.3, vz: 18 * boost, life: 0.4 });
+        }
+
+        for (let i = puffs.length - 1; i >= 0; i--) {
+          const pf = puffs[i];
+          pf.life -= dt;
+          pf.mesh.position.x += pf.vx * dt;
+          pf.mesh.position.y += pf.vy * dt;
+          pf.mesh.position.z += pf.vz * dt;
+          pf.mesh.scale.setScalar(Math.max(0.01, pf.life * 2.2));
+          if (pf.life <= 0) {
+            scene.remove(pf.mesh);
+            puffs.splice(i, 1);
+          }
+        }
 
         for (const c of clouds) {
           c.position.z += 38 * boost * dt;
           if (c.position.z > 20) {
             c.position.z = -140 - Math.random() * 20;
-            c.position.x = (Math.random() - 0.5) * 65;
+            c.position.x = (Math.random() - 0.5) * 70;
           }
         }
 
@@ -355,12 +474,16 @@ export const Plane3DEngine: React.FC<Props> = ({
           if (e.kind === 'ring' && dist < 3.2 && e.alive) {
             e.alive = false;
             treatsCollected += 3;
+            haptics.dpad();
             audioSystem.playSfx('treat');
+            spawnBurst(e.mesh.position, '#ffe055', 8);
             scene.remove(e.mesh);
           } else if (e.kind === 'paw' && dist < 2.8 && e.alive) {
             e.alive = false;
             goldenPaws[e.pawIndex!] = true;
+            haptics.collect();
             audioSystem.playSfx('paw');
+            spawnBurst(e.mesh.position, '#ffe055', 14);
             bannerText = `🐾 Patinha Dourada #${e.pawIndex! + 1} pega no céu!`;
             bannerTimer = 2.0;
             scene.remove(e.mesh);
@@ -394,7 +517,9 @@ export const Plane3DEngine: React.FC<Props> = ({
                 if (e.hp <= 0) {
                   e.alive = false;
                   treatsCollected += 2;
+                  haptics.impact();
                   audioSystem.playSfx('enemy_defeat');
+                  spawnBurst(e.mesh.position, '#ff9f43', 12);
                   scene.remove(e.mesh);
                 }
                 break;
@@ -404,7 +529,9 @@ export const Plane3DEngine: React.FC<Props> = ({
               bossHp--;
               bossHurtFlash = 0.16;
               remove = true;
+              haptics.impact();
               audioSystem.playSfx('enemy_defeat');
+              spawnBurst(b.mesh.position, '#ffe055', 10);
               if (bossHp <= 0) {
                 finished = true;
                 audioSystem.playSfx('win');
@@ -473,7 +600,7 @@ export const Plane3DEngine: React.FC<Props> = ({
         container.removeChild(renderer.domElement);
       }
     };
-  }, [lives, onHudUpdate, onFinish, onPauseRequest]);
+  }, [costume, lives, onHudUpdate, onFinish, onPauseRequest]);
 
   return <div ref={mountRef} style={{ width: '100%', height: '100%' }} />;
 };
